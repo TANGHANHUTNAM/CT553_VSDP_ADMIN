@@ -10,25 +10,130 @@ import {
 import { Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
-import logo from "../assets/logo.png";
-import { FaCity, FaUser, FaUserAlt, FaUserCircle } from "react-icons/fa";
+import { FaUser, FaUserCircle, FaUsers } from "react-icons/fa";
+import { GrShieldSecurity } from "react-icons/gr";
 import { IoMdSettings } from "react-icons/io";
-import { TbLogout2, TbReportSearch } from "react-icons/tb";
-import { MdDashboard, MdPersonSearch, MdWork } from "react-icons/md";
-import { IoBusiness } from "react-icons/io5";
-import { FaEarthAsia, FaLocationDot, FaTreeCity } from "react-icons/fa6";
+import { IoKey } from "react-icons/io5";
+import { MdDashboard } from "react-icons/md";
+import { RiUserSettingsLine } from "react-icons/ri";
+import { TbLogout2 } from "react-icons/tb";
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import logo from "../assets/logo.png";
+import BreadCrumbComponent from "../components/BreadCrumbComponent";
+import { ALL_PERMISSIONS } from "../constants/permissions";
+import { ROUTER_URL } from "../constants/routerIndex";
 import LightDarkMode from "../features/app/LightDarkMode";
-import { routerURL } from "../constants/routerIndex";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { IAuthLogoutResponse, IResponse } from "../interfaces";
+import { IPermissionResponse } from "../interfaces/permission";
+import { logout } from "../redux/authReducer";
+import { clearUser } from "../redux/userReducer";
+import { routerCustom } from "../router";
+import { logoutService } from "../services";
 
 const LayoutAdmin: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const { user } = useAppSelector((state) => state.user);
+  const permissions = useAppSelector((state) => state.user.user?.permissions);
+
+  const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
+
   useEffect(() => {
-    setSelectedKeys([location.pathname]);
-  }, [location.pathname]);
+    const ACL_ENABLE = import.meta.env.VITE_ACL_ENABLE;
+    if ((permissions && permissions.length > 0) || ACL_ENABLE === "true") {
+      // Hệ thống phân quyền
+      const viewUser = permissions?.find(
+        (item: IPermissionResponse) =>
+          item.api_path === ALL_PERMISSIONS.USER.VIEW.api_path &&
+          item.method === ALL_PERMISSIONS.USER.VIEW.method,
+      );
+      const viewRole = permissions?.find(
+        (item: IPermissionResponse) =>
+          item.api_path === ALL_PERMISSIONS.ROLE.VIEW.api_path &&
+          item.method === ALL_PERMISSIONS.ROLE.VIEW.method,
+      );
+      const viewPermission = permissions?.find(
+        (item: IPermissionResponse) =>
+          item.api_path === ALL_PERMISSIONS.PERMISSION.VIEW.api_path &&
+          item.method === ALL_PERMISSIONS.PERMISSION.VIEW.method,
+      );
+      const hasAuthChildren: boolean = Boolean(
+        viewUser || viewRole || viewPermission,
+      );
+      // Hệ thống quản lý form
+
+      const menu_full = [
+        {
+          label: <NavLink to={ROUTER_URL.DASHBOARD_PAGE}>Dashboard</NavLink>,
+          key: ROUTER_URL.DASHBOARD_PAGE,
+          icon: <MdDashboard />,
+        },
+        ...(hasAuthChildren || ACL_ENABLE === "true"
+          ? [
+              {
+                label: "Quản lý phân quyền",
+                key: "auth",
+                icon: <GrShieldSecurity />,
+                children: [
+                  ...(viewUser || ACL_ENABLE === "true"
+                    ? [
+                        {
+                          label: (
+                            <NavLink to={ROUTER_URL.USER_PAGE}>
+                              Người dùng
+                            </NavLink>
+                          ),
+                          key: ROUTER_URL.USER_PAGE,
+                          icon: <FaUsers />,
+                        },
+                      ]
+                    : []),
+                  ...(viewRole || ACL_ENABLE === "true"
+                    ? [
+                        {
+                          label: (
+                            <NavLink to={ROUTER_URL.ROLE_PAGE}>Vai trò</NavLink>
+                          ),
+                          key: ROUTER_URL.ROLE_PAGE,
+                          icon: <RiUserSettingsLine />,
+                        },
+                      ]
+                    : []),
+                  ...(viewPermission || ACL_ENABLE === "true"
+                    ? [
+                        {
+                          label: (
+                            <NavLink to={ROUTER_URL.PERMISSION_PAGE}>
+                              Quyền hạn
+                            </NavLink>
+                          ),
+                          key: ROUTER_URL.PERMISSION_PAGE,
+                          icon: <IoKey />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+      ];
+      setMenuItems(menu_full);
+    }
+  }, [permissions]);
+
   const siderStyle: React.CSSProperties = {
     overflow: "auto",
     height: "100vh",
@@ -54,33 +159,46 @@ const LayoutAdmin: React.FC = () => {
     {
       key: "/infor",
       label: (
-        <div className="flex items-center gap-3 text-black">
-          <Avatar size={34} src={undefined} />
-          <span className="flex flex-col justify-start gap-1 text-sm">
-            <p className="">{`ADMINsssss`}</p>
-            <p className="text-xs">role</p>
-          </span>
-        </div>
+        <Tooltip title={`${user?.role?.description}`}>
+          <NavLink
+            to={ROUTER_URL.PROFILE_PAGE}
+            className="flex items-center gap-3 text-black"
+          >
+            <Avatar size={34} src={user?.avatar || undefined} />
+            <span className="flex w-20 flex-col justify-start gap-1">
+              <p className="overflow-hidden text-ellipsis text-sm">
+                {user?.email || "username@g.commmm"}
+              </p>
+              <p className="overflow-hidden truncate text-ellipsis text-xs uppercase">
+                {user?.role?.name || "rolesad sadádasdsadas"}
+              </p>
+            </span>
+          </NavLink>
+        </Tooltip>
       ),
-      disabled: true,
     },
     {
       type: "divider",
     },
     {
-      key: routerURL.PROFILE_PAGE,
-      label: <NavLink to={routerURL.PROFILE_PAGE}>Hồ sơ</NavLink>,
+      key: ROUTER_URL.PROFILE_PAGE,
+      label: <NavLink to={ROUTER_URL.PROFILE_PAGE}>Hồ sơ</NavLink>,
       icon: <FaUser className="" />,
     },
     {
-      key: routerURL.SETTING_PAGE,
-      label: <NavLink to={routerURL.SETTING_PAGE}>Cài đặt</NavLink>,
+      key: ROUTER_URL.SETTING_PAGE,
+      label: <NavLink to={ROUTER_URL.SETTING_PAGE}>Cài đặt</NavLink>,
       icon: <IoMdSettings className="" />,
     },
     {
       key: "/logout",
       label: (
-        <span onClick={() => {}} className="">
+        <span
+          onClick={() => {
+            handleLogout();
+          }}
+          className=""
+        >
           Đăng xuất
         </span>
       ),
@@ -88,138 +206,27 @@ const LayoutAdmin: React.FC = () => {
     },
   ];
 
-  const menuItems: MenuProps["items"] = [
-    {
-      label: <NavLink to={routerURL.DASHBOARD_PAGE}>Dashboard</NavLink>,
-      key: routerURL.DASHBOARD_PAGE,
-      icon: <MdDashboard />,
-    },
-    {
-      label: <NavLink to="/report-management">Báo cáo</NavLink>,
-      key: "bao-cao",
-      icon: <TbReportSearch />,
-    },
-    {
-      label: "Quản lý người dùng",
-      key: "quan-ly-nguoi-dung",
-      icon: <FaUserAlt />,
-      children: [
-        {
-          label: (
-            <NavLink to="/job-seeker-management">Tài khoản người dùng</NavLink>
-          ),
-          key: "/job-seeker-management",
-        },
-      ],
-    },
-    {
-      label: "Quản lý đăng tuyển",
-      key: "quan-ly-dang-tuyen",
-      icon: <MdPersonSearch />,
-      children: [
-        {
-          label: (
-            <NavLink to="/job-posting-management">Công việc đăng tuyển</NavLink>
-          ),
-          key: "/job-posting-management",
-        },
-      ],
-    },
-    {
-      label: "Quản lý công ty",
-      key: "quan-ly-cong-ty",
-      icon: <IoBusiness />,
-      children: [
-        {
-          label: <NavLink to="/company-management">Công ty</NavLink>,
-          key: "/company-management",
-        },
-        {
-          label: (
-            <NavLink to="/company-type-management">Loại hình công ty</NavLink>
-          ),
-          key: "/company-type-management",
-        },
-        {
-          label: (
-            <NavLink to="/company-size-management">Quy mô công ty</NavLink>
-          ),
-          key: "/company-size-management",
-        },
-        {
-          label: <NavLink to="/workplace-management">Nơi làm việc</NavLink>,
-          key: "/workplace-management",
-        },
-      ],
-    },
-    {
-      label: "Quản lý tuyển dụng",
-      key: "quan-ly-tuyen-dung",
-      icon: <MdWork />,
-      children: [
-        {
-          label: <NavLink to="/language-management">Ngôn ngữ</NavLink>,
-          key: "/language-management",
-        },
-        {
-          label: <NavLink to="/job-categories-management">Nghề nghiệp</NavLink>,
-          key: "/job-categories-management",
-        },
-        {
-          label: (
-            <NavLink to="/employment-type-management">
-              Hình thức làm việc
-            </NavLink>
-          ),
-          key: "/employment-type-management",
-        },
-        {
-          label: (
-            <NavLink to="/education-level-management">Trình độ học vấn</NavLink>
-          ),
-          key: "/education-level-management",
-        },
-        {
-          label: (
-            <NavLink to="/desired-job-level-management">
-              Cấp bậc mong muốn
-            </NavLink>
-          ),
-          key: "/desired-job-level-management",
-        },
-        {
-          label: (
-            <NavLink to="/experience-level-management">
-              Số năm kinh nghiệm
-            </NavLink>
-          ),
-          key: "/experience-level-management",
-        },
-      ],
-    },
-    {
-      label: "Quản lý địa điểm",
-      key: "quan-ly-dia-diem",
-      icon: <FaLocationDot />,
-      children: [
-        {
-          label: <NavLink to="/country-management">Quốc gia</NavLink>,
-          key: "/country-management",
-          icon: <FaEarthAsia />,
-        },
-        {
-          label: <NavLink to="/city-management">Thành phố</NavLink>,
-          key: "/city-management",
-          icon: <FaCity />,
-        },
-        {
-          label: <NavLink to="/district-management">Quận, huyện</NavLink>,
-          key: "/district-management",
-          icon: <FaTreeCity />,
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    setSelectedKeys([location.pathname]);
+  }, [location.pathname]);
+
+  const handleLogout = async () => {
+    try {
+      const res: IResponse<IAuthLogoutResponse> = await logoutService();
+      if (res && res.data) {
+        dispatch(logout());
+        dispatch(clearUser());
+        toast.success("Đăng xuất thành công!");
+        navigate(ROUTER_URL.LOGIN_PAGE);
+      }
+      if (res && res.error) {
+        toast.error("Đăng xuất thất bại!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout className="min-h-screen">
       <Sider
@@ -231,19 +238,18 @@ const LayoutAdmin: React.FC = () => {
         collapsed={collapsed}
         theme="light"
       >
-        <div className="flex flex-col items-center">
+        <Link
+          to={ROUTER_URL.DASHBOARD_PAGE}
+          className="flex flex-col items-center"
+        >
           <img src={logo} alt="logo" className="w-28 p-2 pt-4" />
-          {/* {!collapsed && (
-            <h1 style={{ color: GLOBAL_COLOR }} className="text-lg font-medium">
-              VSDP ADMIN
-            </h1>
-          )} */}
-        </div>
+        </Link>
         <Menu
           theme="light"
           mode="inline"
           selectedKeys={selectedKeys}
           items={menuItems}
+          style={{ borderRight: "none" }}
         />
       </Sider>
       <Layout
@@ -283,7 +289,9 @@ const LayoutAdmin: React.FC = () => {
                 overlayStyle={{}}
               >
                 <div className="flex items-center gap-2">
-                  <p className="font-medium uppercase">ADMIN</p>
+                  <div className="flex font-medium">
+                    {user?.name || "Họ tên"}
+                  </div>
                   <Button
                     type="text"
                     icon={<FaUserCircle />}
@@ -296,8 +304,9 @@ const LayoutAdmin: React.FC = () => {
             </div>
           </div>
         </Header>
-        <Layout.Content>
-          <div className="m-2.5 mt-[73px] overflow-auto">
+        <Layout.Content className="bg-[#F5F5F5] p-3 dark:bg-transparent">
+          <div className="mt-[64px] overflow-auto">
+            <BreadCrumbComponent routes={routerCustom} />
             <Outlet />
           </div>
         </Layout.Content>

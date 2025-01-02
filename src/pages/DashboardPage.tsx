@@ -1,10 +1,10 @@
 import LayoutPage from "../layout/LayoutPage";
 import logo from "../assets/logo.png";
 import { useDynamicTitle, useScrollTop } from "../hooks";
-interface IDashboardPageProps {}
+import { PAGE_NAME } from "../constants/routerIndex";
 
-const DashboardPage: React.FC<IDashboardPageProps> = ({}) => {
-  useDynamicTitle("Dashboard");
+const DashboardPage: React.FC = () => {
+  useDynamicTitle(PAGE_NAME.DASHBOARD);
   useScrollTop();
   return (
     <>

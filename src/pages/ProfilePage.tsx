@@ -1,12 +1,11 @@
+import { PAGE_NAME } from "../constants/routerIndex";
 import { useDynamicTitle, useScrollTop } from "../hooks";
-import LayoutPage from "../layout/LayoutPage";
 
-interface IProfilePageProps {}
-
-const ProfilePage: React.FC<IProfilePageProps> = ({}) => {
-  useDynamicTitle("Trang cá nhân");
+const ProfilePage: React.FC = () => {
+  useDynamicTitle(PAGE_NAME.PROFILE);
   useScrollTop();
-  return <>{/* <LayoutPage>Profile</LayoutPage> */}</>;
+  // const handle;
+  return <></>;
 };
 
 export default ProfilePage;

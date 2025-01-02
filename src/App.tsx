@@ -12,6 +12,7 @@ import {
   GLOBAL_COLOR_ERROR,
   GLOBAL_COLOR_SUCCESS,
   GLOBAL_COLOR_TEXT_PRIMARY,
+  GLOBAL_COLOR_TEXT_SECONDARY,
 } from "./constants/colorCustom";
 import { loadingBarRef } from "./services/apiClient";
 import { useAppSelector } from "./hooks";
@@ -40,12 +41,15 @@ function App() {
               colorSuccess: GLOBAL_COLOR_SUCCESS,
               colorError: GLOBAL_COLOR_ERROR,
               borderRadius: 4,
+              colorText: isDarkMode
+                ? GLOBAL_COLOR_TEXT_PRIMARY
+                : GLOBAL_COLOR_TEXT_SECONDARY,
             },
             components: {
               Layout: {
                 algorithm: true,
-                headerBg: isDarkMode ? dark.DEFAULT : GLOBAL_COLOR_TEXT_PRIMARY,
-                bodyBg: isDarkMode ? dark[800] : GLOBAL_COLOR_TEXT_PRIMARY,
+                headerBg: isDarkMode ? dark.DEFAULT : "#ffff",
+                bodyBg: isDarkMode ? "#181818" : GLOBAL_COLOR_TEXT_PRIMARY,
                 headerColor: isDarkMode
                   ? GLOBAL_COLOR_TEXT_PRIMARY
                   : dark.DEFAULT,
@@ -76,8 +80,9 @@ function App() {
             style: {
               paddingInline: 20,
               borderRadius: 4,
-              background: GLOBAL_COLOR_TEXT_PRIMARY,
+              background: isDarkMode ? dark[800] : GLOBAL_COLOR_TEXT_PRIMARY,
               fontSize: "1rem",
+              maxWidth: "calc(100vw - 40px)",
             },
             success: {
               style: {

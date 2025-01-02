@@ -11,18 +11,20 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import appReducer from "./appReducer";
-import userReducer from "./authReducer";
+import authReducer from "./authReducer";
+import userReducer from "./userReducer";
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["app", "user"],
+  whitelist: ["app", "auth"],
 };
 
 const rootReducer = combineReducers({
-  user: userReducer,
+  auth: authReducer,
   app: appReducer,
+  user: userReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

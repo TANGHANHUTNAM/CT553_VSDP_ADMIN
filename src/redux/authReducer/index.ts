@@ -1,37 +1,30 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface IAuthState {
-  account: any;
+  isAuth: boolean;
 }
 
 const initialState: IAuthState = {
-  account: {
-    success: false,
-    message: "",
-    name: "",
-    access_token: "",
-    email_verified: false,
-    token_type: "",
-    status_code: 0,
-  },
+  isAuth: false,
 };
 
-export const userSlice = createSlice({
-  name: "user",
+export const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {
-    loginSuccess: (state, action: PayloadAction<any>) => {
-      state.account = action.payload;
+    loginSuccess: (state) => {
+      state.isAuth = true;
     },
     loginFailed: (state) => {
-      state.account = initialState.account;
+      state.isAuth = initialState.isAuth;
     },
     logout: (state) => {
-      state.account = initialState.account;
+      localStorage.removeItem("access_token");
+      state.isAuth = initialState.isAuth;
     },
   },
 });
 
-export const { loginSuccess, loginFailed, logout } = userSlice.actions;
+export const { loginSuccess, loginFailed, logout } = authSlice.actions;
 
-export default userSlice.reducer;
+export default authSlice.reducer;

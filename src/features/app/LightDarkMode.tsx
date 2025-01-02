@@ -6,9 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { toggleDarkMode } from "../../redux/appReducer";
 import { useEffect } from "react";
 
-interface ILightDarkModeProps {}
-
-const LightDarkMode: React.FC<ILightDarkModeProps> = ({}) => {
+const LightDarkMode: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isDarkMode } = useAppSelector((state) => state.app);
 
