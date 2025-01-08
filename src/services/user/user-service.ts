@@ -1,8 +1,8 @@
-import { IUserResponse, IResponse } from "../../interfaces";
+import { IDataUsersResponse, IResponse } from "../../interfaces";
 import axiosClient from "../apiClient";
 
-export const getAccountService = async (): Promise<
-  IResponse<IUserResponse>
-> => {
-  return await axiosClient.get("/auth/account");
+export const getUsersService = async (
+  query: string,
+): Promise<IResponse<IDataUsersResponse>> => {
+  return await axiosClient.get(`/users${query}`);
 };

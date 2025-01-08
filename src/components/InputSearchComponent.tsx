@@ -1,13 +1,19 @@
 import { Input } from "antd";
-import { IoMdSearch } from "react-icons/io";
 
 interface IInputSearchComponentProps {
   className?: string | undefined;
   placeholder?: string | undefined;
   size?: "large" | "middle" | "small" | undefined;
   allowClear?: boolean | undefined;
-  prefix: React.ReactNode | undefined;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  prefix?: React.ReactNode | undefined;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  defaultValue?: string | undefined;
+  value?: string | undefined;
+  enterButton?: boolean | React.ReactNode | undefined;
+  onSearch?: (value: string) => void;
+  onClear?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  onPressEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const InputSearchComponent: React.FC<IInputSearchComponentProps> = ({
@@ -16,17 +22,31 @@ const InputSearchComponent: React.FC<IInputSearchComponentProps> = ({
   size,
   allowClear,
   prefix,
+  defaultValue,
+  value,
+  enterButton,
+  onSearch,
+  onClear,
   onChange,
+  onClick,
+  // onPressEnter,
 }) => {
   return (
     <>
-      <Input
-        className={`${className} border border-solid border-gray-300 dark:border-dark-600`}
+      <Input.Search
+        className={`${className} rounded-md border border-solid border-gray-300 dark:border-dark-600`}
         placeholder={placeholder || "Search..."}
         allowClear={allowClear || true}
         size={size || "large"}
-        prefix={prefix || <IoMdSearch className="text-xl" />}
+        prefix={prefix}
+        defaultValue={defaultValue}
+        value={value}
+        enterButton={enterButton}
         onChange={onChange}
+        onSearch={onSearch}
+        onClear={onClear}
+        onClick={onClick}
+        // onPressEnter={onPressEnter}
       />
     </>
   );

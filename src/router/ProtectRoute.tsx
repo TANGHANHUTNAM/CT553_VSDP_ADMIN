@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_URL } from "../constants/routerIndex";
 import { IUserResponse, IResponse } from "../interfaces";
-import { getAccountService } from "../services/user/user-service";
+import { getAccountService } from "../services";
 import { clearUser, setUser } from "../redux/userReducer";
 import LoadingPage from "../pages/LoadingPage";
 import { logout } from "../redux/authReducer";

@@ -10,6 +10,8 @@ import RolePage from "../pages/RolePage";
 import SettingPage from "../pages/SettingPage";
 import UserPage from "../pages/UserPage";
 import ProtectRoute from "./ProtectRoute";
+import Access from "./Access";
+import { ALL_PERMISSIONS } from "../constants/permissions";
 
 export type CustomRouteObject = RouteObject & {
   breadcrumb?: string;
@@ -43,17 +45,50 @@ export const routerCustom: CustomRouteObject[] = [
       },
       {
         path: ROUTER_URL.USER_PAGE,
-        element: <UserPage />,
+        element: (
+          <Access
+            permission={{
+              module: ALL_PERMISSIONS.USER.VIEW.module,
+              api_path: ALL_PERMISSIONS.USER.VIEW.api_path,
+              method: ALL_PERMISSIONS.USER.VIEW.method,
+            }}
+            hideChildren={false}
+          >
+            <UserPage />
+          </Access>
+        ),
         breadcrumb: PAGE_NAME.USER,
       },
       {
         path: ROUTER_URL.ROLE_PAGE,
-        element: <RolePage />,
+        element: (
+          <Access
+            permission={{
+              module: ALL_PERMISSIONS.ROLE.VIEW.module,
+              api_path: ALL_PERMISSIONS.ROLE.VIEW.api_path,
+              method: ALL_PERMISSIONS.ROLE.VIEW.method,
+            }}
+            hideChildren={false}
+          >
+            <RolePage />
+          </Access>
+        ),
         breadcrumb: PAGE_NAME.ROLE,
       },
       {
         path: ROUTER_URL.PERMISSION_PAGE,
-        element: <PermissionPage />,
+        element: (
+          <Access
+            permission={{
+              module: ALL_PERMISSIONS.PERMISSION.VIEW.module,
+              api_path: ALL_PERMISSIONS.PERMISSION.VIEW.api_path,
+              method: ALL_PERMISSIONS.PERMISSION.VIEW.method,
+            }}
+            hideChildren={false}
+          >
+            <PermissionPage />
+          </Access>
+        ),
         breadcrumb: PAGE_NAME.PERMISSION,
       },
     ],

@@ -48,7 +48,6 @@ const LayoutAdmin: React.FC = () => {
 
   const { user } = useAppSelector((state) => state.user);
   const permissions = useAppSelector((state) => state.user.user?.permissions);
-
   const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
 
   useEffect(() => {
@@ -130,6 +129,7 @@ const LayoutAdmin: React.FC = () => {
             ]
           : []),
       ];
+
       setMenuItems(menu_full);
     }
   }, [permissions]);

@@ -10,68 +10,83 @@ export const ALL_MODULES = {
 export const ALL_PERMISSIONS = {
   USER: {
     VIEW: {
-      module: "USER",
+      module: ALL_MODULES.USER,
       api_path: VER + "/users",
       method: "GET",
     },
     CREATE: {
-      module: "USER",
+      module: ALL_MODULES.USER,
       api_path: VER + "/users",
       method: "POST",
     },
     UPDATE: {
-      module: "USER",
+      module: ALL_MODULES.USER,
       api_path: VER + "/users/:id",
       method: "PATCH",
     },
     DELETE: {
-      module: "USER",
+      module: ALL_MODULES.USER,
       api_path: VER + "/users/:id",
       method: "DELETE",
+    },
+    GET_BY_ID: {
+      module: ALL_MODULES.USER,
+      api_path: VER + "/users/:id",
+      method: "GET",
     },
   },
   ROLE: {
     VIEW: {
-      module: "ROLE",
+      module: ALL_MODULES.ROLE,
       api_path: VER + "/roles",
       method: "GET",
     },
     CREATE: {
-      module: "ROLE",
+      module: ALL_MODULES.ROLE,
       api_path: VER + "/roles",
       method: "POST",
     },
     UPDATE: {
-      module: "ROLE",
+      module: ALL_MODULES.ROLE,
       api_path: VER + "/roles/:id",
       method: "PATCH",
     },
     DELETE: {
-      module: "ROLE",
+      module: ALL_MODULES.ROLE,
       api_path: VER + "/roles/:id",
       method: "DELETE",
+    },
+    GET_BY_ID: {
+      module: ALL_MODULES.ROLE,
+      api_path: VER + "/roles/:id",
+      method: "GET",
     },
   },
   PERMISSION: {
     VIEW: {
-      module: "PERMISSION",
+      module: ALL_MODULES.PERMISSION,
       api_path: VER + "/permissions",
       method: "GET",
     },
     CREATE: {
-      module: "PERMISSION",
+      module: ALL_MODULES.PERMISSION,
       api_path: VER + "/permissions",
       method: "POST",
     },
     UPDATE: {
-      module: "PERMISSION",
+      module: ALL_MODULES.PERMISSION,
       api_path: VER + "/permissions/:id",
       method: "PATCH",
     },
     DELETE: {
-      module: "PERMISSION",
+      module: ALL_MODULES.PERMISSION,
       api_path: VER + "/permissions/:id",
       method: "DELETE",
+    },
+    GET_BY_ID: {
+      module: ALL_MODULES.PERMISSION,
+      api_path: VER + "/permissions/:id",
+      method: "GET",
     },
   },
 };

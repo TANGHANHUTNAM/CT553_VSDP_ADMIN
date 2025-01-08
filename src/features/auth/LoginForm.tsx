@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Form, Input } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -8,6 +8,7 @@ import { IAuthRequest, IAuthResponse, IResponse } from "../../interfaces";
 import { loginSuccess } from "../../redux/authReducer";
 import { loginService } from "../../services";
 import { ROUTER_URL } from "../../constants/routerIndex";
+import ButtonComponent from "../../components/ButtonComponent";
 
 const LoginForm: React.FC = () => {
   const [loginForm] = Form.useForm<IAuthRequest>();
@@ -15,7 +16,7 @@ const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const accessToken = window.localStorage.getItem("access_token");
   const { isAuth } = useAppSelector((state) => state.auth);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     if (accessToken && isAuth) {
       navigate(ROUTER_URL.DASHBOARD_PAGE);
@@ -23,6 +24,7 @@ const LoginForm: React.FC = () => {
   }, [accessToken, isAuth, navigate]);
 
   const onFinish = async (data: IAuthRequest) => {
+    setIsLoading(true);
     try {
       const res: IResponse<IAuthResponse> = await loginService(data);
 
@@ -38,6 +40,7 @@ const LoginForm: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -98,12 +101,16 @@ const LoginForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <button
-            type="submit"
-            className="focus:shadow-outline text-text_primary mt-2 w-full rounded bg-primary py-2 font-bold hover:bg-[#25c7e8] focus:outline-none"
-          >
-            Đăng nhập
-          </button>
+          <ButtonComponent
+            htmlType="submit"
+            text="Đăng nhập"
+            className="w-full"
+            type="primary"
+            icon={""}
+            size="large"
+            textTooltip=""
+            loading={isLoading}
+          />
         </Form.Item>
         <div className="flex cursor-pointer justify-end font-medium underline">
           Quên mật khẩu ?

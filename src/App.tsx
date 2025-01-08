@@ -62,6 +62,10 @@ function App() {
               Result: {
                 algorithm: true,
               },
+              Table: {
+                headerBg: isDarkMode ? dark.DEFAULT : "#ededed",
+                headerBorderRadius: 10,
+              },
             },
           }}
         >
@@ -80,7 +84,7 @@ function App() {
             style: {
               paddingInline: 20,
               borderRadius: 4,
-              background: isDarkMode ? dark[800] : GLOBAL_COLOR_TEXT_PRIMARY,
+              background: isDarkMode ? dark[800] : "#fff",
               fontSize: "1rem",
               maxWidth: "calc(100vw - 40px)",
             },

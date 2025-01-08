@@ -1,4 +1,5 @@
 import { IPermissionResponse } from "../permission";
+import { IPaginationResponse } from "../response";
 
 export interface IUserResponse {
   user: {
@@ -26,4 +27,31 @@ export interface IUserRoleResponse {
   name: string;
   description: string;
   active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface IUsersResponse {
+  id: number;
+  name: string;
+  email: string;
+  date_of_birth: string | null;
+  gender: string | null;
+  phone_number: string | null;
+  avatar: string | null;
+  generation: string | null;
+  school: string | null;
+  major: string | null;
+  company: string | null;
+  active: boolean;
+  is_external_guest: boolean;
+  created_at: string;
+  updated_at: string;
+  roleId: number;
+  role: IUserRoleResponse;
+}
+
+export interface IDataUsersResponse {
+  users: IUsersResponse[];
+  pagination: IPaginationResponse;
 }

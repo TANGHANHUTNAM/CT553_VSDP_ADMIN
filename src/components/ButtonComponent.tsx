@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import { BaseButtonProps } from "antd/es/button/button";
 
 interface IButtonComponentProps {
@@ -7,6 +7,10 @@ interface IButtonComponentProps {
   type: BaseButtonProps["type"];
   className?: string;
   size: BaseButtonProps["size"];
+  textTooltip: string;
+  htmlType?: "button" | "submit" | "reset" | undefined;
+  loading?: boolean;
+  onclick?: () => void;
 }
 
 const ButtonComponent: React.FC<IButtonComponentProps> = ({
@@ -15,12 +19,26 @@ const ButtonComponent: React.FC<IButtonComponentProps> = ({
   type = "primary",
   className,
   size,
+  textTooltip = "",
+  htmlType,
+  loading,
+  onclick,
 }) => {
   return (
     <>
-      <Button type={type} icon={icon} size={size} className={className}>
-        {text}
-      </Button>
+      <Tooltip title={textTooltip}>
+        <Button
+          type={type}
+          icon={icon}
+          size={size}
+          className={className}
+          htmlType={htmlType}
+          loading={loading}
+          onClick={onclick}
+        >
+          {text}
+        </Button>
+      </Tooltip>
     </>
   );
 };

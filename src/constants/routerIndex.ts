@@ -10,9 +10,9 @@ export const ROUTER_URL = {
 };
 
 export const PAGE_NAME = {
-  USER: "Trang quản lý người dùng",
-  ROLE: "Trang quản lý người vai trò",
-  PERMISSION: "Trang quản lý người quyền hạn",
+  USER: "Quản lý người dùng",
+  ROLE: "Quản lý người vai trò",
+  PERMISSION: "Quản lý người quyền hạn",
   LOGIN: "Trang đăng nhập",
   DASHBOARD: "Trang Dashboard",
   PROFILE: "Trang hồ sơ",

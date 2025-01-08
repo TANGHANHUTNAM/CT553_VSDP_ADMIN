@@ -24,7 +24,7 @@ const LoginPage: React.FC = () => {
       <div className="flex justify-center">
         {/* form */}
         <div className="flex min-h-full flex-col items-center justify-center gap-5 rounded-l-lg bg-white p-8 shadow-lg dark:bg-dark-700">
-          <div className="dark:text-text_primary text-xl font-semibold uppercase">
+          <div className="text-xl font-semibold uppercase dark:text-text_primary">
             Đăng nhập
           </div>
           <LoginForm />

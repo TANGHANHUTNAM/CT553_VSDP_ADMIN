@@ -58,7 +58,12 @@ axiosClient.interceptors.response.use(
 
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/auth/login") &&
+      !originalRequest.url.includes("/auth/login-google")
+    ) {
       originalRequest._retry = true;
 
       try {

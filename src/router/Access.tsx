@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { IPermissionResponse } from "../interfaces/permission";
-import { useAppSelector } from "../hooks";
 import { Result } from "antd";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../hooks";
+import { IPermissionResponse } from "../interfaces/permission";
 
 interface IAccessProps {
   permission: IPermissionResponse;
@@ -16,8 +16,10 @@ const Access: React.FC<IAccessProps> = ({
 }) => {
   const [allow, setAllow] = useState<boolean>(false);
   const permissions = useAppSelector((state) => state.user?.user?.permissions);
+  const [isChecking, setIsChecking] = useState<boolean>(true);
 
   useEffect(() => {
+    setIsChecking(true);
     if (permissions?.length) {
       const check = permissions.find(
         (item: IPermissionResponse) =>
@@ -29,11 +31,16 @@ const Access: React.FC<IAccessProps> = ({
         setAllow(true);
       } else setAllow(false);
     }
+    setIsChecking(false);
   }, [permissions, permission]);
+
+  if (isChecking) {
+    return <></>;
+  }
 
   return (
     <>
-      {allow === true || import.meta.env.VITE_ACL_ENABLE === "false" ? (
+      {allow === true || import.meta.env.VITE_ACL_ENABLE === "true" ? (
         <>{children}</>
       ) : (
         <>
