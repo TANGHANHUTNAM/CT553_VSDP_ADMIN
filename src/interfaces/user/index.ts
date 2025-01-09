@@ -48,10 +48,30 @@ export interface IUsersResponse {
   created_at: string;
   updated_at: string;
   roleId: number;
-  role: IUserRoleResponse;
+  role: IUserRoleResponse | null;
 }
 
 export interface IDataUsersResponse {
   users: IUsersResponse[];
   pagination: IPaginationResponse;
+}
+
+export interface IDataUserCreateRequest {
+  name: string;
+  email: string;
+  roleId: number;
+}
+
+export interface IDataUserUpdateRequest {
+  name: string;
+  email: string;
+  roleId: number;
+  date_of_birth: string;
+  gender: string;
+  phone_number: string;
+  generation: string;
+  school: string;
+  major: string;
+  company: string;
+  is_external_guest: boolean;
 }

@@ -79,11 +79,7 @@ export const routerCustom: CustomRouteObject[] = [
         path: ROUTER_URL.PERMISSION_PAGE,
         element: (
           <Access
-            permission={{
-              module: ALL_PERMISSIONS.PERMISSION.VIEW.module,
-              api_path: ALL_PERMISSIONS.PERMISSION.VIEW.api_path,
-              method: ALL_PERMISSIONS.PERMISSION.VIEW.method,
-            }}
+            permission={ALL_PERMISSIONS.PERMISSION.VIEW}
             hideChildren={false}
           >
             <PermissionPage />

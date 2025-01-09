@@ -1,6 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Avatar,
   Checkbox,
   Dropdown,
   MenuProps,
@@ -11,27 +10,42 @@ import {
   Tag,
 } from "antd";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { CgExport, CgImport } from "react-icons/cg";
 import { FaCirclePlus } from "react-icons/fa6";
 import { GrPowerReset } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
 import { RiListSettingsFill } from "react-icons/ri";
 import { useSearchParams } from "react-router-dom";
+import ActiveComponent from "../../components/ActiveComponent";
+import AvatarComponent from "../../components/AvatarComponent";
 import ButtonComponent from "../../components/ButtonComponent";
-import DeleteComponent from "../../components/DeleteComponent";
 import EditComponent from "../../components/EditComponent";
 import InputSearchComponent from "../../components/InputSearchComponent";
 import TableSizeSettingComponent from "../../components/TableSizeSettingComponent";
 import ViewComponent from "../../components/ViewComponent";
-import { IUsersResponse } from "../../interfaces";
-import { getUsersService } from "../../services";
-import Access from "../../router/Access";
 import { ALL_PERMISSIONS } from "../../constants/permissions";
-import ActiveComponent from "../../components/ActiveComponent";
+import { PER_PAGE, STATUS } from "../../constants/tableManagement";
+import { IResponse, IUserResponse, IUsersResponse } from "../../interfaces";
+import Access from "../../router/Access";
+import {
+  getAllRolesService,
+  getUsersService,
+  updateStatusUserService,
+} from "../../services";
+import ModalViewDetailsUser from "./ModalViewDetailsUser";
+import ModalCreateNewUser from "./ModalCreateNewUser";
+import ModalUpdateUser from "./ModalUpdateUser";
 
 const UserManagement: React.FC = () => {
-  const PER_PAGE = 10;
+  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openModalViewDetailsUser, setOpenModalViewDetailsUser] =
+    useState<boolean>(false);
+  const [openModalCreateNewUser, setOpenModalCreateNewUser] =
+    useState<boolean>(false);
+  const [openModalUpdateUser, setOpenModalUpdateUser] =
+    useState<boolean>(false);
   const [selectedKeyDropdownExpand, setSelectedKeyDropdownExpand] =
     useState<string>("small");
   const [current, setCurrent] = useState<number>(
@@ -43,6 +57,17 @@ const UserManagement: React.FC = () => {
   const [search, setSearch] = useState<string>(
     searchParams.get("search") || "",
   );
+  const [filterRole, setFilterRole] = useState<string>(
+    searchParams.get("role") || "",
+  );
+  const [filterStatus, setFilterStatus] = useState<string>(
+    searchParams.get("status") || "",
+  );
+  const [sortByUpdatedAt, setSortByUpdatedAt] = useState<
+    "ascend" | "descend" | ""
+  >(searchParams.get("sortByUpdatedAt") as "ascend" | "descend" | "");
+
+  const [userData, setUserData] = useState<IUsersResponse | null>(null);
 
   const handleSearch = (value: string) => {
     setSearch(value);
@@ -54,14 +79,53 @@ const UserManagement: React.FC = () => {
     if (search === "") {
       searchParams.delete("search");
     }
+    searchParams.set("role", filterRole);
+    if (!filterRole) {
+      searchParams.delete("role");
+    }
+    searchParams.set("status", filterStatus);
+    if (!filterStatus) {
+      searchParams.delete("status");
+    }
+    searchParams.set("sortByUpdatedAt", sortByUpdatedAt || "");
+    if (!sortByUpdatedAt) {
+      searchParams.delete("sortByUpdatedAt");
+    }
     searchParams.set("current", current.toString());
     searchParams.set("pageSize", pageSize.toString());
     setSearchParams(searchParams);
-  }, [current, pageSize, search, searchParams, setSearchParams]);
+  }, [
+    current,
+    pageSize,
+    search,
+    filterRole,
+    searchParams,
+    sortByUpdatedAt,
+    filterStatus,
+    setSearchParams,
+  ]);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["users", current, pageSize, search],
+  const { data, isFetching } = useQuery({
+    queryKey: [
+      "users",
+      current,
+      pageSize,
+      search,
+      filterRole,
+      filterStatus,
+      sortByUpdatedAt,
+    ],
     queryFn: () => getUsersService(`?${searchParams.toString()}`),
+  });
+
+  const { data: dataAllRoles } = useQuery({
+    queryKey: ["allRoles"],
+    queryFn: async () => {
+      const response = await getAllRolesService();
+      return response.data;
+    },
+    select: (data) =>
+      data?.map((item) => ({ label: item.name, value: item.id })),
   });
 
   const columns: TableColumnsType<IUsersResponse> = [
@@ -81,8 +145,8 @@ const UserManagement: React.FC = () => {
       dataIndex: "name",
       key: "name",
       render: (_, record) => (
-        <Space size={"middle"}>
-          <Avatar src={record.avatar || undefined} />
+        <Space size={"small"}>
+          <AvatarComponent src={record.avatar} size={35} />
           <span>{record.name}</span>
         </Space>
       ),
@@ -96,12 +160,22 @@ const UserManagement: React.FC = () => {
       title: "Vai trò",
       dataIndex: "role",
       key: "role",
+      filters: dataAllRoles?.map((item) => ({
+        text: item.label,
+        value: item.value,
+      })),
+      filterMultiple: false,
+      filteredValue: filterRole ? [filterRole] : null,
       render: (_, record) => <span>{record?.role?.name}</span>,
     },
     {
       title: "Trạng thái",
       dataIndex: "active",
       key: "active",
+      width: 120,
+      filterMultiple: false,
+      filters: STATUS.map((item) => ({ text: item.label, value: item.value })),
+      filteredValue: filterStatus ? [filterStatus] : null,
       render: (_, record) => (
         <Tag color={record.active ? "green" : "red"}>
           {record.active ? "Hoạt động" : "Không hoạt động"}
@@ -127,6 +201,8 @@ const UserManagement: React.FC = () => {
       title: "Thời gian cập nhập",
       dataIndex: "updated_at",
       key: "updated_at",
+      sorter: true,
+      sortOrder: sortByUpdatedAt || undefined,
       render: (updated_at) => {
         return new Date(updated_at).toLocaleString("vi-VN", {
           year: "numeric",
@@ -145,37 +221,41 @@ const UserManagement: React.FC = () => {
       width: 150,
       render: (_, record) => (
         <Space size={"middle"}>
-          <Access
-            hideChildren
-            permission={{
-              module: ALL_PERMISSIONS.USER.GET_BY_ID.module,
-              method: ALL_PERMISSIONS.USER.GET_BY_ID.method,
-              api_path: ALL_PERMISSIONS.USER.GET_BY_ID.api_path,
-            }}
-          >
-            <ViewComponent titleTooltip="Xem chi tiết" />
+          <Access hideChildren permission={ALL_PERMISSIONS.USER.GET_BY_ID}>
+            <ViewComponent
+              titleTooltip={`Xem chi tiết ${record.name}`}
+              onClick={() => {
+                setOpenModalViewDetailsUser(true);
+                setUserData(record);
+              }}
+            />
           </Access>
 
-          <Access
-            hideChildren
-            permission={{
-              module: ALL_PERMISSIONS.USER.UPDATE.module,
-              method: ALL_PERMISSIONS.USER.UPDATE.method,
-              api_path: ALL_PERMISSIONS.USER.UPDATE.api_path,
-            }}
-          >
-            <EditComponent titleTooltip="Chỉnh sửa" />
+          <Access hideChildren permission={ALL_PERMISSIONS.USER.UPDATE}>
+            <EditComponent
+              titleTooltip={`Chỉnh sửa ${record.name}`}
+              onClick={() => {
+                setOpenModalUpdateUser(true);
+                setUserData(record);
+              }}
+            />
           </Access>
 
-          <Access
-            hideChildren
-            permission={{
-              module: ALL_PERMISSIONS.USER.DELETE.module,
-              method: ALL_PERMISSIONS.USER.DELETE.method,
-              api_path: ALL_PERMISSIONS.USER.DELETE.api_path,
-            }}
-          >
-            <ActiveComponent titleTooltip="Kích hoạt" />
+          <Access hideChildren permission={ALL_PERMISSIONS.USER.UPDATE_STATUS}>
+            <ActiveComponent
+              titleTooltip={`${record.active ? "Khóa tài khoản" : "Mở tài khoản"} ${
+                record.name
+              }`}
+              defaultValue={record.active}
+              value={record.active}
+              loading={mutation.isPending}
+              onChange={(checked) => {
+                mutation.mutate({
+                  id: record.id,
+                  status: checked ? 1 : 0,
+                });
+              }}
+            />
           </Access>
         </Space>
       ),
@@ -184,6 +264,8 @@ const UserManagement: React.FC = () => {
 
   const handleOnChangeTable: TableProps<IUsersResponse>["onChange"] = (
     pagination,
+    filters,
+    sorter,
   ) => {
     if (pagination.current !== current) {
       setCurrent(pagination.current || 1);
@@ -191,7 +273,67 @@ const UserManagement: React.FC = () => {
     if (pagination.pageSize !== pageSize) {
       setPageSize(pagination.pageSize || PER_PAGE);
     }
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (key === "role") {
+          if (value && value[0]) {
+            setFilterRole(value[0] as string);
+          }
+        }
+      });
+      Object.entries(filters).forEach(([key, value]) => {
+        if (key === "active") {
+          if (value && value[0]) {
+            setFilterStatus(value[0] as string);
+          }
+        }
+      });
+    }
+    if (!filters.role) {
+      setFilterRole("");
+    }
+    if (!filters.active) {
+      setFilterStatus("");
+    }
+    if (sorter) {
+      if (!Array.isArray(sorter) && sorter.field === "updated_at") {
+        setSortByUpdatedAt(
+          sorter.order === "ascend"
+            ? "ascend"
+            : sorter.order === "descend"
+              ? "descend"
+              : "",
+        );
+      }
+      if (!Array.isArray(sorter) && !sorter.field) {
+        setSortByUpdatedAt("");
+      }
+    }
   };
+
+  const mutation = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: number }) => {
+      const res: IResponse<IUserResponse> = await updateStatusUserService(
+        id,
+        status,
+      );
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data && data.data) {
+        toast.success(data.message as string);
+        queryClient.invalidateQueries({
+          queryKey: ["users"],
+        });
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const headerTableRender: TableProps<IUsersResponse>["title"] = () => (
     <div className="flex items-center justify-between">
@@ -275,6 +417,9 @@ const UserManagement: React.FC = () => {
     setCurrent(1);
     setPageSize(PER_PAGE);
     setSearch("");
+    setFilterRole("");
+    setFilterStatus("");
+    setSortByUpdatedAt("");
     setSelectedKeyDropdownExpand("small");
     setCheckedList(defaultCheckedList);
   };
@@ -307,13 +452,16 @@ const UserManagement: React.FC = () => {
             size="large"
             type="primary"
           />
-          <ButtonComponent
-            text="Thêm mới"
-            textTooltip="Thêm mới người dùng"
-            icon={<FaCirclePlus className="" />}
-            size="large"
-            type="primary"
-          />
+          <Access hideChildren permission={ALL_PERMISSIONS.USER.CREATE}>
+            <ButtonComponent
+              text="Thêm mới"
+              textTooltip="Thêm mới người dùng"
+              icon={<FaCirclePlus className="" />}
+              size="large"
+              type="primary"
+              onclick={() => setOpenModalCreateNewUser(true)}
+            />
+          </Access>
           <ButtonComponent
             text=""
             textTooltip="Làm mới giá trị"
@@ -333,7 +481,7 @@ const UserManagement: React.FC = () => {
         title={headerTableRender}
         rowKey={(record) => record.id}
         loading={{
-          spinning: isLoading,
+          spinning: isFetching,
           tip: "Đang tải dữ liệu...",
         }}
         pagination={{
@@ -351,6 +499,22 @@ const UserManagement: React.FC = () => {
           pageSizeOptions: ["1", "5", "10", "20"],
         }}
         onChange={handleOnChangeTable}
+      />
+      <ModalViewDetailsUser
+        open={openModalViewDetailsUser}
+        setOpen={setOpenModalViewDetailsUser}
+        userData={userData}
+      />
+      <ModalCreateNewUser
+        open={openModalCreateNewUser}
+        setOpen={setOpenModalCreateNewUser}
+        dataAllRoles={dataAllRoles as { label: string; value: number }[]}
+      />
+      <ModalUpdateUser
+        open={openModalUpdateUser}
+        setOpen={setOpenModalUpdateUser}
+        userData={userData as IUsersResponse}
+        dataAllRoles={dataAllRoles as { label: string; value: number }[]}
       />
     </div>
   );

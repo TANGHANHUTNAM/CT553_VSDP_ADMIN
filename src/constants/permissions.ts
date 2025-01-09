@@ -34,6 +34,11 @@ export const ALL_PERMISSIONS = {
       api_path: VER + "/users/:id",
       method: "GET",
     },
+    UPDATE_STATUS: {
+      module: ALL_MODULES.USER,
+      api_path: VER + "/users/status/:id",
+      method: "PATCH",
+    },
   },
   ROLE: {
     VIEW: {

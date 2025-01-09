@@ -6,6 +6,8 @@ interface IActiveComponentProps {
   defaultValue?: boolean | undefined;
   defaultChecked?: boolean | undefined;
   loading?: boolean | undefined;
+  disabled?: boolean | undefined;
+  value?: boolean | undefined;
 }
 
 const ActiveComponent: React.FC<IActiveComponentProps> = ({
@@ -14,6 +16,8 @@ const ActiveComponent: React.FC<IActiveComponentProps> = ({
   defaultValue,
   defaultChecked,
   loading,
+  disabled,
+  value,
 }) => {
   return (
     <div>
@@ -25,6 +29,8 @@ const ActiveComponent: React.FC<IActiveComponentProps> = ({
           defaultValue={defaultValue}
           defaultChecked={defaultChecked}
           loading={loading}
+          disabled={disabled}
+          value={value}
         />
       </Tooltip>
     </div>

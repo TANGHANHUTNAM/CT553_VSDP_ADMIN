@@ -35,7 +35,7 @@ const Access: React.FC<IAccessProps> = ({
   }, [permissions, permission]);
 
   if (isChecking) {
-    return <></>;
+    return <>Loading...</>;
   }
 
   return (

@@ -14,8 +14,17 @@ import {
   GLOBAL_COLOR_TEXT_PRIMARY,
   GLOBAL_COLOR_TEXT_SECONDARY,
 } from "./constants/colorCustom";
+import "dayjs/locale/vi";
 import { loadingBarRef } from "./services/apiClient";
 import { useAppSelector } from "./hooks";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.locale("vi");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Ho_Chi_Minh");
 
 function App() {
   const queryClient = new QueryClient({
