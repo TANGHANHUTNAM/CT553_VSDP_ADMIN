@@ -72,8 +72,11 @@ function App() {
                 algorithm: true,
               },
               Table: {
-                headerBg: isDarkMode ? dark.DEFAULT : "#ededed",
+                headerBg: isDarkMode ? "" : GLOBAL_COLOR,
+                headerColor: isDarkMode ? "" : "#fff",
                 headerBorderRadius: 10,
+                headerSortActiveBg: isDarkMode ? "" : GLOBAL_COLOR,
+                headerSortHoverBg: isDarkMode ? "" : GLOBAL_COLOR,
               },
             },
           }}

@@ -1,15 +1,16 @@
 import { PAGE_NAME } from "../constants/routerIndex";
+import RoleManagement from "../features/role/RoleManagement";
 import { useDynamicTitle, useScrollTop } from "../hooks";
 import LayoutPage from "../layout/LayoutPage";
 
-interface IRolePageProps {}
-
-const RolePage: React.FC<IRolePageProps> = ({}) => {
+const RolePage: React.FC = () => {
   useDynamicTitle(PAGE_NAME.ROLE);
   useScrollTop();
   return (
     <>
-      <LayoutPage>Vai trò</LayoutPage>
+      <LayoutPage>
+        <RoleManagement />
+      </LayoutPage>
     </>
   );
 };

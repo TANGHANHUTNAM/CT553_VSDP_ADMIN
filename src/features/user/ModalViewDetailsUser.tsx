@@ -2,6 +2,7 @@ import { Descriptions, Drawer, Tag } from "antd";
 import { FaWindowClose } from "react-icons/fa";
 import AvatarComponent from "../../components/AvatarComponent";
 import { IUsersResponse } from "../../interfaces";
+import { formatDate, formatDateTime } from "../../utils/functionUtils";
 
 interface IModalViewDetailsUserProps {
   open: boolean;
@@ -64,14 +65,7 @@ const ModalViewDetailsUser: React.FC<IModalViewDetailsUserProps> = ({
             )}
           </Descriptions.Item>
           <Descriptions.Item label="Ngày Sinh">
-            {new Date(userData?.date_of_birth as string).toLocaleDateString(
-              "vi-VN",
-              {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              },
-            ) || "Chưa cập nhật"}
+            {formatDate(userData?.date_of_birth as string) || "Chưa cập nhật"}
           </Descriptions.Item>
           <Descriptions.Item label="Giới Tính">
             {userData?.gender || "Chưa cập nhật"}
@@ -96,24 +90,10 @@ const ModalViewDetailsUser: React.FC<IModalViewDetailsUserProps> = ({
             {userData?.is_external_guest ? "Có" : "Không"}
           </Descriptions.Item>
           <Descriptions.Item label="Ngày Tạo">
-            {new Date(userData?.created_at as string).toLocaleString("vi-VN", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            })}
+            {formatDateTime(userData?.created_at as string)}
           </Descriptions.Item>
           <Descriptions.Item label="Ngày Cập Nhật">
-            {new Date(userData?.updated_at as string).toLocaleString("vi-VN", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            })}
+            {formatDateTime(userData?.updated_at as string)}
           </Descriptions.Item>
         </Descriptions>
       </Drawer>

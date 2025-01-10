@@ -10,53 +10,54 @@ import {
   Tag,
 } from "antd";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { CgExport, CgImport } from "react-icons/cg";
 import { FaCirclePlus } from "react-icons/fa6";
 import { GrPowerReset } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
+import { LuFileKey2 } from "react-icons/lu";
+
 import { RiListSettingsFill } from "react-icons/ri";
 import { useSearchParams } from "react-router-dom";
-import ActiveComponent from "../../components/ActiveComponent";
-import AvatarComponent from "../../components/AvatarComponent";
 import ButtonComponent from "../../components/ButtonComponent";
 import EditComponent from "../../components/EditComponent";
 import InputSearchComponent from "../../components/InputSearchComponent";
 import TableSizeSettingComponent from "../../components/TableSizeSettingComponent";
-import ViewComponent from "../../components/ViewComponent";
 import { ALL_PERMISSIONS } from "../../constants/permissions";
 import { PER_PAGE, STATUS } from "../../constants/tableManagement";
-import { IResponse, IUserResponse, IUsersResponse } from "../../interfaces";
+import { IResponse, IRoleResponse } from "../../interfaces";
 import Access from "../../router/Access";
 import {
-  getAllRolesService,
-  getUsersService,
-  updateStatusUserService,
+  getAllRolesWithPaginationService,
+  updateStatusRoleService,
 } from "../../services";
-import ModalViewDetailsUser from "./ModalViewDetailsUser";
-import ModalCreateNewUser from "./ModalCreateNewUser";
-import ModalUpdateUser from "./ModalUpdateUser";
 import {
   colorFilterIcon,
   colorSortDownIcon,
   colorSortUpIcon,
   formatDateTime,
 } from "../../utils/functionUtils";
+import ModalCreateNewRole from "./ModalCreateNewRole";
+import ModalUpdateRole from "./ModalUpdateRole";
+import ActiveComponent from "../../components/ActiveComponent";
+import toast from "react-hot-toast";
 import {
   CaretDownFilled,
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
+import ViewComponent from "../../components/ViewComponent";
+import ModalUpdateListPermissionsRole from "./ModalUpdateListPermissionsRole";
 
-const UserManagement: React.FC = () => {
+const RoleManagement: React.FC = () => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [openModalViewDetailsUser, setOpenModalViewDetailsUser] =
+  const [openModalCreateNewRole, setOpenModalCreateNewRole] =
     useState<boolean>(false);
-  const [openModalCreateNewUser, setOpenModalCreateNewUser] =
+  const [openModalUpdateRole, setOpenModalUpdateRole] =
     useState<boolean>(false);
-  const [openModalUpdateUser, setOpenModalUpdateUser] =
-    useState<boolean>(false);
+  const [
+    openModalUpdateListPermissionsRole,
+    setOpenModalUpdateListPermissionsRole,
+  ] = useState<boolean>(false);
   const [selectedKeyDropdownExpand, setSelectedKeyDropdownExpand] =
     useState<string>("small");
   const [current, setCurrent] = useState<number>(
@@ -68,9 +69,6 @@ const UserManagement: React.FC = () => {
   const [search, setSearch] = useState<string>(
     searchParams.get("search") || "",
   );
-  const [filterRole, setFilterRole] = useState<string>(
-    searchParams.get("role") || "",
-  );
   const [filterStatus, setFilterStatus] = useState<string>(
     searchParams.get("status") || "",
   );
@@ -78,8 +76,9 @@ const UserManagement: React.FC = () => {
     "ascend" | "descend" | ""
   >(searchParams.get("sortByUpdatedAt") as "ascend" | "descend" | "");
 
-  const [userData, setUserData] = useState<IUsersResponse | null>(null);
-
+  const [dataDetailRole, setDataDetailRole] = useState<IRoleResponse | null>(
+    null,
+  );
   const handleSearch = (value: string) => {
     setSearch(value);
     setCurrent(1);
@@ -89,10 +88,6 @@ const UserManagement: React.FC = () => {
     searchParams.set("search", search);
     if (search === "") {
       searchParams.delete("search");
-    }
-    searchParams.set("role", filterRole);
-    if (!filterRole) {
-      searchParams.delete("role");
     }
     searchParams.set("status", filterStatus);
     if (!filterStatus) {
@@ -109,37 +104,50 @@ const UserManagement: React.FC = () => {
     current,
     pageSize,
     search,
-    filterRole,
-    searchParams,
     sortByUpdatedAt,
+    searchParams,
     filterStatus,
     setSearchParams,
   ]);
 
   const { data, isFetching } = useQuery({
     queryKey: [
-      "users",
+      "roles",
       current,
       pageSize,
       search,
-      filterRole,
       filterStatus,
       sortByUpdatedAt,
     ],
-    queryFn: () => getUsersService(`?${searchParams.toString()}`),
+    queryFn: () =>
+      getAllRolesWithPaginationService(`?${searchParams.toString()}`),
   });
 
-  const { data: dataAllRoles } = useQuery({
-    queryKey: ["allRoles"],
-    queryFn: async () => {
-      const response = await getAllRolesService();
-      return response.data;
+  const mutationUpdateStatusRole = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: number }) => {
+      const response: IResponse<IRoleResponse> = await updateStatusRoleService(
+        id,
+        status,
+      );
+      return response;
     },
-    select: (data) =>
-      data?.map((item) => ({ label: item.name, value: item.id })),
+    onSuccess: (data) => {
+      if (data && data.data) {
+        toast.success(data.message as string);
+        queryClient.invalidateQueries({
+          queryKey: ["roles"],
+        });
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
   });
 
-  const columns: TableColumnsType<IUsersResponse> = [
+  const columns: TableColumnsType<IRoleResponse> = [
     {
       title: "STT",
       key: "STT",
@@ -152,47 +160,26 @@ const UserManagement: React.FC = () => {
       ),
     },
     {
-      title: "Người dùng",
+      title: "Tên quyền hạn",
       dataIndex: "name",
       key: "name",
-      render: (_, record) => (
-        <Space size={"small"}>
-          <AvatarComponent src={record.avatar} size={35} />
-          <span>{record.name}</span>
-        </Space>
-      ),
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Vai trò",
-      dataIndex: "role",
-      key: "role",
-      filters: dataAllRoles?.map((item) => ({
-        text: item.label,
-        value: item.value,
-      })),
-      filterIcon: (filtered) => (
-        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
-      ),
-      filterMultiple: false,
-      filteredValue: filterRole ? [filterRole] : null,
-      render: (_, record) => <span>{record?.role?.name}</span>,
+      title: "Miêu tả",
+      dataIndex: "description",
+      key: "description",
     },
     {
       title: "Trạng thái",
       dataIndex: "active",
       key: "active",
       width: 120,
-      filterIcon: (filtered) => (
-        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
-      ),
       filterMultiple: false,
       filters: STATUS.map((item) => ({ text: item.label, value: item.value })),
       filteredValue: filterStatus ? [filterStatus] : null,
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
+      ),
       render: (_, record) => (
         <Tag color={record.active ? "green" : "red"}>
           {record.active ? "Hoạt động" : "Không hoạt động"}
@@ -230,36 +217,36 @@ const UserManagement: React.FC = () => {
       width: 150,
       render: (_, record) => (
         <Space size={"middle"}>
-          <Access hideChildren permission={ALL_PERMISSIONS.USER.GET_BY_ID}>
+          <Access
+            hideChildren
+            permission={ALL_PERMISSIONS.ROLE.UPDATE_ROLE_PERMISSION}
+          >
             <ViewComponent
-              titleTooltip={`Xem chi tiết ${record.name}`}
+              titleTooltip={`Thiết lập quyền hạn ${record.name}`}
               onClick={() => {
-                setOpenModalViewDetailsUser(true);
-                setUserData(record);
+                setOpenModalUpdateListPermissionsRole(true);
+                setDataDetailRole(record);
               }}
+              icon={<LuFileKey2 className="text-xl" />}
             />
           </Access>
-
-          <Access hideChildren permission={ALL_PERMISSIONS.USER.UPDATE}>
+          <Access hideChildren permission={ALL_PERMISSIONS.ROLE.UPDATE}>
             <EditComponent
               titleTooltip={`Chỉnh sửa ${record.name}`}
               onClick={() => {
-                setOpenModalUpdateUser(true);
-                setUserData(record);
+                setOpenModalUpdateRole(true);
+                setDataDetailRole(record);
               }}
             />
           </Access>
-
-          <Access hideChildren permission={ALL_PERMISSIONS.USER.UPDATE_STATUS}>
+          <Access hideChildren permission={ALL_PERMISSIONS.ROLE.UPDATE_STATUS}>
             <ActiveComponent
-              titleTooltip={`${record.active ? "Khóa tài khoản" : "Mở tài khoản"} ${
-                record.name
-              }`}
+              titleTooltip={record?.active ? "Tắt kích hoạt" : "Kích hoạt"}
               defaultValue={record.active}
-              value={record.active}
-              loading={mutation.isPending}
+              value={record?.active}
+              loading={mutationUpdateStatusRole.isPending}
               onChange={(checked) => {
-                mutation.mutate({
+                mutationUpdateStatusRole.mutate({
                   id: record.id,
                   status: checked ? 1 : 0,
                 });
@@ -271,7 +258,7 @@ const UserManagement: React.FC = () => {
     },
   ];
 
-  const handleOnChangeTable: TableProps<IUsersResponse>["onChange"] = (
+  const handleOnChangeTable: TableProps<IRoleResponse>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -281,28 +268,6 @@ const UserManagement: React.FC = () => {
     }
     if (pagination.pageSize !== pageSize) {
       setPageSize(pagination.pageSize || PER_PAGE);
-    }
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (key === "role") {
-          if (value && value[0]) {
-            setFilterRole(value[0] as string);
-          }
-        }
-      });
-      Object.entries(filters).forEach(([key, value]) => {
-        if (key === "active") {
-          if (value && value[0]) {
-            setFilterStatus(value[0] as string);
-          }
-        }
-      });
-    }
-    if (!filters.role) {
-      setFilterRole("");
-    }
-    if (!filters.active) {
-      setFilterStatus("");
     }
     if (sorter) {
       if (!Array.isArray(sorter) && sorter.field === "updated_at") {
@@ -318,58 +283,35 @@ const UserManagement: React.FC = () => {
         setSortByUpdatedAt("");
       }
     }
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (key === "active") {
+          if (value && value[0]) {
+            setFilterStatus(value[0] as string);
+          }
+        }
+      });
+    }
+    if (!filters.active) {
+      setFilterStatus("");
+    }
   };
 
-  const mutation = useMutation({
-    mutationFn: async ({ id, status }: { id: number; status: number }) => {
-      const res: IResponse<IUserResponse> = await updateStatusUserService(
-        id,
-        status,
-      );
-      return res;
-    },
-    onSuccess: (data) => {
-      if (data && data.data) {
-        toast.success(data.message as string);
-        queryClient.invalidateQueries({
-          queryKey: ["users"],
-        });
-      }
-      if (data && data.error) {
-        toast.error(data.message as string);
-      }
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-
-  const headerTableRender: TableProps<IUsersResponse>["title"] = () => (
-    <div className="flex items-center justify-between">
-      <div className="w-1/2 text-base font-semibold">Danh sách người dùng</div>
-      <div className="flex w-1/2 items-center justify-end space-x-2">
-        <TableSizeSettingComponent
-          items={itemsDropdownExpand}
-          onClick={(key) => setSelectedKeyDropdownExpand(key)}
-          selectedKeys={[selectedKeyDropdownExpand || "small"]}
-        />
-        {/* Setting Display Column */}
-        <Dropdown menu={menuSetting} trigger={["hover"]}>
-          <span>
-            <ButtonComponent
-              text=""
-              textTooltip="Cài đặt hiển thị cột"
-              icon={<RiListSettingsFill />}
-              size="middle"
-              type="primary"
-            />
-          </span>
-        </Dropdown>
-      </div>
-    </div>
-  );
-
   // Setting Display Column
+  const itemsDropdownExpand: MenuProps["items"] = [
+    {
+      key: "lagre",
+      label: "Kích thước bảng lớn",
+    },
+    {
+      key: "middle",
+      label: "Kích thước bảng trung bình",
+    },
+    {
+      key: "small",
+      label: "Kích thước bảng nhỏ",
+    },
+  ];
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.map((item) => ({
@@ -407,32 +349,40 @@ const UserManagement: React.FC = () => {
     ],
   };
 
-  const itemsDropdownExpand: MenuProps["items"] = [
-    {
-      key: "lagre",
-      label: "Kích thước bảng lớn",
-    },
-    {
-      key: "middle",
-      label: "Kích thước bảng trung bình",
-    },
-    {
-      key: "small",
-      label: "Kích thước bảng nhỏ",
-    },
-  ];
+  const headerTableRender: TableProps<IRoleResponse>["title"] = () => (
+    <div className="flex items-center justify-between">
+      <div className="w-1/2 text-base font-semibold">Danh sách vai trò</div>
+      <div className="flex w-1/2 items-center justify-end space-x-2">
+        <TableSizeSettingComponent
+          items={itemsDropdownExpand}
+          onClick={(key) => setSelectedKeyDropdownExpand(key)}
+          selectedKeys={[selectedKeyDropdownExpand || "small"]}
+        />
+        {/* Setting Display Column */}
+        <Dropdown menu={menuSetting} trigger={["hover"]}>
+          <span>
+            <ButtonComponent
+              text=""
+              textTooltip="Cài đặt hiển thị cột"
+              icon={<RiListSettingsFill />}
+              size="middle"
+              type="primary"
+            />
+          </span>
+        </Dropdown>
+      </div>
+    </div>
+  );
 
   const handleReset = () => {
     setCurrent(1);
     setPageSize(PER_PAGE);
     setSearch("");
-    setFilterRole("");
     setFilterStatus("");
     setSortByUpdatedAt("");
     setSelectedKeyDropdownExpand("small");
     setCheckedList(defaultCheckedList);
   };
-
   return (
     <>
       <div className="mb-4 flex items-center justify-between">
@@ -447,28 +397,14 @@ const UserManagement: React.FC = () => {
           />
         </div>
         <div className="flex w-1/2 items-center justify-end space-x-2">
-          <ButtonComponent
-            text="Xuất file"
-            textTooltip="Xuất danh sách người dùng"
-            icon={<CgExport className="" />}
-            size="large"
-            type="primary"
-          />
-          <ButtonComponent
-            text="Nhập file"
-            textTooltip="Thêm danh sách người dùng"
-            icon={<CgImport className="" />}
-            size="large"
-            type="primary"
-          />
-          <Access hideChildren permission={ALL_PERMISSIONS.PERMISSION.CREATE}>
+          <Access hideChildren permission={ALL_PERMISSIONS.ROLE.CREATE}>
             <ButtonComponent
               text="Thêm mới"
-              textTooltip="Thêm mới người dùng"
+              textTooltip="Thêm mới vai trò"
               icon={<FaCirclePlus className="" />}
               size="large"
               type="primary"
-              onclick={() => setOpenModalCreateNewUser(true)}
+              onclick={() => setOpenModalCreateNewRole(true)}
             />
           </Access>
           <ButtonComponent
@@ -482,13 +418,13 @@ const UserManagement: React.FC = () => {
         </div>
       </div>
 
-      <Table<IUsersResponse>
+      <Table<IRoleResponse>
         columns={newColumns}
-        dataSource={data?.data?.users || []}
+        dataSource={data?.data?.roles || []}
         size={selectedKeyDropdownExpand as "large" | "middle" | "small"}
         bordered
         title={headerTableRender}
-        rowKey={(record) => record.id}
+        rowKey={(record) => record.id as number}
         loading={{
           spinning: isFetching,
           tip: "Đang tải dữ liệu...",
@@ -497,7 +433,7 @@ const UserManagement: React.FC = () => {
           current,
           pageSize,
           total: data?.data?.pagination?.totalRecords,
-          showTotal: (total) => `Tổng ${total} người dùng`,
+          showTotal: (total) => `Tổng ${total} vai trò`,
           showSizeChanger: true,
           onShowSizeChange(current, pageSize) {
             if (pageSize !== current) {
@@ -509,24 +445,22 @@ const UserManagement: React.FC = () => {
         }}
         onChange={handleOnChangeTable}
       />
-      <ModalViewDetailsUser
-        open={openModalViewDetailsUser}
-        setOpen={setOpenModalViewDetailsUser}
-        userData={userData}
+      <ModalCreateNewRole
+        open={openModalCreateNewRole}
+        setOpen={setOpenModalCreateNewRole}
       />
-      <ModalCreateNewUser
-        open={openModalCreateNewUser}
-        setOpen={setOpenModalCreateNewUser}
-        dataAllRoles={dataAllRoles as { label: string; value: number }[]}
+      <ModalUpdateRole
+        open={openModalUpdateRole}
+        setOpen={setOpenModalUpdateRole}
+        dataDetailRole={dataDetailRole}
       />
-      <ModalUpdateUser
-        open={openModalUpdateUser}
-        setOpen={setOpenModalUpdateUser}
-        userData={userData as IUsersResponse}
-        dataAllRoles={dataAllRoles as { label: string; value: number }[]}
+      <ModalUpdateListPermissionsRole
+        open={openModalUpdateListPermissionsRole}
+        setOpen={setOpenModalUpdateListPermissionsRole}
+        dataDetailRole={dataDetailRole}
       />
     </>
   );
 };
 
-export default UserManagement;
+export default RoleManagement;

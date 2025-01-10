@@ -31,18 +31,17 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
       data: IDataUserUpdateRequest;
     }) => {
       const response = await updateUserService(id, data);
-      console.log("response", response);
       return response;
     },
     onSuccess: (data) => {
       if (data && data.data) {
-        queryClient.invalidateQueries({ queryKey: ["users"] });
         toast.success(data.message as string);
         setOpen(false);
       }
       if (data && data.error) {
         toast.error(data.message as string);
       }
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
 
@@ -60,7 +59,7 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
         width={1000}
         maskClosable={false}
         afterOpenChange={(open) => {
-          if (open) {
+          if (open && userData) {
             form.setFieldsValue({
               ...userData,
             });
@@ -114,7 +113,7 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
                 { required: true, message: "Vai trò không được để trống" },
               ]}
             >
-              <Select disabled options={dataAllRoles} />
+              <Select options={dataAllRoles} />
             </Form.Item>
           </Col>
         </Row>
@@ -127,12 +126,12 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
                 { required: true, message: "Họ tên không được để trống" },
               ]}
             >
-              <Input />
+              <Input placeholder="Họ tên" />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name="phone_number" label="Số điện thoại">
-              <Input />
+              <Input placeholder="Số điện thoại" />
             </Form.Item>
           </Col>
         </Row>
@@ -148,36 +147,40 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
                 value ? value.tz("UTC", true).toISOString() : null
               }
             >
-              <DatePicker format={"DD/MM/YYYY"} style={{ width: "100%" }} />
+              <DatePicker
+                placeholder="Chọn ngày sinh"
+                format={"DD/MM/YYYY"}
+                style={{ width: "100%" }}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name="gender" label="Giới tính">
-              <Select options={GENDER} />
+              <Select placeholder="Chọn giới tính" options={GENDER} />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item name="generation" label="Thế hệ">
-              <Input />
+              <Input placeholder="Thế hệ" />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name="school" label="Trường học">
-              <Input />
+              <Input placeholder="Trường học" />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item name="major" label="Ngành học">
-              <Input />
+              <Input placeholder="Ngành học" />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name="company" label="Công ty">
-              <Input />
+              <Input placeholder="Cônng ty" />
             </Form.Item>
           </Col>
         </Row>
@@ -185,6 +188,7 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
           <Col span={12}>
             <Form.Item name="is_external_guest" label="Khách mời">
               <Select
+                placeholder="Khách mời"
                 options={[
                   { label: "Có", value: true },
                   { label: "Không", value: false },

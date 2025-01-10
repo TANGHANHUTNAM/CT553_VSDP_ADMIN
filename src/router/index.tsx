@@ -46,14 +46,7 @@ export const routerCustom: CustomRouteObject[] = [
       {
         path: ROUTER_URL.USER_PAGE,
         element: (
-          <Access
-            permission={{
-              module: ALL_PERMISSIONS.USER.VIEW.module,
-              api_path: ALL_PERMISSIONS.USER.VIEW.api_path,
-              method: ALL_PERMISSIONS.USER.VIEW.method,
-            }}
-            hideChildren={false}
-          >
+          <Access permission={ALL_PERMISSIONS.USER.VIEW} hideChildren={false}>
             <UserPage />
           </Access>
         ),
@@ -62,14 +55,7 @@ export const routerCustom: CustomRouteObject[] = [
       {
         path: ROUTER_URL.ROLE_PAGE,
         element: (
-          <Access
-            permission={{
-              module: ALL_PERMISSIONS.ROLE.VIEW.module,
-              api_path: ALL_PERMISSIONS.ROLE.VIEW.api_path,
-              method: ALL_PERMISSIONS.ROLE.VIEW.method,
-            }}
-            hideChildren={false}
-          >
+          <Access permission={ALL_PERMISSIONS.ROLE.VIEW} hideChildren={false}>
             <RolePage />
           </Access>
         ),

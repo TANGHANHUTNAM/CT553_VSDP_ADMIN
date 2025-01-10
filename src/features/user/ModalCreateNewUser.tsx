@@ -21,7 +21,6 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
   const mutateCreateUser = useMutation({
     mutationFn: async (data: IDataUserCreateRequest) => {
       const response = await createUserService(data);
-      console.log("response", response);
       return response;
     },
     onSuccess: (data) => {
@@ -74,7 +73,7 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
           label="Họ tên"
           rules={[{ required: true, message: "Họ tên không được để trống" }]}
         >
-          <Input />
+          <Input placeholder="Họ tên" />
         </Form.Item>
         <Form.Item
           name="email"
@@ -90,14 +89,14 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Email" />
         </Form.Item>
         <Form.Item
           name="roleId"
           label="Vai trò"
           rules={[{ required: true, message: "Vai trò không được để trống" }]}
         >
-          <Select options={dataAllRoles} />
+          <Select placeholder="Chọn vai trò" options={dataAllRoles} />
         </Form.Item>
       </Modal>
     </>
