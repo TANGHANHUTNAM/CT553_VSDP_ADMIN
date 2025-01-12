@@ -25,7 +25,7 @@ import InputSearchComponent from "../../components/InputSearchComponent";
 import TableSizeSettingComponent from "../../components/TableSizeSettingComponent";
 import ViewComponent from "../../components/ViewComponent";
 import { ALL_PERMISSIONS } from "../../constants/permissions";
-import { PER_PAGE, STATUS } from "../../constants/tableManagement";
+import { PER_PAGE, SIZE_TABLE, STATUS } from "../../constants/tableManagement";
 import { IResponse, IUserResponse, IUsersResponse } from "../../interfaces";
 import Access from "../../router/Access";
 import {
@@ -41,6 +41,7 @@ import {
   colorSortDownIcon,
   colorSortUpIcon,
   formatDateTime,
+  paginationOptions,
 } from "../../utils/functionUtils";
 import {
   CaretDownFilled,
@@ -157,7 +158,7 @@ const UserManagement: React.FC = () => {
       key: "name",
       render: (_, record) => (
         <Space size={"small"}>
-          <AvatarComponent src={record.avatar} size={35} />
+          <AvatarComponent src={record.avatar_url} size={35} />
           <span>{record.name}</span>
         </Space>
       ),
@@ -407,20 +408,7 @@ const UserManagement: React.FC = () => {
     ],
   };
 
-  const itemsDropdownExpand: MenuProps["items"] = [
-    {
-      key: "lagre",
-      label: "Kích thước bảng lớn",
-    },
-    {
-      key: "middle",
-      label: "Kích thước bảng trung bình",
-    },
-    {
-      key: "small",
-      label: "Kích thước bảng nhỏ",
-    },
-  ];
+  const itemsDropdownExpand: MenuProps["items"] = SIZE_TABLE;
 
   const handleReset = () => {
     setCurrent(1);
@@ -493,20 +481,14 @@ const UserManagement: React.FC = () => {
           spinning: isFetching,
           tip: "Đang tải dữ liệu...",
         }}
-        pagination={{
+        pagination={paginationOptions(
           current,
+          setCurrent,
           pageSize,
-          total: data?.data?.pagination?.totalRecords,
-          showTotal: (total) => `Tổng ${total} người dùng`,
-          showSizeChanger: true,
-          onShowSizeChange(current, pageSize) {
-            if (pageSize !== current) {
-              setCurrent(1);
-            }
-            setPageSize(pageSize);
-          },
-          pageSizeOptions: ["1", "5", "10", "20"],
-        }}
+          setPageSize,
+          data?.data?.pagination.totalRecords || 0,
+          "người dùng",
+        )}
         onChange={handleOnChangeTable}
       />
       <ModalViewDetailsUser

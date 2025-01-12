@@ -12,7 +12,7 @@ import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
-import { FaUser, FaUserCircle, FaUsers } from "react-icons/fa";
+import { FaUser, FaUsers } from "react-icons/fa";
 import { GrShieldSecurity } from "react-icons/gr";
 import { IoMdSettings } from "react-icons/io";
 import { IoKey } from "react-icons/io5";
@@ -27,6 +27,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 import logo from "../assets/logo.png";
+import AvatarComponent from "../components/AvatarComponent";
+import BackToTop from "../components/BackToTop";
 import BreadCrumbComponent from "../components/BreadCrumbComponent";
 import { ALL_PERMISSIONS } from "../constants/permissions";
 import { ROUTER_URL } from "../constants/routerIndex";
@@ -72,8 +74,8 @@ const LayoutAdmin: React.FC = () => {
       const hasAuthChildren: boolean = Boolean(
         viewUser || viewRole || viewPermission,
       );
-      // Hệ thống quản lý form
 
+      // Hệ thống quản lý form
       const menu_full = [
         {
           label: <NavLink to={ROUTER_URL.DASHBOARD_PAGE}>Dashboard</NavLink>,
@@ -143,6 +145,7 @@ const LayoutAdmin: React.FC = () => {
     bottom: 0,
     scrollbarWidth: "thin",
     scrollbarColor: "light",
+    boxShadow: "6px 0 6px -5px rgba(0, 0, 0, 0.1)",
   };
 
   const headerStyle: React.CSSProperties = {
@@ -153,6 +156,7 @@ const LayoutAdmin: React.FC = () => {
     insetInlineStart: collapsed ? 80 : 230,
     top: 0,
     right: 0,
+    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
   };
 
   const items: MenuProps["items"] = [
@@ -164,7 +168,7 @@ const LayoutAdmin: React.FC = () => {
             to={ROUTER_URL.PROFILE_PAGE}
             className="flex items-center gap-3 text-black"
           >
-            <Avatar size={34} src={user?.avatar || undefined} />
+            <AvatarComponent size={35} src={user?.avatar_url || undefined} />
             <span className="flex w-20 flex-col justify-start gap-1">
               <p className="overflow-hidden text-ellipsis text-sm">
                 {user?.email || "username@g.commmm"}
@@ -191,13 +195,16 @@ const LayoutAdmin: React.FC = () => {
       icon: <IoMdSettings className="" />,
     },
     {
+      type: "divider",
+    },
+    {
+      style: { color: "#ed4444" },
       key: "/logout",
       label: (
         <span
           onClick={() => {
             handleLogout();
           }}
-          className=""
         >
           Đăng xuất
         </span>
@@ -231,7 +238,7 @@ const LayoutAdmin: React.FC = () => {
     <Layout className="min-h-screen">
       <Sider
         style={siderStyle}
-        className="shadow-sm"
+        className="shadow-2xl"
         width={230}
         trigger={null}
         collapsible
@@ -258,7 +265,7 @@ const LayoutAdmin: React.FC = () => {
       >
         <Header
           style={headerStyle}
-          className="shadow-sm transition-all duration-200"
+          className="shadow-2xl transition-all duration-200"
         >
           <div className="flex min-h-full items-center justify-between">
             {/* Collapse */}
@@ -288,17 +295,11 @@ const LayoutAdmin: React.FC = () => {
                 }}
                 overlayStyle={{}}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex cursor-pointer items-center gap-2">
                   <div className="flex font-medium">
                     {user?.name || "Họ tên"}
                   </div>
-                  <Button
-                    type="text"
-                    icon={<FaUserCircle />}
-                    style={{
-                      fontSize: "30px",
-                    }}
-                  />
+                  <AvatarComponent src={user?.avatar_url} size={40} />
                 </div>
               </Dropdown>
             </div>
@@ -306,6 +307,7 @@ const LayoutAdmin: React.FC = () => {
         </Header>
         <Layout.Content className="bg-[#F5F5F5] p-3 dark:bg-transparent">
           <div className="mt-[64px] overflow-auto">
+            <BackToTop />
             <BreadCrumbComponent routes={routerCustom} />
             <Outlet />
           </div>

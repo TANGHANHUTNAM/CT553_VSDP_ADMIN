@@ -107,7 +107,7 @@ const ModalUpdateListPermissionsRole: React.FC<
     setTimeout(() => {
       setSelectedRowKeys([]);
       setLoading(false);
-    }, 1000);
+    }, 500);
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {

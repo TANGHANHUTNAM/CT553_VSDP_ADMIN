@@ -22,7 +22,7 @@ import EditComponent from "../../components/EditComponent";
 import InputSearchComponent from "../../components/InputSearchComponent";
 import TableSizeSettingComponent from "../../components/TableSizeSettingComponent";
 import { ALL_PERMISSIONS } from "../../constants/permissions";
-import { PER_PAGE, STATUS } from "../../constants/tableManagement";
+import { PER_PAGE, SIZE_TABLE, STATUS } from "../../constants/tableManagement";
 import { IResponse, IRoleResponse } from "../../interfaces";
 import Access from "../../router/Access";
 import {
@@ -34,6 +34,7 @@ import {
   colorSortDownIcon,
   colorSortUpIcon,
   formatDateTime,
+  paginationOptions,
 } from "../../utils/functionUtils";
 import ModalCreateNewRole from "./ModalCreateNewRole";
 import ModalUpdateRole from "./ModalUpdateRole";
@@ -298,20 +299,7 @@ const RoleManagement: React.FC = () => {
   };
 
   // Setting Display Column
-  const itemsDropdownExpand: MenuProps["items"] = [
-    {
-      key: "lagre",
-      label: "Kích thước bảng lớn",
-    },
-    {
-      key: "middle",
-      label: "Kích thước bảng trung bình",
-    },
-    {
-      key: "small",
-      label: "Kích thước bảng nhỏ",
-    },
-  ];
+  const itemsDropdownExpand: MenuProps["items"] = SIZE_TABLE;
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.map((item) => ({
@@ -429,20 +417,14 @@ const RoleManagement: React.FC = () => {
           spinning: isFetching,
           tip: "Đang tải dữ liệu...",
         }}
-        pagination={{
+        pagination={paginationOptions(
           current,
+          setCurrent,
           pageSize,
-          total: data?.data?.pagination?.totalRecords,
-          showTotal: (total) => `Tổng ${total} vai trò`,
-          showSizeChanger: true,
-          onShowSizeChange(current, pageSize) {
-            if (pageSize !== current) {
-              setCurrent(1);
-            }
-            setPageSize(pageSize);
-          },
-          pageSizeOptions: ["1", "5", "10", "20"],
-        }}
+          setPageSize,
+          data?.data?.pagination.totalRecords || 0,
+          "vai trò",
+        )}
         onChange={handleOnChangeTable}
       />
       <ModalCreateNewRole

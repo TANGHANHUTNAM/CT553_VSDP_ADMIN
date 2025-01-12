@@ -83,6 +83,9 @@ const ModalViewDetailsUser: React.FC<IModalViewDetailsUserProps> = ({
           <Descriptions.Item label="Ngành Học">
             {userData?.major || "Chưa cập nhật"}
           </Descriptions.Item>
+          <Descriptions.Item label="Nghề nghiệp">
+            {userData?.job_title || "Chưa cập nhật"}
+          </Descriptions.Item>
           <Descriptions.Item label="Công Ty">
             {userData?.company || "Chưa cập nhật"}
           </Descriptions.Item>

@@ -179,19 +179,24 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="company" label="Công ty">
-              <Input placeholder="Cônng ty" />
+            <Form.Item name="job_title" label="Nghề nghiệp">
+              <Input placeholder="Nghề nghiệp" />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col span={12}>
+            <Form.Item name="company" label="Công ty">
+              <Input placeholder="Cônng ty" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
             <Form.Item name="is_external_guest" label="Khách mời">
               <Select
                 placeholder="Khách mời"
                 options={[
-                  { label: "Có", value: true },
-                  { label: "Không", value: false },
+                  { label: "Là khách mời", value: true },
+                  { label: "Không là khách mời", value: false },
                 ]}
               />
             </Form.Item>

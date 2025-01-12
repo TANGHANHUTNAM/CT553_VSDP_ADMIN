@@ -1,6 +1,7 @@
 import {
   IDataUserCreateRequest,
   IDataUsersResponse,
+  IDataUserUpdateProfileRequest,
   IDataUserUpdateRequest,
   IResponse,
   IUserResponse,
@@ -33,4 +34,22 @@ export const updateStatusUserService = async (
   return await axiosClient.patch(`/users/status/${id}`, {
     status,
   });
+};
+
+export const getUserProfileService = async (): Promise<
+  IResponse<IUsersResponse>
+> => {
+  return await axiosClient.get("/users/me/profile");
+};
+
+export const updateProfileService = async (
+  data: IDataUserUpdateProfileRequest,
+): Promise<IResponse<IUsersResponse>> => {
+  return await axiosClient.patch("/users/me/profile", data);
+};
+
+export const updateAvatarProfileService = async (
+  data: FormData,
+): Promise<IResponse<IUsersResponse>> => {
+  return await axiosClient.patch("/users/upload/avatar", data);
 };

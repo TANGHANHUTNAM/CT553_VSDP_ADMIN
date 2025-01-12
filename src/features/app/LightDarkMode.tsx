@@ -19,7 +19,11 @@ const LightDarkMode: React.FC = () => {
   }, [isDarkMode]);
 
   return (
-    <Tooltip title={`${isDarkMode ? "Giao diện tối" : "Giao diện sáng"}`}>
+    <Tooltip
+      mouseLeaveDelay={0.1}
+      mouseEnterDelay={0.1}
+      title={`${isDarkMode ? "Giao diện tối" : "Giao diện sáng"}`}
+    >
       <button
         className="rounded-full p-2"
         onClick={() => {

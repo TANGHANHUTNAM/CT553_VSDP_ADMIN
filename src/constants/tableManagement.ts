@@ -25,3 +25,18 @@ export const STATUS = [
     label: "Không hoạt động",
   },
 ];
+
+export const SIZE_TABLE = [
+  {
+    key: "lagre",
+    label: "Kích thước bảng lớn",
+  },
+  {
+    key: "middle",
+    label: "Kích thước bảng trung bình",
+  },
+  {
+    key: "small",
+    label: "Kích thước bảng nhỏ",
+  },
+];

@@ -1,4 +1,4 @@
-import { SortOrder } from "antd/es/table/interface";
+import { SortOrder, TablePaginationConfig } from "antd/es/table/interface";
 
 export const colorMethod = (
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
@@ -48,4 +48,28 @@ export const colorSortUpIcon = (sortOrder: SortOrder | undefined) => {
 
 export const colorSortDownIcon = (sortOrder: SortOrder | undefined) => {
   return sortOrder === "descend" ? "#155BD3" : "#fff";
+};
+
+export const paginationOptions = (
+  current: number,
+  setCurrent: (value: number) => void,
+  pageSize: number,
+  setPageSize: (value: number) => void,
+  total: number | 0,
+  showTitle?: string,
+) => {
+  return {
+    current,
+    pageSize,
+    total: total,
+    showTotal: (total) => `Tổng ${total} ${showTitle}`,
+    showSizeChanger: true,
+    onShowSizeChange(current, pageSize) {
+      if (pageSize !== current) {
+        setCurrent(1);
+      }
+      setPageSize(pageSize);
+    },
+    pageSizeOptions: ["5", "10", "20", "50"],
+  } as TablePaginationConfig | undefined;
 };

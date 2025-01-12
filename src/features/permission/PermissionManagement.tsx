@@ -24,7 +24,7 @@ import {
   dataMethod,
   dataModule,
 } from "../../constants/permissions";
-import { PER_PAGE } from "../../constants/tableManagement";
+import { PER_PAGE, SIZE_TABLE } from "../../constants/tableManagement";
 import { IPermissionResponse } from "../../interfaces";
 import Access from "../../router/Access";
 import {
@@ -37,6 +37,7 @@ import {
   colorSortDownIcon,
   colorSortUpIcon,
   formatDateTime,
+  paginationOptions,
 } from "../../utils/functionUtils";
 import ModalCreateNewPermission from "./ModalCreateNewPermission";
 import ModalUpdatePermission from "./ModalUpdatePermission";
@@ -211,15 +212,15 @@ const PermissionManagement: React.FC = () => {
       ),
     },
     {
+      title: "Miêu tả",
+      key: "name",
+      dataIndex: "name",
+    },
+    {
       title: "Api Path",
       key: "api_path",
       dataIndex: "api_path",
       width: "15%",
-    },
-    {
-      title: "Miêu tả",
-      key: "name",
-      dataIndex: "name",
     },
     {
       title: "Method",
@@ -302,20 +303,7 @@ const PermissionManagement: React.FC = () => {
   ];
 
   // Setting Display Column
-  const itemsDropdownExpand: MenuProps["items"] = [
-    {
-      key: "lagre",
-      label: "Kích thước bảng lớn",
-    },
-    {
-      key: "middle",
-      label: "Kích thước bảng trung bình",
-    },
-    {
-      key: "small",
-      label: "Kích thước bảng nhỏ",
-    },
-  ];
+  const itemsDropdownExpand: MenuProps["items"] = SIZE_TABLE;
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.map((item) => ({
@@ -435,20 +423,14 @@ const PermissionManagement: React.FC = () => {
           spinning: isFetching,
           tip: "Đang tải dữ liệu...",
         }}
-        pagination={{
+        pagination={paginationOptions(
           current,
+          setCurrent,
           pageSize,
-          total: data?.data?.pagination?.totalRecords,
-          showTotal: (total) => `Tổng ${total} quyền hạn`,
-          showSizeChanger: true,
-          onShowSizeChange(current, pageSize) {
-            if (pageSize !== current) {
-              setCurrent(1);
-            }
-            setPageSize(pageSize);
-          },
-          pageSizeOptions: ["1", "5", "10", "20"],
-        }}
+          setPageSize,
+          data?.data?.pagination.totalRecords || 0,
+          "quyền hạn",
+        )}
         onChange={handleOnChangeTable}
       />
       <ModalCreateNewPermission

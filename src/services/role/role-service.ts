@@ -2,7 +2,6 @@ import {
   IDataRoleCreateRequest,
   IDataRolesResponse,
   IDataRoleUpdateRequest,
-  IPermissionResponse,
   IResponse,
   IRoleResponse,
   IRolesResponse,

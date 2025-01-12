@@ -9,12 +9,16 @@ export interface IUserResponse {
     date_of_birth: string;
     gender: string;
     phone_number: string;
-    avatar: string;
+    avatar_url: string;
+    public_id: string;
     generation: string;
     school: string;
     major: string;
     company: string;
     is_external_guest: boolean;
+    job_title: string;
+    start_date: string;
+    end_date: string;
     active: boolean;
     roleId: number;
     role: IUserRoleResponse;
@@ -38,7 +42,8 @@ export interface IUsersResponse {
   date_of_birth: string | null;
   gender: string | null;
   phone_number: string | null;
-  avatar: string | null;
+  avatar_url: string | null;
+  public_id: string | null;
   generation: string | null;
   school: string | null;
   major: string | null;
@@ -47,6 +52,9 @@ export interface IUsersResponse {
   is_external_guest: boolean;
   created_at: string;
   updated_at: string;
+  job_title: string | null;
+  start_date: string | null;
+  end_date: string | null;
   roleId: number;
   role: IUserRoleResponse | null;
 }
@@ -74,4 +82,17 @@ export interface IDataUserUpdateRequest {
   major: string;
   company: string;
   is_external_guest: boolean;
+  job_title: string;
+}
+
+export interface IDataUserUpdateProfileRequest {
+  name: string;
+  date_of_birth: string;
+  company: string;
+  gender: string;
+  genderation: string;
+  job_title: string;
+  major: string;
+  phone_number: string;
+  school: string;
 }
