@@ -79,6 +79,9 @@ const UploadAvatar: React.FC<IUploadAvatarProps> = ({ dataUserProfile }) => {
         toast.error(data.message as string);
       }
     },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
   });
 
   const handleUpload = async () => {

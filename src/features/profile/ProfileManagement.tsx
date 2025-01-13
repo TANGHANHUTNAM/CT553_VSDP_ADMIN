@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, Col, Row, Tabs, Tag } from "antd";
 import { getUserProfileService } from "../../services";
-import { formatDate } from "../../utils/functionUtils";
+import { formatDate, formatGender } from "../../utils/functionUtils";
 import ProfileDetails from "./ProfileDetails";
 import UpdateProfile from "./UpdateProfile";
 import UploadAvatar from "./UploadAvatar";
@@ -44,16 +44,19 @@ const ProfileManagement: React.FC = () => {
         {/* User Info */}
         <Col span={20}>
           <Row gutter={16}>
-            <Col span={8}>
+            <Col span={24}>
               <div className="mb-4">
                 <Tag className="font-semibold uppercase" color="green">
-                  {dataUserProfile?.data?.active ? "Active" : "Inactive"}
+                  {dataUserProfile?.data?.active
+                    ? "Hoạt động"
+                    : "Không hoạt động"}
                 </Tag>
                 {dataUserProfile?.data?.active &&
-                  dataUserProfile?.data?.start_date && (
+                  dataUserProfile?.data?.start_date &&
+                  dataUserProfile?.data?.end_date && (
                     <span className="">
-                      {dataUserProfile?.data?.start_date} -{" "}
-                      {dataUserProfile?.data?.end_date}
+                      {formatDate(dataUserProfile?.data?.start_date)} -{" "}
+                      {formatDate(dataUserProfile?.data?.end_date)}
                     </span>
                   )}
               </div>
@@ -67,7 +70,7 @@ const ProfileManagement: React.FC = () => {
               </p>
               <p>
                 <span className="text-gray-400">Giới tính: </span>
-                {dataUserProfile?.data?.gender}
+                {formatGender(dataUserProfile?.data?.gender || "")}
               </p>
             </Col>
             <Col span={8}>
@@ -87,9 +90,7 @@ const ProfileManagement: React.FC = () => {
               </p>
               <p>
                 <span className="text-gray-400">Số điện thoại: </span>
-                <a href={`tel:${dataUserProfile?.data?.phone_number}`}>
-                  {dataUserProfile?.data?.phone_number}
-                </a>
+                {dataUserProfile?.data?.phone_number || "Chưa cập nhật"}
               </p>
             </Col>
           </Row>

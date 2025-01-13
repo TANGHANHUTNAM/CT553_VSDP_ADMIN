@@ -68,6 +68,8 @@ export interface IDataUserCreateRequest {
   name: string;
   email: string;
   roleId: number;
+  start_date: string;
+  end_date: string;
 }
 
 export interface IDataUserUpdateRequest {
@@ -83,6 +85,8 @@ export interface IDataUserUpdateRequest {
   company: string;
   is_external_guest: boolean;
   job_title: string;
+  start_date: string;
+  end_date: string;
 }
 
 export interface IDataUserUpdateProfileRequest {

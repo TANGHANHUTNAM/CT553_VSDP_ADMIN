@@ -32,6 +32,9 @@ const ModalCreateNewPermission: React.FC<IModalCreateNewPermissionProps> = ({
         toast.error(data.message as string);
       }
     },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
   });
 
   const onCreate = (data: IDataPermissionRequest) => {

@@ -53,3 +53,9 @@ export const updateAvatarProfileService = async (
 ): Promise<IResponse<IUsersResponse>> => {
   return await axiosClient.patch("/users/upload/avatar", data);
 };
+
+export const createListUsersService = async (
+  users: IDataUserCreateRequest[],
+): Promise<IResponse<IDataUserCreateRequest[]>> => {
+  return await axiosClient.post("/users/batch", { users });
+};

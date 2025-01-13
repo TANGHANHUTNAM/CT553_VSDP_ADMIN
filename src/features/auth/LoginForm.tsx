@@ -39,6 +39,7 @@ const LoginForm: React.FC = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau");
     }
     setIsLoading(false);
   };

@@ -11,6 +11,7 @@ interface IButtonComponentProps {
   htmlType?: "button" | "submit" | "reset" | undefined;
   loading?: boolean;
   onclick?: () => void;
+  danger?: boolean;
 }
 
 const ButtonComponent: React.FC<IButtonComponentProps> = ({
@@ -23,6 +24,7 @@ const ButtonComponent: React.FC<IButtonComponentProps> = ({
   htmlType,
   loading,
   onclick,
+  danger,
 }) => {
   return (
     <>
@@ -35,6 +37,7 @@ const ButtonComponent: React.FC<IButtonComponentProps> = ({
           htmlType={htmlType}
           loading={loading}
           onClick={onclick}
+          danger={danger}
         >
           {text}
         </Button>

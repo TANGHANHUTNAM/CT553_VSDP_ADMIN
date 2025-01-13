@@ -48,6 +48,7 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
+import ModalImportListUser from "./ModalImportListUser";
 
 const UserManagement: React.FC = () => {
   const queryClient = useQueryClient();
@@ -57,6 +58,9 @@ const UserManagement: React.FC = () => {
   const [openModalCreateNewUser, setOpenModalCreateNewUser] =
     useState<boolean>(false);
   const [openModalUpdateUser, setOpenModalUpdateUser] =
+    useState<boolean>(false);
+
+  const [openModalImportListUser, setOpenModalImportListUser] =
     useState<boolean>(false);
   const [selectedKeyDropdownExpand, setSelectedKeyDropdownExpand] =
     useState<string>("small");
@@ -201,11 +205,11 @@ const UserManagement: React.FC = () => {
       ),
     },
     {
-      title: "Thời gian tạo",
-      dataIndex: "created_at",
-      key: "created_at",
-      render: (created_at) => {
-        return formatDateTime(created_at);
+      title: "Ngày hết hạn",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (end_date) => {
+        return formatDateTime(end_date);
       },
     },
     {
@@ -442,14 +446,20 @@ const UserManagement: React.FC = () => {
             size="large"
             type="primary"
           />
-          <ButtonComponent
-            text="Nhập file"
-            textTooltip="Thêm danh sách người dùng"
-            icon={<CgImport className="" />}
-            size="large"
-            type="primary"
-          />
-          <Access hideChildren permission={ALL_PERMISSIONS.PERMISSION.CREATE}>
+          <Access
+            hideChildren
+            permission={ALL_PERMISSIONS.USER.CREATE_LIST_USERS}
+          >
+            <ButtonComponent
+              text="Nhập file"
+              textTooltip="Thêm danh sách người dùng"
+              icon={<CgImport className="" />}
+              size="large"
+              type="primary"
+              onclick={() => setOpenModalImportListUser(true)}
+            />
+          </Access>
+          <Access hideChildren permission={ALL_PERMISSIONS.USER.CREATE}>
             <ButtonComponent
               text="Thêm mới"
               textTooltip="Thêm mới người dùng"
@@ -505,6 +515,11 @@ const UserManagement: React.FC = () => {
         open={openModalUpdateUser}
         setOpen={setOpenModalUpdateUser}
         userData={userData as IUsersResponse}
+        dataAllRoles={dataAllRoles as { label: string; value: number }[]}
+      />
+      <ModalImportListUser
+        open={openModalImportListUser}
+        setOpen={setOpenModalImportListUser}
         dataAllRoles={dataAllRoles as { label: string; value: number }[]}
       />
     </>

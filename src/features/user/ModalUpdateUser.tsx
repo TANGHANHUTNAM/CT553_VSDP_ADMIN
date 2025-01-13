@@ -5,12 +5,28 @@ import toast from "react-hot-toast";
 import { GENDER } from "../../constants/tableManagement";
 import { IDataUserUpdateRequest, IUsersResponse } from "../../interfaces";
 import { updateUserService } from "../../services";
-
+const { RangePicker } = DatePicker;
 interface IModalUpdateUserProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   userData: IUsersResponse | null;
   dataAllRoles: { label: string; value: number }[];
+}
+
+interface IDataForm {
+  name: string;
+  email: string;
+  roleId: number;
+  date_of_birth: string;
+  gender: string;
+  phone_number: string;
+  generation: string;
+  school: string;
+  major: string;
+  company: string;
+  is_external_guest: boolean;
+  job_title: string;
+  time: [string, string];
 }
 
 const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
@@ -45,8 +61,13 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
     },
   });
 
-  const onCreate = (data: IDataUserUpdateRequest) => {
-    mutateUpdateUser.mutate({ id: userData?.id as number, data });
+  const onCreate = (data: IDataForm) => {
+    const requestData: IDataUserUpdateRequest = {
+      ...data,
+      start_date: data.time[0],
+      end_date: data.time[1],
+    };
+    mutateUpdateUser.mutate({ id: userData?.id as number, data: requestData });
   };
   return (
     <>
@@ -62,6 +83,7 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
           if (open && userData) {
             form.setFieldsValue({
               ...userData,
+              time: [userData.start_date, userData.end_date],
             });
           }
         }}
@@ -117,6 +139,26 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item
+          label="Thời gian hoạt động"
+          name={"time"}
+          rules={[{ required: true, message: "Thời gian không được để trống" }]}
+          getValueProps={(value: string[]) => ({
+            value: value
+              ? [value[0] && dayjs(value[0]), value[1] && dayjs(value[1])]
+              : [],
+          })}
+          normalize={(value: Dayjs[]) => {
+            return value
+              ? [
+                  value[0] && value[0].tz("Asia/Ho_Chi_Minh").format(),
+                  value[1] && value[1].tz("Asia/Ho_Chi_Minh").format(),
+                ]
+              : [];
+          }}
+        >
+          <RangePicker format={"DD/MM/YYYY"} style={{ width: "100%" }} />
+        </Form.Item>
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item

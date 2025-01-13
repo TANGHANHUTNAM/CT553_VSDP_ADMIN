@@ -20,22 +20,26 @@ export const colorMethod = (
 };
 
 export const formatDateTime = (date: string) => {
-  return new Date(date).toLocaleString("vi-VN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
+  return date
+    ? new Date(date).toLocaleString("vi-VN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+    : "Chưa cập nhật";
 };
 
 export const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString("vi-VN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  return date
+    ? new Date(date).toLocaleDateString("vi-VN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    : "Chưa cập nhật";
 };
 
 export const colorFilterIcon = (filtered: boolean) => {
@@ -57,6 +61,7 @@ export const paginationOptions = (
   setPageSize: (value: number) => void,
   total: number | 0,
   showTitle?: string,
+  pageSizeOptions?: string[],
 ) => {
   return {
     current,
@@ -70,6 +75,19 @@ export const paginationOptions = (
       }
       setPageSize(pageSize);
     },
-    pageSizeOptions: ["5", "10", "20", "50"],
+    pageSizeOptions: pageSizeOptions || ["5", "10", "20", "50"],
   } as TablePaginationConfig | undefined;
+};
+
+export const formatGender = (value: string | undefined) => {
+  switch (value) {
+    case "MALE":
+      return "Nam";
+    case "FEMALE":
+      return "Nữ";
+    case "OTHER":
+      return "Khác";
+    default:
+      return "Chưa cập nhật";
+  }
 };

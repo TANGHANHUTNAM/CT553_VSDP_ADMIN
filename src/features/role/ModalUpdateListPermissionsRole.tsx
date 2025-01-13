@@ -127,7 +127,6 @@ const ModalUpdateListPermissionsRole: React.FC<
         dataDetailRole?.id as number,
         selectedRowKeys as number[],
       );
-      console.log("res>>>>>>>>>>>>>>>>>>>>>>>", res);
       return res;
     },
     onSuccess: (data) => {
@@ -142,10 +141,11 @@ const ModalUpdateListPermissionsRole: React.FC<
         toast.error(data.message as string);
       }
     },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
   });
-  useEffect(() => {
-    console.log("selectedRowKeys", selectedRowKeys);
-  }, [selectedRowKeys]);
+  useEffect(() => {}, [selectedRowKeys]);
   return (
     <>
       <Modal

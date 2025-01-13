@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  Layout,
-  Menu,
-  MenuProps,
-  Tooltip,
-} from "antd";
+import { Button, Dropdown, Layout, Menu, MenuProps, Tooltip } from "antd";
 import { Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";

@@ -142,11 +142,14 @@ const PermissionManagement: React.FC = () => {
         toast.success(data.message as string);
       }
       if (data && data.error) {
-        toast.error(data.error as string);
+        toast.error(data.message as string);
       }
       queryClient.invalidateQueries({
         queryKey: ["permissions"],
       });
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
     },
   });
 

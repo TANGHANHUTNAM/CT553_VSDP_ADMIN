@@ -40,6 +40,8 @@ const ProtectRoute: React.FC<IProtectRouteProps> = ({ children }) => {
         }
       } catch (error) {
         console.log(error);
+        dispatch(logout());
+        dispatch(clearUser());
       }
     };
     if (isAuth && window.localStorage.getItem("access_token") && !user) {

@@ -59,6 +59,11 @@ export const ALL_PERMISSIONS = {
       api_path: VER + "/users",
       method: "GET",
     },
+    CREATE_LIST_USERS: {
+      module: ALL_MODULES.USER,
+      api_path: VER + "/users/batch",
+      method: "POST",
+    },
     CREATE: {
       module: ALL_MODULES.USER,
       api_path: VER + "/users",

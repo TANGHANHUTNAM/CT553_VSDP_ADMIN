@@ -1,8 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Form, Input, Modal, Select } from "antd";
+import { DatePicker, Form, Input, Modal, Select } from "antd";
 import toast from "react-hot-toast";
 import { IDataUserCreateRequest } from "../../interfaces";
 import { createUserService } from "../../services";
+import dayjs, { Dayjs } from "dayjs";
+const { RangePicker } = DatePicker;
+
+interface IDataForm {
+  name: string;
+  email: string;
+  roleId: number;
+  time: [string, string];
+}
 
 interface IModalCreateNewUserProps {
   open: boolean;
@@ -33,10 +42,19 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
         toast.error(data.message as string);
       }
     },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
   });
 
-  const onCreate = (data: IDataUserCreateRequest) => {
-    mutateCreateUser.mutate(data);
+  const onCreate = (data: IDataForm) => {
+    const [start_date, end_date] = data.time;
+    mutateCreateUser.mutate({
+      ...data,
+      start_date,
+      end_date,
+    });
+    console.log(start_date, end_date);
   };
 
   return (
@@ -97,6 +115,26 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
           rules={[{ required: true, message: "Vai trò không được để trống" }]}
         >
           <Select placeholder="Chọn vai trò" options={dataAllRoles} />
+        </Form.Item>
+        <Form.Item
+          label="Thọn thời gian hoạt động"
+          name={"time"}
+          rules={[{ required: true, message: "Thời gian không được để trống" }]}
+          getValueProps={(value: string[]) => ({
+            value: value
+              ? [value[0] && dayjs(value[0]), value[1] && dayjs(value[1])]
+              : [],
+          })}
+          normalize={(value: Dayjs[]) => {
+            return value
+              ? [
+                  value[0] && value[0].tz().format(),
+                  value[1] && value[1].tz().format(),
+                ]
+              : [];
+          }}
+        >
+          <RangePicker format={"DD/MM/YYYY"} style={{ width: "100%" }} />
         </Form.Item>
       </Modal>
     </>

@@ -10,6 +10,8 @@ import {
 import { updateProfileService } from "../../services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { setUser } from "../../redux/userReducer";
 
 interface IUpdateProfileProps {
   dataUserProfile: IUsersResponse | null;
@@ -17,6 +19,8 @@ interface IUpdateProfileProps {
 
 const UpdateProfile: React.FC<IUpdateProfileProps> = ({ dataUserProfile }) => {
   const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
   const [formUserUpdate] = Form.useForm();
   useEffect(() => {
     if (dataUserProfile) {
@@ -32,6 +36,12 @@ const UpdateProfile: React.FC<IUpdateProfileProps> = ({ dataUserProfile }) => {
     },
     onSuccess: (data) => {
       if (data && data.data) {
+        dispatch(
+          setUser({
+            ...user,
+            ...data.data,
+          }),
+        );
         queryClient.invalidateQueries({ queryKey: ["user", "profile"] });
         toast.success(data.message as string);
       }

@@ -2,7 +2,11 @@ import { Descriptions, Drawer, Tag } from "antd";
 import { FaWindowClose } from "react-icons/fa";
 import AvatarComponent from "../../components/AvatarComponent";
 import { IUsersResponse } from "../../interfaces";
-import { formatDate, formatDateTime } from "../../utils/functionUtils";
+import {
+  formatDate,
+  formatDateTime,
+  formatGender,
+} from "../../utils/functionUtils";
 
 interface IModalViewDetailsUserProps {
   open: boolean;
@@ -31,7 +35,10 @@ const ModalViewDetailsUser: React.FC<IModalViewDetailsUserProps> = ({
       >
         <Descriptions bordered column={1}>
           <Descriptions.Item label="Avatar">
-            <AvatarComponent src={userData?.avatar || undefined} size={64} />
+            <AvatarComponent
+              src={userData?.avatar_url || undefined}
+              size={64}
+            />
           </Descriptions.Item>
           <Descriptions.Item label="ID">
             {userData?.id || "Chưa cập nhật"}
@@ -68,7 +75,7 @@ const ModalViewDetailsUser: React.FC<IModalViewDetailsUserProps> = ({
             {formatDate(userData?.date_of_birth as string) || "Chưa cập nhật"}
           </Descriptions.Item>
           <Descriptions.Item label="Giới Tính">
-            {userData?.gender || "Chưa cập nhật"}
+            {formatGender(userData?.gender || "") || "Chưa cập nhật"}
           </Descriptions.Item>
           <Descriptions.Item label="Số Điện Thoại">
             {userData?.phone_number || "Chưa cập nhật"}
@@ -91,6 +98,12 @@ const ModalViewDetailsUser: React.FC<IModalViewDetailsUserProps> = ({
           </Descriptions.Item>
           <Descriptions.Item label="Khách Mời Bên Ngoài">
             {userData?.is_external_guest ? "Có" : "Không"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Ngày Kích Hoạt Tài Khoản">
+            {formatDateTime(userData?.start_date as string)}
+          </Descriptions.Item>
+          <Descriptions.Item label="Ngày Hết Hạn Tài Khoản">
+            {formatDateTime(userData?.end_date as string)}
           </Descriptions.Item>
           <Descriptions.Item label="Ngày Tạo">
             {formatDateTime(userData?.created_at as string)}

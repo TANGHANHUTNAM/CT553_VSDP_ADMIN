@@ -38,6 +38,7 @@ const LoginGoogle: React.FC = () => {
         toast.error(resAPI.message as string);
       }
     } catch (error) {
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau");
       console.log(error);
     } finally {
       setIsLoadingLoginGoogle(false);
