@@ -144,6 +144,28 @@ const UserManagement: React.FC = () => {
       data?.map((item) => ({ label: item.name, value: item.id })),
   });
 
+  const mutationChangeStatus = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: number }) => {
+      const res: IResponse<IUserResponse> = await updateStatusUserService(
+        id,
+        status,
+      );
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data && data.data) {
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+        toast.success(data.message as string);
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   const columns: TableColumnsType<IUsersResponse> = [
     {
       title: "STT",
@@ -260,13 +282,12 @@ const UserManagement: React.FC = () => {
               titleTooltip={`${record.active ? "Khóa tài khoản" : "Mở tài khoản"} ${
                 record.name
               }`}
-              defaultValue={record.active}
               value={record.active}
-              loading={mutation.isPending}
-              onChange={(checked) => {
-                mutation.mutate({
+              loading={mutationChangeStatus.isPending}
+              onChange={(check) => {
+                mutationChangeStatus.mutate({
                   id: record.id,
-                  status: checked ? 1 : 0,
+                  status: check ? 1 : 0,
                 });
               }}
             />
@@ -324,30 +345,6 @@ const UserManagement: React.FC = () => {
       }
     }
   };
-
-  const mutation = useMutation({
-    mutationFn: async ({ id, status }: { id: number; status: number }) => {
-      const res: IResponse<IUserResponse> = await updateStatusUserService(
-        id,
-        status,
-      );
-      return res;
-    },
-    onSuccess: (data) => {
-      if (data && data.data) {
-        toast.success(data.message as string);
-        queryClient.invalidateQueries({
-          queryKey: ["users"],
-        });
-      }
-      if (data && data.error) {
-        toast.error(data.message as string);
-      }
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
 
   const headerTableRender: TableProps<IUsersResponse>["title"] = () => (
     <div className="flex items-center justify-between">
@@ -482,7 +479,7 @@ const UserManagement: React.FC = () => {
 
       <Table<IUsersResponse>
         columns={newColumns}
-        dataSource={data?.data?.users || []}
+        dataSource={data?.data?.users}
         size={selectedKeyDropdownExpand as "large" | "middle" | "small"}
         bordered
         title={headerTableRender}

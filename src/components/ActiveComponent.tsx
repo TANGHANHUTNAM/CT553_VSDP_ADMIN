@@ -2,12 +2,13 @@ import { Switch, Tooltip } from "antd";
 
 interface IActiveComponentProps {
   titleTooltip?: string | React.ReactNode | undefined;
-  onChange?: (checked: boolean) => void;
+  onChange: (checked: boolean) => void;
   defaultValue?: boolean | undefined;
   defaultChecked?: boolean | undefined;
   loading?: boolean | undefined;
   disabled?: boolean | undefined;
   value?: boolean | undefined;
+  onClick?: (checked: boolean) => void;
 }
 
 const ActiveComponent: React.FC<IActiveComponentProps> = ({
@@ -18,11 +19,14 @@ const ActiveComponent: React.FC<IActiveComponentProps> = ({
   loading,
   disabled,
   value,
+  onClick,
 }) => {
   return (
     <div>
       <Tooltip title={titleTooltip}>
         <Switch
+          checkedChildren="ON"
+          unCheckedChildren="OFF"
           rootClassName=""
           size="small"
           onChange={onChange}
@@ -31,6 +35,7 @@ const ActiveComponent: React.FC<IActiveComponentProps> = ({
           loading={loading}
           disabled={disabled}
           value={value}
+          onClick={onClick}
         />
       </Tooltip>
     </div>

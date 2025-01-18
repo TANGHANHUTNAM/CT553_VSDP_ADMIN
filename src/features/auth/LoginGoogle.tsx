@@ -32,7 +32,7 @@ const LoginGoogle: React.FC = () => {
         localStorage.setItem("access_token", resAPI.data.access_token);
         dispatch(loginSuccess());
         navigate("/");
-        toast.success("Đăng nhập thành công!");
+        toast.success(resAPI.message as string);
       }
       if (resAPI && resAPI.error) {
         toast.error(resAPI.message as string);

@@ -1,16 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import vsdp from "../assets/vsdp.jpg";
 import LoginForm from "../features/auth/LoginForm";
 import LoginGoogle from "../features/auth/LoginGoogle";
 import { useAppSelector, useDynamicTitle, useScrollTop } from "../hooks";
 import { PAGE_NAME } from "../constants/routerIndex";
+import ModalChangePassword from "../features/auth/ModalChangePassword";
 
 const LoginPage: React.FC = () => {
   useDynamicTitle(PAGE_NAME.LOGIN);
   useScrollTop();
-
   const { isDarkMode } = useAppSelector((state) => state.app);
-
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
@@ -18,6 +17,8 @@ const LoginPage: React.FC = () => {
       document.documentElement.classList.remove("dark");
     }
   }, [isDarkMode]);
+
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-blue-50 dark:bg-dark-900">
@@ -27,8 +28,9 @@ const LoginPage: React.FC = () => {
           <div className="text-xl font-semibold uppercase dark:text-text_primary">
             Đăng nhập
           </div>
-          <LoginForm />
+          <LoginForm setOpen={setOpen} />
           <LoginGoogle />
+          <ModalChangePassword open={open} setOpen={setOpen} />
         </div>
 
         {/* img */}

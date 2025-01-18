@@ -3,14 +3,18 @@ import { Form, Input } from "antd";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import ButtonComponent from "../../components/ButtonComponent";
+import { ROUTER_URL } from "../../constants/routerIndex";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { IAuthRequest, IAuthResponse, IResponse } from "../../interfaces";
 import { loginSuccess } from "../../redux/authReducer";
 import { loginService } from "../../services";
-import { ROUTER_URL } from "../../constants/routerIndex";
-import ButtonComponent from "../../components/ButtonComponent";
 
-const LoginForm: React.FC = () => {
+interface ILoginFormProps {
+  setOpen: (open: boolean) => void;
+}
+
+const LoginForm: React.FC<ILoginFormProps> = ({ setOpen }) => {
   const [loginForm] = Form.useForm<IAuthRequest>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -113,7 +117,10 @@ const LoginForm: React.FC = () => {
             loading={isLoading}
           />
         </Form.Item>
-        <div className="flex cursor-pointer justify-end font-medium underline">
+        <div
+          onClick={() => setOpen(true)}
+          className="flex cursor-pointer justify-end font-medium underline"
+        >
           Quên mật khẩu ?
         </div>
       </Form>

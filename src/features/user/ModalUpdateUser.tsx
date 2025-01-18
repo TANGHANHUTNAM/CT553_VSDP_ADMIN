@@ -76,7 +76,7 @@ const ModalUpdateUser: React.FC<IModalUpdateUserProps> = ({
         title={`Cập nhật thông tin người dùng ${userData?.email || ""}`}
         okText="Cập nhật"
         cancelText="Hủy"
-        style={{ top: 30 }}
+        centered
         width={1000}
         maskClosable={false}
         afterOpenChange={(open) => {

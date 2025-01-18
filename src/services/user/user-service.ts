@@ -59,3 +59,33 @@ export const createListUsersService = async (
 ): Promise<IResponse<IDataUserCreateRequest[]>> => {
   return await axiosClient.post("/users/batch", { users });
 };
+
+export const sendMailOTPService = async (
+  email: string,
+): Promise<IResponse<number>> => {
+  return await axiosClient.post("/users/send-mail-otp", email);
+};
+
+export const verifyOTPService = async (
+  email: string,
+  otp: string,
+): Promise<
+  IResponse<{
+    email: string;
+    temp_token: string;
+  }>
+> => {
+  return await axiosClient.post("/users/verify-otp", { email, otp });
+};
+
+export const changePasswordService = async (
+  email: string,
+  new_password: string,
+  temp_token: string,
+): Promise<IResponse<string>> => {
+  return await axiosClient.post("/users/change-password", {
+    email,
+    new_password,
+    temp_token,
+  });
+};

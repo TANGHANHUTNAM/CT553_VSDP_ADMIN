@@ -63,7 +63,10 @@ axiosClient.interceptors.response.use(
       error.response.status === 401 &&
       !originalRequest._retry &&
       !originalRequest.url.includes("/auth/login") &&
-      !originalRequest.url.includes("/auth/login-google")
+      !originalRequest.url.includes("/auth/login-google") &&
+      !originalRequest.url.includes("/users/send-mail-otp") &&
+      !originalRequest.url.includes("/users/verify-otp") &&
+      !originalRequest.url.includes("/users/change-password")
     ) {
       originalRequest._retry = true;
 
