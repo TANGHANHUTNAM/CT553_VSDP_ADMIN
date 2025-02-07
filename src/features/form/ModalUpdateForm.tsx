@@ -1,41 +1,48 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
+import { IDataFormRequest, IFormResponse } from "../../interfaces";
+import { updateFormService } from "../../services";
 import toast from "react-hot-toast";
-import { IDataUserCreateRequest } from "../../interfaces";
-import { createUserService } from "../../services";
 import dayjs, { Dayjs } from "dayjs";
+import { SCOPE_FORM } from "../../constants/tableManagement";
 const { RangePicker } = DatePicker;
+
+interface IModalUpdateFormProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  dataDetailForm: IFormResponse | null;
+}
 
 interface IDataForm {
   name: string;
-  email: string;
-  roleId: number;
+  description: string;
+  scope: string;
   time: [string, string];
 }
 
-interface IModalCreateNewUserProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  dataAllRoles: { label: string; value: number }[];
-}
-
-const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
+const ModalUpdateForm: React.FC<IModalUpdateFormProps> = ({
   open,
   setOpen,
-  dataAllRoles,
+  dataDetailForm,
 }) => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
 
-  const mutateCreateUser = useMutation({
-    mutationFn: async (data: IDataUserCreateRequest) => {
-      const response = await createUserService(data);
+  const mutationUpdateForm = useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: IDataFormRequest;
+    }) => {
+      const response = await updateFormService(id, data);
       return response;
     },
     onSuccess: (data) => {
       if (data && data.data) {
         toast.success(data.message as string);
-        queryClient.invalidateQueries({ queryKey: ["users"] });
+        queryClient.invalidateQueries({ queryKey: ["forms"] });
         setOpen(false);
       }
       if (data && data.error) {
@@ -48,26 +55,43 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
   });
 
   const onCreate = (data: IDataForm) => {
-    const [start_date, end_date] = data.time;
-    mutateCreateUser.mutate({
-      ...data,
-      start_date,
-      end_date,
+    mutationUpdateForm.mutate({
+      id: dataDetailForm?.id as string,
+      data: {
+        ...data,
+        start_date: data.time[0],
+        end_date: data.time[1],
+      },
     });
   };
-
   return (
     <>
       <Modal
         open={open}
-        title="Tạo mới người dùng"
-        okText="Tạo"
+        title={`Cập nhật biểu mẫu ${dataDetailForm?.name || ""}`}
+        okText="Cập nhật"
         cancelText="Hủy"
         maskClosable={false}
+        afterOpenChange={(open) => {
+          if (!open) {
+            form.resetFields();
+          }
+          if (open && dataDetailForm) {
+            form.setFieldsValue({
+              name: dataDetailForm.name,
+              description: dataDetailForm.description,
+              scope: dataDetailForm.scope,
+              time: [
+                dataDetailForm.start_date && dayjs(dataDetailForm.start_date),
+                dataDetailForm.end_date && dayjs(dataDetailForm.end_date),
+              ],
+            });
+          }
+        }}
         okButtonProps={{
           autoFocus: true,
           htmlType: "submit",
-          loading: mutateCreateUser.isPending,
+          loading: mutationUpdateForm.isPending,
         }}
         onCancel={() => setOpen(false)}
         destroyOnClose
@@ -76,7 +100,7 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
             layout="vertical"
             form={form}
             name="form_in_modal"
-            disabled={mutateCreateUser.isPending}
+            disabled={mutationUpdateForm.isPending}
             initialValues={{ modifier: "public" }}
             clearOnDestroy
             onFinish={(values) => onCreate(values)}
@@ -87,33 +111,36 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
       >
         <Form.Item
           name="name"
-          label="Họ tên"
-          rules={[{ required: true, message: "Họ tên không được để trống" }]}
+          label="Tên biểu mẫu"
+          rules={[
+            { required: true, message: "Tên biểu mẫu không được để trống!" },
+          ]}
         >
-          <Input placeholder="Họ tên" />
+          <Input placeholder="Tên biểu mẫu" />
         </Form.Item>
         <Form.Item
-          name="email"
-          label="Email"
+          name="description"
+          label="Mô tả"
           rules={[
             {
               required: true,
-              message: "Email không được để trống",
-            },
-            {
-              type: "email",
-              message: "Email không hợp lệ",
+              message: "Mô tả không được để trống!",
             },
           ]}
         >
-          <Input placeholder="Email" />
+          <Input placeholder="Mô tả" />
         </Form.Item>
         <Form.Item
-          name="roleId"
-          label="Vai trò"
-          rules={[{ required: true, message: "Vai trò không được để trống" }]}
+          name="scope"
+          label="Mục đích"
+          rules={[
+            {
+              required: true,
+              message: "Mục đích không được để trống!",
+            },
+          ]}
         >
-          <Select placeholder="Chọn vai trò" options={dataAllRoles} />
+          <Select options={SCOPE_FORM} placeholder="Chọn mục đích" />
         </Form.Item>
         <Form.Item
           label="Chọn thời gian hoạt động"
@@ -142,4 +169,4 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
   );
 };
 
-export default ModalCreateNewUser;
+export default ModalUpdateForm;

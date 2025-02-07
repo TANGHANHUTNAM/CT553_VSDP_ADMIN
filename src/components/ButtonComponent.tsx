@@ -3,15 +3,16 @@ import { BaseButtonProps } from "antd/es/button/button";
 
 interface IButtonComponentProps {
   text: string;
-  icon: React.ReactNode;
-  type: BaseButtonProps["type"];
+  icon?: React.ReactNode;
+  type?: BaseButtonProps["type"];
   className?: string;
   size: BaseButtonProps["size"];
-  textTooltip: string;
+  textTooltip?: string;
   htmlType?: "button" | "submit" | "reset" | undefined;
   loading?: boolean;
   onclick?: () => void;
   danger?: boolean;
+  variant?: BaseButtonProps["variant"];
 }
 
 const ButtonComponent: React.FC<IButtonComponentProps> = ({
@@ -25,6 +26,7 @@ const ButtonComponent: React.FC<IButtonComponentProps> = ({
   loading,
   onclick,
   danger,
+  variant,
 }) => {
   return (
     <>
@@ -38,6 +40,7 @@ const ButtonComponent: React.FC<IButtonComponentProps> = ({
           loading={loading}
           onClick={onclick}
           danger={danger}
+          variant={variant}
         >
           {text}
         </Button>

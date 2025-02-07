@@ -3,7 +3,7 @@ import { Form, Input, Modal, Select } from "antd";
 import { dataMethod, dataModule } from "../../constants/permissions";
 import toast from "react-hot-toast";
 import { IDataPermissionRequest } from "../../interfaces";
-import { createPermissionService } from "../../services/permission/permission-service";
+import { createPermissionService } from "../../services";
 
 interface IModalCreateNewPermissionProps {
   open: boolean;

@@ -40,3 +40,14 @@ export const SIZE_TABLE = [
     label: "Kích thước bảng nhỏ",
   },
 ];
+
+export const SCOPE_FORM = [
+  {
+    value: "SCHOLARSHIP",
+    label: "Học bổng",
+  },
+  {
+    value: "SURVEY",
+    label: "Khảo sát",
+  },
+];

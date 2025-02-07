@@ -11,6 +11,8 @@ import { IoKey } from "react-icons/io5";
 import { MdDashboard } from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { TbLogout2 } from "react-icons/tb";
+import { FaWpforms } from "react-icons/fa";
+
 import {
   Link,
   NavLink,
@@ -73,6 +75,43 @@ const LayoutAdmin: React.FC = () => {
           label: <NavLink to={ROUTER_URL.DASHBOARD_PAGE}>Dashboard</NavLink>,
           key: ROUTER_URL.DASHBOARD_PAGE,
           icon: <MdDashboard />,
+        },
+        {
+          label: "Quản lý biểu mẫu",
+          key: "form",
+          icon: <FaWpforms />,
+          children: [
+            {
+              label: <NavLink to={ROUTER_URL.FORM_PAGE}>Biểu mẫu</NavLink>,
+              key: ROUTER_URL.FORM_PAGE,
+              icon: <FaWpforms />,
+            },
+            {
+              label: (
+                <NavLink to={ROUTER_URL.FORM_VERSION_PAGE}>
+                  Phiên bản biểu mẫu
+                </NavLink>
+              ),
+              key: ROUTER_URL.FORM_VERSION_PAGE,
+              icon: <FaWpforms />,
+            },
+            {
+              label: (
+                <NavLink to={ROUTER_URL.FORM_GROUP_PAGE}>Nhóm biểu mẫu</NavLink>
+              ),
+              key: ROUTER_URL.FORM_GROUP_PAGE,
+              icon: <FaWpforms />,
+            },
+            {
+              label: (
+                <NavLink to={ROUTER_URL.FORM_FIELD_PAGE}>
+                  Trường của biểu mẫu
+                </NavLink>
+              ),
+              key: ROUTER_URL.FORM_FIELD_PAGE,
+              icon: <FaWpforms />,
+            },
+          ],
         },
         ...(hasAuthChildren || ACL_ENABLE === "true"
           ? [

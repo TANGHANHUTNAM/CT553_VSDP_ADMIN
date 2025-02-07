@@ -137,7 +137,7 @@ const ModalChangePassword: React.FC<IModalChangePasswordProps> = ({
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập email" />
           </Form.Item>
         </Form>
       ),
@@ -200,6 +200,7 @@ const ModalChangePassword: React.FC<IModalChangePasswordProps> = ({
               aria-required="true"
               type="password"
               autoComplete="new_password"
+              placeholder="Nhập mật khẩu mới"
             />
           </Form.Item>
           <Form.Item
@@ -231,6 +232,7 @@ const ModalChangePassword: React.FC<IModalChangePasswordProps> = ({
               aria-required="true"
               type="password"
               autoComplete="new_password"
+              placeholder="Nhập lại mật khẩu mới"
             />
           </Form.Item>
         </Form>

@@ -30,7 +30,7 @@ import Access from "../../router/Access";
 import {
   deletePermissionService,
   getAllPermissionsWithPagination,
-} from "../../services/permission/permission-service";
+} from "../../services";
 import {
   colorFilterIcon,
   colorMethod,
@@ -215,7 +215,7 @@ const PermissionManagement: React.FC = () => {
       ),
     },
     {
-      title: "Miêu tả",
+      title: "Mô tả",
       key: "name",
       dataIndex: "name",
     },

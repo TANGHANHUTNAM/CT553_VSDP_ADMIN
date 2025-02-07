@@ -1,7 +1,14 @@
 import { createBrowserRouter, RouteObject } from "react-router-dom";
+import { ALL_PERMISSIONS } from "../constants/permissions";
 import { PAGE_NAME, ROUTER_URL } from "../constants/routerIndex";
 import LayoutAdmin from "../layout/LayoutAdmin";
+import LayoutFormBuilder from "../layout/LayoutFormBuilder";
 import DashboardPage from "../pages/DashboardPage";
+import FormBuilderPage from "../pages/FormBuilderPage";
+import FormFieldPage from "../pages/FormFieldPage";
+import FormGroupPage from "../pages/FormGroupPage";
+import FormPage from "../pages/FormPage";
+import FormVersionPage from "../pages/FormVersionPage";
 import LoginPage from "../pages/LoginPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import PermissionPage from "../pages/PermissionPage";
@@ -9,9 +16,8 @@ import ProfilePage from "../pages/ProfilePage";
 import RolePage from "../pages/RolePage";
 import SettingPage from "../pages/SettingPage";
 import UserPage from "../pages/UserPage";
-import ProtectRoute from "./ProtectRoute";
 import Access from "./Access";
-import { ALL_PERMISSIONS } from "../constants/permissions";
+import ProtectRoute from "./ProtectRoute";
 
 export type CustomRouteObject = RouteObject & {
   breadcrumb?: string;
@@ -72,6 +78,42 @@ export const routerCustom: CustomRouteObject[] = [
           </Access>
         ),
         breadcrumb: PAGE_NAME.PERMISSION,
+      },
+      {
+        path: ROUTER_URL.FORM_PAGE,
+        element: <FormPage />,
+        breadcrumb: PAGE_NAME.FORM,
+      },
+      {
+        path: ROUTER_URL.FORM_VERSION_PAGE,
+        element: <FormVersionPage />,
+        breadcrumb: PAGE_NAME.FORM_VERSION,
+      },
+      {
+        path: ROUTER_URL.FORM_GROUP_PAGE,
+        element: <FormGroupPage />,
+        breadcrumb: PAGE_NAME.FORM_GROUP,
+      },
+      {
+        path: ROUTER_URL.FORM_FIELD_PAGE,
+        element: <FormFieldPage />,
+        breadcrumb: PAGE_NAME.FORM_FIELD,
+      },
+    ],
+  },
+  {
+    path: ROUTER_URL.FORM_BUILDER_PAGE,
+    element: (
+      <ProtectRoute>
+        <LayoutFormBuilder />
+      </ProtectRoute>
+    ),
+    breadcrumb: PAGE_NAME.FORM_BUILDER,
+    children: [
+      {
+        index: true,
+        element: <FormBuilderPage />,
+        breadcrumb: PAGE_NAME.FORM_BUILDER,
       },
     ],
   },

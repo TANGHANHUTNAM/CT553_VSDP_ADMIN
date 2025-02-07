@@ -2,7 +2,7 @@ import { Form, Input, Modal, Select } from "antd";
 import { dataMethod, dataModule } from "../../constants/permissions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IDataPermissionRequest, IPermissionResponse } from "../../interfaces";
-import { updatePermissionService } from "../../services/permission/permission-service";
+import { updatePermissionService } from "../../services";
 import toast from "react-hot-toast";
 
 interface IModalUpdatePermissionProps {

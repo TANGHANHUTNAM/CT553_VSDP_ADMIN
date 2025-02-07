@@ -166,7 +166,7 @@ const RoleManagement: React.FC = () => {
       key: "name",
     },
     {
-      title: "Miêu tả",
+      title: "Mô tả",
       dataIndex: "description",
       key: "description",
     },
