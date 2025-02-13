@@ -1,5 +1,5 @@
 import { SortOrder, TablePaginationConfig } from "antd/es/table/interface";
-
+import { v4 as uuidv4 } from "uuid";
 export const colorMethod = (
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
 ) => {
@@ -90,4 +90,8 @@ export const formatGender = (value: string | undefined) => {
     default:
       return "Chưa cập nhật";
   }
+};
+
+export const generateUniqueId = () => {
+  return uuidv4().replace(/-/g, "").substring(0, 25);
 };

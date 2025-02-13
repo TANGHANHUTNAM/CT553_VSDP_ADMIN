@@ -10,7 +10,7 @@ interface IButtonComponentProps {
   textTooltip?: string;
   htmlType?: "button" | "submit" | "reset" | undefined;
   loading?: boolean;
-  onclick?: () => void;
+  onclick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   danger?: boolean;
   variant?: BaseButtonProps["variant"];
 }

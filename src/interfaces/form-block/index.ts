@@ -1,6 +1,9 @@
-export type FormCategoryType = "Layout" | "Form";
+import { RowLayoutBlock } from "../../components/block/layouts/RowLayout";
+import { RadioSelectBlock } from "../../components/block/RadioSelectBlock";
 
-export type FormBlockType = "RowLayout";
+export type FormCategoryType = "Layout" | "Field";
+
+export type FormBlockType = "RowLayout" | "RadioSelect";
 
 export type ObjectBlockType = {
   blockCategory: FormCategoryType;
@@ -10,9 +13,13 @@ export type ObjectBlockType = {
     label: string;
   };
   createInstance: (id: string) => FormBlockInstance;
-  canvasComponent: React.FC;
+  canvasComponent: React.FC<{ blockInstance: FormBlockInstance }>;
   formComponent: React.FC;
-  propertiesComponent: React.FC;
+  propertiesComponent: React.FC<{
+    positionIndex?: number;
+    blockInstance: FormBlockInstance;
+    parentId?: string;
+  }>;
 };
 
 export type FormBlockInstance = {
@@ -25,4 +32,9 @@ export type FormBlockInstance = {
 
 export type FormBlocksType = {
   [key in FormBlockType]: ObjectBlockType;
+};
+
+export const FormBlocks: FormBlocksType = {
+  RowLayout: RowLayoutBlock,
+  RadioSelect: RadioSelectBlock,
 };

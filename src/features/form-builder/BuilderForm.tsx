@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
-import { IFormResponse } from "../../interfaces";
+import { FaGlobeAmericas, FaSave } from "react-icons/fa";
 import { MdPlayArrow } from "react-icons/md";
-import { FaSave } from "react-icons/fa";
-import { FaGlobeAmericas } from "react-icons/fa";
+import { IFormResponse } from "../../interfaces";
 
 import ButtonComponent from "../../components/ButtonComponent";
+import BuilderCanvas from "./BuilderCanvas";
 import BuilderSidebarLeft from "./BuilderSidebarLeft";
 import BuilderSidebarRight from "./BuilderSidebarRight";
-import BuilderCanvas from "./BuilderCanvas";
 interface IBuilderFormProps {
   form?: IFormResponse | null;
 }
@@ -18,53 +16,38 @@ const BuilderForm: React.FC<IBuilderFormProps> = () => {
   const [isCloseSidebarRight, setIsCloseSidebarRight] =
     useState<boolean>(false);
   return (
-    <div className="flex min-h-[calc(100vh-70px)] bg-white">
+    <div className="flex bg-white">
       {/* LEFT SIDEBAR */}
       <div
-        className={`relative overflow-hidden px-2 py-2 pl-3 transition-all duration-300 ${
-          isCloseSidebarLeft ? "w-0 opacity-0" : "w-1/4 opacity-100"
+        className={`relative transition-all duration-300 ${
+          isCloseSidebarLeft ? "w-5" : "w-1/4 opacity-100"
         }`}
       >
-        {!isCloseSidebarLeft && <BuilderSidebarLeft />}
+        <BuilderSidebarLeft
+          isCloseSidebarLeft={isCloseSidebarLeft}
+          setIsCloseSidebarLeft={setIsCloseSidebarLeft}
+        />
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="relative flex-1 p-1">
-        <div className="absolute left-0 top-1/2 text-2xl text-primary">
-          <button onClick={() => setIsCloseSidebarLeft(!isCloseSidebarLeft)}>
-            {isCloseSidebarLeft ? (
-              <IoMdArrowDropright />
-            ) : (
-              <IoMdArrowDropleft />
-            )}
-          </button>
-        </div>
-        <div className="absolute right-0 top-1/2 text-2xl text-primary">
-          <button onClick={() => setIsCloseSidebarRight(!isCloseSidebarRight)}>
-            {isCloseSidebarRight ? (
-              <IoMdArrowDropleft />
-            ) : (
-              <IoMdArrowDropright />
-            )}
-          </button>
-        </div>
+      <div className="relative flex-1 pb-3">
         {/* HEADER */}
-        <div className="mx-2 flex items-center justify-between p-3">
+        <div className="flex items-center justify-between p-3">
           <div className="flex items-center justify-center gap-1">
             <ButtonComponent
               type="primary"
-              text="Lưu"
+              text="Save"
               size="middle"
               icon={<FaSave className="text-lg" />}
-              textTooltip="Lưu"
+              textTooltip="Save"
             />
           </div>
           <ButtonComponent
             className="shadow-xl"
             type="primary"
             icon={<MdPlayArrow className="text-xl" />}
-            text="Xem trước"
-            textTooltip="Xem trước"
+            text="Preview"
+            textTooltip="Preview"
             size="middle"
           />
           <ButtonComponent
@@ -76,18 +59,19 @@ const BuilderForm: React.FC<IBuilderFormProps> = () => {
           />
         </div>
         {/* FORM */}
-        <div className="mx-5 h-[calc(100vh-140px)] overflow-auto rounded-lg border-2 border-solid border-primary p-2 scrollbar-thin">
-          <BuilderCanvas />
-        </div>
+        <BuilderCanvas />
       </div>
 
       {/* RIGHT SIDEBAR */}
       <div
-        className={`relative overflow-hidden bg-gray-200 px-2 py-4 pl-3 transition-all duration-300 ${
-          isCloseSidebarRight ? "w-0 opacity-0" : "w-1/4 opacity-100"
+        className={`relative transition-all duration-300 ${
+          isCloseSidebarRight ? "w-5" : "w-1/4 opacity-100"
         }`}
       >
-        {!isCloseSidebarRight && <BuilderSidebarRight />}
+        <BuilderSidebarRight
+          isCloseSidebarRight={isCloseSidebarRight}
+          setIsCloseSidebarRight={setIsCloseSidebarRight}
+        />
       </div>
     </div>
   );

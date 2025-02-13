@@ -1,6 +1,4 @@
-interface IFormSettingsProps {}
-
-const FormSettings: React.FC<IFormSettingsProps> = ({}) => {
+const FormSettings: React.FC = () => {
   return <div>FormSettings</div>;
 };
 
