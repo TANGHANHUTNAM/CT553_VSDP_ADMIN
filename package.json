@@ -18,7 +18,7 @@
     "@tanstack/react-query": "^5.62.16",
     "@tanstack/react-query-devtools": "5.62.0",
     "@types/lodash.debounce": "^4.0.9",
-    "antd": "5.22.2",
+    "antd": "^5.24.0",
     "antd-img-crop": "^4.24.0",
     "axios": "1.7.8",
     "axios-retry": "4.5.0",

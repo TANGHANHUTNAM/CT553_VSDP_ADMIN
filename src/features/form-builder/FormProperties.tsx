@@ -16,7 +16,7 @@ const FormProperties = () => {
     </div>
   ) : (
     <div className="mt-2 h-[calc(100vh-160px)] w-full overflow-y-auto p-1 text-gray-600 scrollbar-thin">
-      <h1 className="mb-2"> Properties </h1>
+      <h1 className="mb-2 text-lg"> Properties </h1>
       {LayoutPropertyBlock && (
         <LayoutPropertyBlock blockInstance={selectedBlockLayout} />
       )}
