@@ -1,8 +1,16 @@
 import { Button, Input, Popconfirm } from "antd";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaRobot } from "react-icons/fa6";
+import { BuilderContext } from "../../context/form-builder/BuilderContext";
+import toast from "react-hot-toast";
+import { generateFormQuestionPrompt } from "../../utils/prompt-ai";
+import { AIChatSession } from "../../utils/google-ai";
+import { updateUniqueId } from "../../utils/functionUtils";
 
 const FormAI = () => {
+  const { blocksLayout, setBlocksLayout, formData } =
+    useContext(BuilderContext);
+  const [userRequest, setUserRequest] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const suggestQuestions = () => {
@@ -17,6 +25,49 @@ const FormAI = () => {
       </div>
     );
   };
+
+  const generateFormWithAI = async () => {
+    if (!userRequest) {
+      toast.error("Please describe your form requirements");
+      return;
+    }
+    try {
+      setLoading(true);
+      const formName = formData?.name || "";
+      const formDescription = formData?.description || "";
+      const PROMPT = generateFormQuestionPrompt(
+        userRequest,
+        formName,
+        formDescription,
+        blocksLayout,
+      );
+      const result = await AIChatSession.sendMessage(PROMPT);
+      const responseText = result.response.text();
+      const parsedResponse = JSON?.parse(responseText);
+      const actionType = parsedResponse?.actionType;
+      const generatedBlocks = parsedResponse?.blocks;
+      console.log("parsedResponse", parsedResponse);
+      const updatedUniqueIds = updateUniqueId(generatedBlocks);
+      console.log("updatedUniqueIds", updatedUniqueIds);
+      setBlocksLayout((prev) => {
+        if (actionType === "addQuestions") {
+          return [...prev, ...updatedUniqueIds];
+        } else if (actionType === "createForm") {
+          return [...updatedUniqueIds];
+        } else {
+          return prev;
+        }
+      });
+      setUserRequest("");
+      toast.success("Form generated successfully");
+    } catch (error) {
+      toast.error("Failed to generate form with AI");
+      console.log(error);
+    } finally {
+      setUserRequest("");
+      setLoading(false);
+    }
+  };
   return (
     <div className="mt-2 h-[calc(100vh-160px)] w-full overflow-y-auto p-1 pr-3 text-gray-600 scrollbar-thin">
       <div className="mb-3 flex items-center justify-start gap-2 font-medium text-primary">
@@ -28,8 +79,10 @@ const FormAI = () => {
         rows={5}
         size="large"
         allowClear
-        placeholder="Chat with AI"
+        placeholder="Describe your form requirements..."
         className="ring-1 ring-primary"
+        value={userRequest}
+        onChange={(e) => setUserRequest(e.target.value)}
       />
       <div className="mt-4 flex items-center justify-between">
         <Popconfirm
@@ -45,7 +98,13 @@ const FormAI = () => {
             <u>Help?</u>
           </div>
         </Popconfirm>
-        <Button loading={loading} type="primary">
+        <Button
+          onClick={() => {
+            generateFormWithAI();
+          }}
+          loading={loading}
+          type="primary"
+        >
           Generate Form
         </Button>
       </div>

@@ -50,6 +50,7 @@ export const ALL_MODULES = {
   USER: "USER",
   ROLE: "ROLE",
   PERMISSION: "PERMISSION",
+  FORM: "FORM",
 };
 
 export const ALL_PERMISSIONS = {
@@ -161,6 +162,33 @@ export const ALL_PERMISSIONS = {
     GET_ALL_PERMISSIONS_BY_ROLEID: {
       module: ALL_MODULES.PERMISSION,
       api_path: VER + "/permissions/role/:id",
+      method: "GET",
+    },
+  },
+  FORM: {
+    VIEW: {
+      module: ALL_MODULES.FORM,
+      api_path: VER + "/forms",
+      method: "GET",
+    },
+    CREATE: {
+      module: ALL_MODULES.FORM,
+      api_path: VER + "/forms",
+      method: "POST",
+    },
+    UPDATE: {
+      module: ALL_MODULES.FORM,
+      api_path: VER + "/forms/:id",
+      method: "PATCH",
+    },
+    DELETE: {
+      module: ALL_MODULES.FORM,
+      api_path: VER + "/forms/:id",
+      method: "DELETE",
+    },
+    GET_BY_ID: {
+      module: ALL_MODULES.FORM,
+      api_path: VER + "/forms/:id",
       method: "GET",
     },
   },

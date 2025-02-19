@@ -70,48 +70,19 @@ const LayoutAdmin: React.FC = () => {
       );
 
       // Hệ thống quản lý form
+      const viewForm = permissions?.find(
+        (item: IPermissionResponse) =>
+          item.api_path === ALL_PERMISSIONS.FORM.VIEW.api_path &&
+          item.method === ALL_PERMISSIONS.FORM.VIEW.method,
+      );
+
+      const hasFormChildren: boolean = Boolean(viewForm);
+
       const menu_full = [
         {
           label: <NavLink to={ROUTER_URL.DASHBOARD_PAGE}>Dashboard</NavLink>,
           key: ROUTER_URL.DASHBOARD_PAGE,
           icon: <MdDashboard />,
-        },
-        {
-          label: "Quản lý biểu mẫu",
-          key: "form",
-          icon: <FaWpforms />,
-          children: [
-            {
-              label: <NavLink to={ROUTER_URL.FORM_PAGE}>Biểu mẫu</NavLink>,
-              key: ROUTER_URL.FORM_PAGE,
-              icon: <FaWpforms />,
-            },
-            {
-              label: (
-                <NavLink to={ROUTER_URL.FORM_VERSION_PAGE}>
-                  Phiên bản biểu mẫu
-                </NavLink>
-              ),
-              key: ROUTER_URL.FORM_VERSION_PAGE,
-              icon: <FaWpforms />,
-            },
-            {
-              label: (
-                <NavLink to={ROUTER_URL.FORM_GROUP_PAGE}>Nhóm biểu mẫu</NavLink>
-              ),
-              key: ROUTER_URL.FORM_GROUP_PAGE,
-              icon: <FaWpforms />,
-            },
-            {
-              label: (
-                <NavLink to={ROUTER_URL.FORM_FIELD_PAGE}>
-                  Trường của biểu mẫu
-                </NavLink>
-              ),
-              key: ROUTER_URL.FORM_FIELD_PAGE,
-              icon: <FaWpforms />,
-            },
-          ],
         },
         ...(hasAuthChildren || ACL_ENABLE === "true"
           ? [
@@ -157,6 +128,57 @@ const LayoutAdmin: React.FC = () => {
                         },
                       ]
                     : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasFormChildren || ACL_ENABLE === "true"
+          ? [
+              {
+                label: "Quản lý biểu mẫu",
+                key: "form",
+                icon: <FaWpforms />,
+                children: [
+                  ...(viewForm || ACL_ENABLE === "true"
+                    ? [
+                        {
+                          label: (
+                            <NavLink to={ROUTER_URL.FORM_PAGE}>
+                              Biểu mẫu
+                            </NavLink>
+                          ),
+                          key: ROUTER_URL.FORM_PAGE,
+                          icon: <FaWpforms />,
+                        },
+                      ]
+                    : []),
+                  {
+                    label: (
+                      <NavLink to={ROUTER_URL.FORM_VERSION_PAGE}>
+                        Phiên bản biểu mẫu
+                      </NavLink>
+                    ),
+                    key: ROUTER_URL.FORM_VERSION_PAGE,
+                    icon: <FaWpforms />,
+                  },
+                  {
+                    label: (
+                      <NavLink to={ROUTER_URL.FORM_GROUP_PAGE}>
+                        Nhóm biểu mẫu
+                      </NavLink>
+                    ),
+                    key: ROUTER_URL.FORM_GROUP_PAGE,
+                    icon: <FaWpforms />,
+                  },
+                  {
+                    label: (
+                      <NavLink to={ROUTER_URL.FORM_FIELD_PAGE}>
+                        Trường của biểu mẫu
+                      </NavLink>
+                    ),
+                    key: ROUTER_URL.FORM_FIELD_PAGE,
+                    icon: <FaWpforms />,
+                  },
                 ],
               },
             ]

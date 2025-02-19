@@ -21,6 +21,8 @@ export type InputTextAttributesType = {
   max: number;
   type: "Email" | "Text" | "Password";
   size: "small" | "middle" | "large";
+  prefix: string;
+  suffix: string;
 };
 
 export type NewInstanceInputText = FormBlockInstance & {
@@ -42,6 +44,8 @@ export const InputTextBlock: ObjectBlockType = {
       max: 255,
       type: "Text",
       size: "middle",
+      prefix: "",
+      suffix: "",
     },
   }),
   blockBtnElement: {

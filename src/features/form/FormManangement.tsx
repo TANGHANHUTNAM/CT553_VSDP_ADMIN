@@ -40,6 +40,8 @@ import {
 } from "../../utils/functionUtils";
 import ModalCreateNewForm from "./ModalCreateNewForm";
 import ModalUpdateForm from "./ModalUpdateForm";
+import Access from "../../router/Access";
+import { ALL_PERMISSIONS } from "../../constants/permissions";
 
 const FormManangement: React.FC = () => {
   const queryClient = useQueryClient();
@@ -207,20 +209,27 @@ const FormManangement: React.FC = () => {
       width: 150,
       render: (_, record) => (
         <Space size={"middle"}>
-          <ViewComponent
-            titleTooltip={`builder ${record.name}`}
-            onClick={() => {
-              navigate(`/form-builder/${record.id}`);
-            }}
-            icon={<RiListSettingsFill className="text-lg" />}
-          />
-          <EditComponent
-            titleTooltip={`Chỉnh sửa ${record.name}`}
-            onClick={() => {
-              setOpenModalUpdateForm(true);
-              setDataDetailForm(record);
-            }}
-          />
+          <Access
+            permission={ALL_PERMISSIONS.FORM.GET_BY_ID}
+            hideChildren={false}
+          >
+            <ViewComponent
+              titleTooltip={`Xây dựng biểu mẫu ${record.name}`}
+              onClick={() => {
+                navigate(`/form-builder/${record.id}`);
+              }}
+              icon={<RiListSettingsFill className="text-lg" />}
+            />
+          </Access>
+          <Access permission={ALL_PERMISSIONS.FORM.UPDATE} hideChildren={false}>
+            <EditComponent
+              titleTooltip={`Chỉnh sửa ${record.name}`}
+              onClick={() => {
+                setOpenModalUpdateForm(true);
+                setDataDetailForm(record);
+              }}
+            />
+          </Access>
           <ActiveComponent
             loading={mutationUpdateFormStatus.isPending}
             titleTooltip={record.is_active ? "Đóng" : "Mở"}
@@ -362,14 +371,16 @@ const FormManangement: React.FC = () => {
           />
         </div>
         <div className="flex w-1/2 items-center justify-end space-x-2">
-          <ButtonComponent
-            text="Thêm mới"
-            textTooltip="Thêm mới biểu mẫu"
-            icon={<FaCirclePlus className="" />}
-            size="large"
-            type="primary"
-            onclick={() => setOpenModalCreateNewForm(true)}
-          />
+          <Access permission={ALL_PERMISSIONS.FORM.CREATE} hideChildren={true}>
+            <ButtonComponent
+              text="Thêm mới"
+              textTooltip="Thêm mới biểu mẫu"
+              icon={<FaCirclePlus className="" />}
+              size="large"
+              type="primary"
+              onclick={() => setOpenModalCreateNewForm(true)}
+            />
+          </Access>
           <ButtonComponent
             text=""
             textTooltip="Làm mới giá trị"

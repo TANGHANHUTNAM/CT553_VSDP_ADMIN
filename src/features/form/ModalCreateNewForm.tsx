@@ -5,6 +5,7 @@ import { createFormService } from "../../services";
 import toast from "react-hot-toast";
 import { SCOPE_FORM } from "../../constants/tableManagement";
 import dayjs, { Dayjs } from "dayjs";
+import { useNavigate } from "react-router-dom";
 const { RangePicker } = DatePicker;
 
 interface IModalCreateNewFormProps {
@@ -23,6 +24,7 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
   open,
   setOpen,
 }) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
 
@@ -36,6 +38,7 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
         toast.success(data.message as string);
         queryClient.invalidateQueries({ queryKey: ["forms"] });
         setOpen(false);
+        navigate(`/form-builder/${data.data.id}`);
       }
       if (data && data.error) {
         toast.error(data.message as string);

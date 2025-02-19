@@ -21,6 +21,9 @@ export type InputNumberAttributesType = {
   prefix: string;
   suffix: string;
   fixed: boolean;
+  min: number;
+  max: number;
+  precision: number;
 };
 
 export type NewInstanceInputNumber = FormBlockInstance & {
@@ -42,6 +45,9 @@ export const InputNumberBlock: ObjectBlockType = {
       prefix: "",
       suffix: "",
       fixed: true,
+      min: 0,
+      max: 100,
+      precision: 0,
     },
   }),
   blockBtnElement: {

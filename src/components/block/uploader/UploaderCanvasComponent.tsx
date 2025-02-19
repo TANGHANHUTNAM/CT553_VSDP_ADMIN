@@ -1,6 +1,6 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Upload, UploadProps } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Form, Upload, UploadFile, UploadProps } from "antd";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { FormBlockInstance } from "../../../interfaces/form-block";
 import { NewInstanceUploader } from "./UploaderBlock";
@@ -11,9 +11,17 @@ const UploaderCanvasComponent = ({
   blockInstance: FormBlockInstance;
 }) => {
   const block = blockInstance as NewInstanceUploader;
-  const { helperText, label, numberMax, required, sizeMax, textButton, type } =
-    block.attributes;
-  const [fileList, setFileList] = useState<any[]>([]);
+  const {
+    helperText,
+    label,
+    numberMax,
+    required,
+    sizeMax,
+    textButton,
+    type,
+    size,
+  } = block.attributes;
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
 
   const convertFileToBase64 = (file: File): Promise<string> => {
@@ -108,12 +116,12 @@ const UploaderCanvasComponent = ({
       );
 
       const filteredBase64Files = base64Files.filter(Boolean);
-      console.log("Filtered base64 files:", filteredBase64Files);
+
       form.setFieldsValue({
         [block.id]:
           filteredBase64Files.length > 0 ? filteredBase64Files : undefined,
       });
-
+      console.log("form.getFieldValue(block.id)", form.getFieldValue(block.id));
       form.validateFields([block.id]);
 
       if (info.file.status === "done") {
@@ -130,9 +138,9 @@ const UploaderCanvasComponent = ({
     },
   };
 
-  useEffect(() => {
-    console.log("form.getFieldValue(block.id)", form.getFieldValue(block.id));
-  }, [fileList, form, block.id]);
+  // useEffect(() => {
+  //   console.log("form.getFieldValue(block.id)", form.getFieldValue(block.id));
+  // }, [fileList, form, block.id]);
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -159,12 +167,20 @@ const UploaderCanvasComponent = ({
           ]}
           validateTrigger={["onChange", "onBlur"]}
         >
-          <Upload {...propsUpload}>
-            <Button icon={<UploadOutlined />}>{textButton}</Button>
+          <Upload
+            className="!pointer-events-none cursor-default"
+            {...propsUpload}
+          >
+            <Button size={size} icon={<UploadOutlined />}>
+              {textButton}
+            </Button>
           </Upload>
         </Form.Item>
       </Form>
       <div className="flex flex-col gap-1 text-xs text-gray-700">
+        <span>
+          Loại file cho phép: {type.length > 0 ? type.join(",") : "*"}
+        </span>
         <span>Kích thước mỗi tệp tối đa: {sizeMax} MB</span>
         <span>Số lượng file tối đa: {numberMax}</span>
       </div>

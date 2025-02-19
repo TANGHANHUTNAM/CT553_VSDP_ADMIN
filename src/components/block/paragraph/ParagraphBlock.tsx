@@ -30,7 +30,6 @@ export const ParagraphBlock: ObjectBlockType = {
     id,
     blockType,
     attributes: {
-      label: "Paragraph",
       text: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis ipsam distinctio eveniet expedita ex nemo dolorem saepe, consectetur, et nobis vero labore assumenda quidem repudiandae non id necessitatibus. Fugiat, consequuntur.",
       fontSize: "text-sm",
       fontWeight: "font-normal",

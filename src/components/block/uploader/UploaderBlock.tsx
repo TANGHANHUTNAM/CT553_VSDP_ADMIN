@@ -20,6 +20,7 @@ export type UploaderAttributesType = {
   sizeMax: number;
   numberMax: number;
   type: string[];
+  size: "small" | "middle" | "large";
 };
 
 export type NewInstanceUploader = FormBlockInstance & {
@@ -39,18 +40,8 @@ export const UploaderBlock: ObjectBlockType = {
       sizeMax: 5,
       numberMax: 5,
       textButton: "Click to Upload",
-      type: [
-        "image/*",
-        // "application/pdf",
-        // ".doc",
-        // ".docx",
-        // ".xls",
-        // ".xlsx",
-        // ".ppt",
-        // ".pptx",
-        // "video/*",
-        // "audio/*",
-      ],
+      type: [],
+      size: "middle",
     },
   }),
   blockBtnElement: {

@@ -81,7 +81,11 @@ export const routerCustom: CustomRouteObject[] = [
       },
       {
         path: ROUTER_URL.FORM_PAGE,
-        element: <FormPage />,
+        element: (
+          <Access permission={ALL_PERMISSIONS.FORM.VIEW} hideChildren={false}>
+            <FormPage />,
+          </Access>
+        ),
         breadcrumb: PAGE_NAME.FORM,
       },
       {
@@ -112,7 +116,14 @@ export const routerCustom: CustomRouteObject[] = [
     children: [
       {
         index: true,
-        element: <FormBuilderPage />,
+        element: (
+          <Access
+            permission={ALL_PERMISSIONS.FORM.GET_BY_ID}
+            hideChildren={false}
+          >
+            <FormBuilderPage />
+          </Access>
+        ),
         breadcrumb: PAGE_NAME.FORM_BUILDER,
       },
     ],

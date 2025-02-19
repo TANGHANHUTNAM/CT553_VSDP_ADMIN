@@ -1,4 +1,4 @@
-import { Form, Input, Select, Switch } from "antd";
+import { Form, Input, InputNumber, Select, Switch } from "antd";
 import { useContext, useEffect } from "react";
 import { OPTIONS_SIZE_INPUT } from "../../../constants/builderForm";
 import { BuilderContext } from "../../../context/form-builder/BuilderContext";
@@ -31,6 +31,9 @@ const InputNumberPropertiesComponent = ({
       prefix: block.attributes.prefix,
       suffix: block.attributes.suffix,
       fixed: block.attributes.fixed,
+      min: block.attributes.min,
+      max: block.attributes.max,
+      precision: block.attributes.precision,
     });
   }, [block.attributes, form]);
 
@@ -66,15 +69,18 @@ const InputNumberPropertiesComponent = ({
           suffix: block.attributes.suffix,
           fixed: block.attributes.fixed,
           size: block.attributes.size,
+          min: block.attributes.min,
+          max: block.attributes.max,
+          precision: block.attributes.precision,
         }}
         labelCol={{ span: 7 }}
         wrapperCol={{ span: 17 }}
         labelAlign="left"
+        validateTrigger={["onChange", "onBlur"]}
       >
         <Form.Item
           label="Label"
           name="label"
-          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: true, message: "Label is required" },
             { min: 3, message: "Label must be at least 3 characters" },
@@ -86,7 +92,6 @@ const InputNumberPropertiesComponent = ({
         <Form.Item
           label="Helper Text"
           name="helperText"
-          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: false },
             {
@@ -115,9 +120,21 @@ const InputNumberPropertiesComponent = ({
           <Select options={OPTIONS_SIZE_INPUT} />
         </Form.Item>
         <Form.Item
+          label="Precision"
+          name="precision"
+          rules={[{ required: false }]}
+        >
+          <InputNumber min={0} />
+        </Form.Item>
+        <Form.Item label="Min" name="min" rules={[{ required: false }]}>
+          <InputNumber min={0} />
+        </Form.Item>
+        <Form.Item label="Max" name="max" rules={[{ required: false }]}>
+          <InputNumber min={0} />
+        </Form.Item>
+        <Form.Item
           label="Prefix"
           name="prefix"
-          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: false },
             {
@@ -131,7 +148,6 @@ const InputNumberPropertiesComponent = ({
         <Form.Item
           label="Suffix"
           name="suffix"
-          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: false },
             {

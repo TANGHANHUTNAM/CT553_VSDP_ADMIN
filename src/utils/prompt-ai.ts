@@ -34,13 +34,21 @@ export const generateFormQuestionPrompt = (
      - \`label\`: (string) The question label.
      - \`options\`: (array) Options, e.g., ["Option 1", "Option 2"].
      - \`required\`: (boolean) If the field is required.
+     - \`helperText\`: (string) Helper text.
+     - \`inline\`: (boolean) If the options should be displayed inline.
 
-2. **TextField**
+2. **InputText**
    - Attributes:
      - \`label\`: (string) The field label.
      - \`helperText\`: (string) Helper text.
      - \`required\`: (boolean) If the field is required.
      - \`placeHolder\`: (string) Placeholder text.
+      - \`min\`: (number) Minimum length default 0.
+      - \`max\`: (number) Maximum length default 255.
+      - \`type\`: (string) Field type, e.g., "Email", "Text", "Password".
+      - \`size\`: (string) Size, e.g., "small", "medium", "large".
+      - \`prefix\`: (string) Prefix text.
+      - \`suffix\`: (string) Suffix text.
 
 3. **TextArea**
    - Attributes:
@@ -49,6 +57,10 @@ export const generateFormQuestionPrompt = (
      - \`required\`: (boolean) If the field is required.
      - \`placeHolder\`: (string) Placeholder text.
      - \`rows\`: (number) Default rows = 3.
+      - \`size\`: (string) Size, e.g., "small", "medium", "large".
+      - \`min\`: (number) Minimum length default 0.
+      - \`max\`: (number) Maximum length default 255.
+
 
 4. **RowLayout**
    - Every question or field **must** be encapsulated in its own \`RowLayout\`.
@@ -57,23 +69,108 @@ export const generateFormQuestionPrompt = (
 5. **Heading**
    - Attributes:
      - \`label\`: (string) The heading label (e.g., the section or subsection title).
-     - \`level\`: (number) The heading level (default to 1 for H1).
-     - \`fontSize\`: (string) Font size, e.g., "medium" or "large".
-     - \`fontWeight\`: (string) Font weight, e.g., "normal".
+     - \`fontSize\`: (string) Font size, e.g., "text-lg".
+     - \`fontWeight\`: (string) Font weight, e.g., "font-normal".
 
 6. **Paragraph**
    - Attributes:
-     - \`label\`: (string) Label for the paragraph block (e.g., description, intro text).
      - \`text\`: (string) The text content of the paragraph.
-     - \`fontSize\`: (string) Font size (e.g., "small", "medium").
-     - \`fontWeight\`: (string) Font weight (e.g., "normal", "bold").
+     - \`fontSize\`: (string) Font size (e.g., "text-sm", "text-base", "text-lg").
+     - \`fontWeight\`: (string) Font weight (e.g., "font-normal", "font-medium").
 
-7. **StarRating**
+7.  **CheckBox**
    - Attributes:
-     - \`label\`: (string) Field label.
-     - \`helperText\`: (string) Helper text.
-     - \`required\`: (boolean) If the field is required.
-     - \`maxStars\`: (number) Default 5.
+      - \`label\`: (string) The question label.
+      - \`options\`: (array) Options, e.g., ["Option 1", "Option 2"].
+      - \`required\`: (boolean) If the field is required.
+      - \`helperText\`: (string) Helper text.
+      - \`inline\`: (boolean) If the options should be displayed inline.
+
+8. **DatePicker**
+   - Attributes:
+      - \`label\`: (string) The question label.
+      - \`helperText\`: (string) Helper text.
+      - \`required\`: (boolean) If the field is required.
+      - \`placeHolder\`: (string) Placeholder text.
+      - \`dateFormat\`: (string) Date format, e.g., "DD/MM/YYYY".
+      - \`minDate\`: (date) Minimum date.
+      - \`maxDate\`: (date) Maximum date.
+      - \`size\`: (string) Size, e.g., "large", "middle", "small".
+
+9. **TimePicker**
+    - Attributes:
+        - \`label\`: (string) The question label.
+        - \`helperText\`: (string) Helper text.
+        - \`required\`: (boolean) If the field is required.
+        - \`placeHolder\`: (string) Placeholder text.
+        - \`formatTime\`: (string) Time format, e.g., "HH:mm:ss".
+        - \`size\`: (string) Size, e.g., "large", "middle", "small".
+
+10. **Signature**
+    - Attributes:
+        - \`label\`: (string) The question label.
+        - \`helperText\`: (string) Helper text.
+        - \`required\`: (boolean) If the field is required.
+
+11. **Uploader**
+    - Attributes:
+        - \`label\`: (string) The question label.
+        - \`helperText\`: (string) Helper text.
+        - \`required\`: (boolean) If the field is required.
+        - \`textButton\`: (string) Button text.
+        - \`sizeMax\`: (number) Maximum size.
+        - \`numberMax\`: (number) Maximum number of files.
+        - \`type\`: (array) File types, e.g., ["image/*", "application/pdf", ".doc"] or [].
+        - \`size\`: (string) Size, e.g., "small", "middle", "large".
+
+12. **EditorText**
+    - Attributes:
+        - \`label\`: (string) The question label.
+        - \`helperText\`: (string) Helper text.
+        - \`required\`: (boolean) If the field is required.
+        - \`placeHolder\`: (string) Placeholder text.
+
+13. **SelectOption**
+    - Attributes:
+        - \`label\`: (string) The question label.
+        - \`helperText\`: (string) Helper text.
+        - \`required\`: (boolean) If the field is required.
+        - \`placeHolder\`: (string) Placeholder text.
+        - \`options\`: (array) Options, e.g., ["Option 1", "Option 2"].
+        - \`size\`: (string) Size, e.g., "small", "middle", "large".
+        - \`placeMent\`: (string) Placement, e.g., "topLeft", "topRight", "bottomLeft", "bottomRight".
+        - \`showSearch\`: (boolean) If the search option should be displayed.
+
+14. **RangePicker**
+    - Attributes:
+        - \`label\`: (string) The question label.
+        - \`helperText\`: (string) Helper text.
+        - \`required\`: (boolean) If the field is required.
+        - \`placeHolder\`: (string) Placeholder text.
+        - \`placeHolderStartDate\`: (string) Placeholder text for start date.
+        - \`placeHolderEndDate\`: (string) Placeholder text for end date.
+        - \`dateFormat\`: (string) Date format, e.g., "DD/MM/YYYY".
+        - \`minDate\`: (date) Minimum date.
+        - \`maxDate\`: (date) Maximum date.
+        - \`size\`: (string) Size, e.g., "large", "middle", "small".
+
+15. **Link**
+    - Attributes:
+        - \`label\`: (string) The question label. 
+        - \`text\`: (string) The text content of the link. default "Click here".
+        - \`href\`: (string) The URL of the link.
+        - \`target\`: (string) The target attribute of the link. default "_blank".
+
+16. **InputNumber**
+    - Attributes:
+        - \`label\`: (string) The question label.
+        - \`helperText\`: (string) Helper text.
+        - \`required\`: (boolean) If the field is required.
+        - \`placeHolder\`: (string) Placeholder text.
+        - \`size\`: (string) Size, e.g., "small", "middle", "large".
+        - \`prefix\`: (string) Prefix text.
+        - \`suffix\`: (string) Suffix text.
+        - \`fixed\`: (boolean) If the field is fixed.
 ---
 
 
@@ -99,7 +196,7 @@ ${stringifiedBlocks}
     - Do not include duplicate questions or modify existing ones.
     - Return new questions encapsulated in \`RowLayout\` blocks.
     - Include unique \`id\` for all blocks and child blocks.
-2. If \`actionType\` is **"createForm"**, return the entire form structure including headings, descriptions, and all new blocks.
+2. If \`actionType\` is **"createForm"**, return the entire form structure, ensuring that headings and paragraphs are grouped within a single RowLayout, followed by all newly added blocks.
     - Completely replace the \`currentBlocks\`.
     - Use the title and description from the user request as part of the new form definition.
 3. Ensure proper encapsulation of all questions and fields in \`RowLayout\` blocks.
@@ -117,10 +214,10 @@ ${stringifiedBlocks}
       "blockType": "RowLayout",
       "attributes": {},
       "isLocked": false,
-      "childblocks": [
+      "childBlock": [
         {
           "id": "new-id-2",
-          "blockType": "TextField",
+          "blockType": "InputText",
           "attributes": {
             "label": "Your Age",
             "helperText": "Enter your age in years.",
@@ -139,22 +236,20 @@ ${stringifiedBlocks}
 {
   "actionType": "createForm",
   "blocks": [
-    
     {
     "id": "row-layout-1",
     "blockType": "RowLayout",
     "attributes": {},
     "isLocked": true,
-    "childblocks": [
+    "childBlock": [
         {
         "id": "heading-1",
         "blockType": "Heading",
-        "isLo
+        "isLocked": true,
         "attributes": {
           "label": "New Form for Survey",
-          "level": 1,
-          "fontSize": "4x-large",
-          "fontWeight": "normal",
+          "fontSize": "text-lg",
+          "fontWeight": "font-normal",
      
         }
       },
@@ -162,10 +257,9 @@ ${stringifiedBlocks}
         "id": "desc-1",
         "blockType": "Paragraph",
         "attributes": {
-          "label": "Description",
           "text": "This form is to gather user feedback.",
-          "fontSize": "small",
-          "fontWeight": "normal"
+          "fontSize": "text-small",
+          "fontWeight": "font-normal"
         }
       },
      ],
@@ -175,14 +269,16 @@ ${stringifiedBlocks}
       "blockType": "RowLayout",
       "attributes": {},
       "isLocked": false,
-      "childblocks": [
+      "childBlock": [
         {
           "id": "new-id-4",
           "blockType": "RadioSelect",
           "attributes": {
             "label": "How satisfied are you?",
             "options": ["Very satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very dissatisfied"],
-            "required": true
+            "required": true,
+            "helperText": "Select one option.",
+            "inline": true
           }
         }
       ]

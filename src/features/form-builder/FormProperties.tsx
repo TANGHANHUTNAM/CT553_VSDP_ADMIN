@@ -1,11 +1,13 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
 import { FormBlocks } from "../../interfaces/form-block";
 import { LuMousePointerClick } from "react-icons/lu";
 
 const FormProperties = () => {
-  const { selectedBlockLayout } = useContext(BuilderContext);
-
+  const { selectedBlockLayout, blocksLayout } = useContext(BuilderContext);
+  useEffect(() => {
+    console.log("blocksLayout", blocksLayout);
+  }, [blocksLayout]);
   const LayoutPropertyBlock =
     selectedBlockLayout &&
     FormBlocks[selectedBlockLayout.blockType]?.propertiesComponent;

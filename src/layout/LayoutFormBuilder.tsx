@@ -7,6 +7,8 @@ import {
   GLOBAL_COLOR_SUCCESS,
 } from "../constants/colorCustom";
 import BackToTop from "../components/BackToTop";
+import Access from "../router/Access";
+import { ALL_PERMISSIONS } from "../constants/permissions";
 
 const LayoutFormBuilder: React.FC = () => {
   return (
@@ -23,11 +25,16 @@ const LayoutFormBuilder: React.FC = () => {
           },
         }}
       >
-        <HeaderFormBuilder />
-        <div className="relative bg-transparent">
-          <BackToTop />
-          <Outlet />
-        </div>
+        <Access
+          permission={ALL_PERMISSIONS.FORM.GET_BY_ID}
+          hideChildren={false}
+        >
+          <HeaderFormBuilder />
+          <div className="relative bg-transparent">
+            <BackToTop />
+            <Outlet />
+          </div>
+        </Access>
       </ConfigProvider>
     </>
   );

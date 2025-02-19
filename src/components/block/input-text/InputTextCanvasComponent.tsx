@@ -8,8 +8,18 @@ const InputTextCanvasComponent = ({
   blockInstance: FormBlockInstance;
 }) => {
   const block = blockInstance as NewInstanceInputText;
-  const { helperText, label, placeHolder, required, min, max, type, size } =
-    block.attributes;
+  const {
+    helperText,
+    label,
+    placeHolder,
+    required,
+    min,
+    max,
+    type,
+    size,
+    prefix,
+    suffix,
+  } = block.attributes;
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="mb-3 text-base">
@@ -47,6 +57,8 @@ const InputTextCanvasComponent = ({
               variant="underlined"
               className="!pointer-events-none w-2/3 cursor-default"
               placeholder={placeHolder}
+              prefix={prefix}
+              suffix={suffix}
             />
           ) : (
             <Input
@@ -56,6 +68,8 @@ const InputTextCanvasComponent = ({
               variant="underlined"
               className="!pointer-events-none w-2/3 cursor-default"
               placeholder={placeHolder}
+              prefix={prefix}
+              suffix={suffix}
             />
           )}
         </Form.Item>

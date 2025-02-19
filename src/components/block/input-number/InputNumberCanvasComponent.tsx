@@ -17,6 +17,9 @@ const InputNumberCanvasComponent = ({
     suffix,
     prefix,
     fixed,
+    max,
+    min,
+    precision,
   } = block.attributes;
   return (
     <div className="flex w-full flex-col gap-2">
@@ -43,6 +46,9 @@ const InputNumberCanvasComponent = ({
             readOnly
             prefix={prefix}
             suffix={suffix}
+            min={min}
+            max={max}
+            precision={precision}
             variant="underlined"
             className="!pointer-events-none w-2/3 cursor-default"
             placeholder={placeHolder}

@@ -16,6 +16,9 @@ const InputNumberFormComponent = ({
     suffix,
     prefix,
     fixed,
+    max,
+    min,
+    precision,
   } = block.attributes;
   return (
     <div className="flex w-full flex-col gap-2">
@@ -43,6 +46,9 @@ const InputNumberFormComponent = ({
             suffix={suffix}
             variant="underlined"
             className="w-2/3"
+            max={max}
+            min={min}
+            precision={precision}
             placeholder={placeHolder}
             formatter={(value) => {
               return fixed

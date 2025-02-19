@@ -1,5 +1,6 @@
 import { SortOrder, TablePaginationConfig } from "antd/es/table/interface";
 import { v4 as uuidv4 } from "uuid";
+import { FormBlockInstance } from "../interfaces/form-block";
 export const colorMethod = (
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
 ) => {
@@ -94,4 +95,14 @@ export const formatGender = (value: string | undefined) => {
 
 export const generateUniqueId = () => {
   return uuidv4().replace(/-/g, "").substring(0, 25);
+};
+
+export const updateUniqueId = (blocks: FormBlockInstance[]) => {
+  blocks.forEach((block) => {
+    block.id = generateUniqueId();
+    block?.childBlock?.forEach((childBlock) => {
+      childBlock.id = generateUniqueId();
+    });
+  });
+  return blocks;
 };

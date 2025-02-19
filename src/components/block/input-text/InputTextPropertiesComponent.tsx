@@ -31,6 +31,8 @@ const InputTextPropertiesComponent = ({
       max: block.attributes.max,
       type: block.attributes.type,
       size: block.attributes.size,
+      prefix: block.attributes.prefix,
+      suffix: block.attributes.suffix,
     });
   }, [block.attributes, form]);
 
@@ -64,6 +66,8 @@ const InputTextPropertiesComponent = ({
           max: block.attributes.max,
           type: block.attributes.type,
           size: block.attributes.size,
+          prefix: block.attributes.prefix,
+          suffix: block.attributes.suffix,
         }}
         labelCol={{ span: 7 }}
         wrapperCol={{ span: 17 }}
@@ -140,6 +144,13 @@ const InputTextPropertiesComponent = ({
 
         <Form.Item label="Size" name="size" rules={[{ required: false }]}>
           <Select options={OPTIONS_SIZE_INPUT} />
+        </Form.Item>
+
+        <Form.Item label="Prefix" name="prefix" rules={[{ required: false }]}>
+          <Input allowClear />
+        </Form.Item>
+        <Form.Item label="Suffix" name="suffix" rules={[{ required: false }]}>
+          <Input allowClear />
         </Form.Item>
         <Form.Item
           label="Required"
