@@ -8,7 +8,7 @@ const InputTextCanvasComponent = ({
   blockInstance: FormBlockInstance;
 }) => {
   const block = blockInstance as NewInstanceInputText;
-  const { helperText, label, placeHolder, required, min, max, type } =
+  const { helperText, label, placeHolder, required, min, max, type, size } =
     block.attributes;
   return (
     <div className="flex w-full flex-col gap-2">
@@ -17,7 +17,7 @@ const InputTextCanvasComponent = ({
           {label}
           {required && <span className="ml-1">*</span>}
         </label>
-        {helperText && <p className="mt-1 text-[0.8rem]">{helperText}</p>}
+        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
       </div>
       <Form>
         <Form.Item
@@ -40,16 +40,17 @@ const InputTextCanvasComponent = ({
         >
           {type === "Password" ? (
             <Input.Password
-              size="large"
+              size={size}
               allowClear
               readOnly
+              autoComplete="new-password"
               variant="underlined"
               className="!pointer-events-none w-2/3 cursor-default"
               placeholder={placeHolder}
             />
           ) : (
             <Input
-              size="large"
+              size={size}
               allowClear
               readOnly
               variant="underlined"

@@ -2,7 +2,8 @@ import { useContext, useEffect } from "react";
 import { BuilderContext } from "../../../context/form-builder/BuilderContext";
 import { FormBlockInstance } from "../../../interfaces/form-block";
 import { NewInstanceTextArea, TextAreaAttributesType } from "./TextAreaBlock";
-import { Form, Input, InputNumber, Switch } from "antd";
+import { Form, Input, InputNumber, Select, Switch } from "antd";
+import { OPTIONS_SIZE_INPUT } from "../../../constants/builderForm";
 
 const TextAreaPropertiesComponent = ({
   positionIndex,
@@ -25,6 +26,7 @@ const TextAreaPropertiesComponent = ({
       min: block.attributes.min,
       max: block.attributes.max,
       rows: block.attributes.rows,
+      size: block.attributes.size,
     });
   }, [block.attributes, form]);
 
@@ -57,10 +59,14 @@ const TextAreaPropertiesComponent = ({
           max: block.attributes.max,
           rows: block.attributes.rows,
         }}
+        labelCol={{ span: 7 }}
+        wrapperCol={{ span: 17 }}
+        labelAlign="left"
       >
         <Form.Item
           label="Label"
           name="label"
+          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: true, message: "Label is required" },
             { min: 3, message: "Label must be at least 3 characters" },
@@ -72,6 +78,7 @@ const TextAreaPropertiesComponent = ({
         <Form.Item
           label="Helper Text"
           name="helperText"
+          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: false },
             { max: 255, message: "Helper text must be at most 255 characters" },
@@ -82,6 +89,7 @@ const TextAreaPropertiesComponent = ({
         <Form.Item
           label="Place Holder"
           name="placeHolder"
+          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: false },
             {
@@ -115,7 +123,9 @@ const TextAreaPropertiesComponent = ({
         <Form.Item label="Rows" name="rows" rules={[{ required: false }]}>
           <InputNumber min={0} />
         </Form.Item>
-
+        <Form.Item label="Size" name="size" rules={[{ required: false }]}>
+          <Select options={OPTIONS_SIZE_INPUT} />
+        </Form.Item>
         <Form.Item
           label="Required"
           name="required"

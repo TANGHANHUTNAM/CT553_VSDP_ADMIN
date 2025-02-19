@@ -14,6 +14,7 @@ const blockType: FormBlockType = "RadioSelect";
 
 export type RadioSelectAttributes = {
   label: string;
+  helperText: string;
   options: string[];
   required: boolean;
   inline: boolean;
@@ -32,7 +33,8 @@ export const RadioSelectBlock: ObjectBlockType = {
       blockType,
       isLocked: false,
       attributes: {
-        label: "Select an option",
+        label: "Choose an option",
+        helperText: "Helper Text",
         options: ["Option 1", "Option 2", "Option 3"],
         required: true,
         inline: false,

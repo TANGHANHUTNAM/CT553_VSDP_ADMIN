@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { FaCircle, FaPaintBrush } from "react-icons/fa";
+import { FaCircle } from "react-icons/fa";
+import { FaRobot } from "react-icons/fa6";
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 import FormProperties from "./FormProperties";
+import FormAI from "./FormAI";
 
 const BuilderSidebarRight = ({
   isCloseSidebarRight,
@@ -10,7 +12,7 @@ const BuilderSidebarRight = ({
   isCloseSidebarRight: boolean;
   setIsCloseSidebarRight: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [tab, setTab] = useState<"properties" | "style">("properties");
+  const [tab, setTab] = useState<"properties" | "AI">("properties");
   return (
     <div
       className={`fixed h-full p-2 transition-all duration-300 ${isCloseSidebarRight ? "w-0 pr-3" : "w-1/4 pl-4"}`}
@@ -31,16 +33,16 @@ const BuilderSidebarRight = ({
               <div>Properties</div>
             </div>
             <div
-              onClick={() => setTab("style")}
-              className={`${tab === "style" ? "text-primary" : "text-gray-700"} flex w-1/2 cursor-pointer flex-col items-center py-2`}
+              onClick={() => setTab("AI")}
+              className={`${tab === "AI" ? "text-primary" : "text-gray-700"} flex w-1/2 cursor-pointer flex-col items-center py-2`}
             >
-              <FaPaintBrush className="text-xl" />
-              <div>Style</div>
+              <FaRobot className="text-xl" />
+              <div>AI Support</div>
             </div>
           </div>
           <div className="">
             {tab === "properties" && <FormProperties />}
-            {tab === "style" && <>a</>}
+            {tab === "AI" && <FormAI />}
           </div>
         </>
       )}

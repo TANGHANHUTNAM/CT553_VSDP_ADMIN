@@ -27,6 +27,8 @@ const RadioSelectPropertiesComponent = ({
       label: block.attributes.label,
       options: block.attributes.options || [],
       required: block.attributes.required,
+      inline: block.attributes.inline,
+      helperText: block.attributes.helperText,
     });
   }, [block.attributes, form]);
   const onValuesChange = (_: unknown, allValues: RadioSelectAttributes) => {
@@ -53,11 +55,17 @@ const RadioSelectPropertiesComponent = ({
           label: block.attributes.label,
           options: block.attributes.options || [],
           required: block.attributes.required,
+          inline: block.attributes.inline,
+          helperText: block.attributes.helperText,
         }}
+        labelCol={{ span: 7 }}
+        wrapperCol={{ span: 17 }}
+        labelAlign="left"
       >
         <Form.Item
           label="Label"
           name="label"
+          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: true, message: "Label is required" },
             { min: 3, message: "Label must be at least 3 characters" },
@@ -67,39 +75,61 @@ const RadioSelectPropertiesComponent = ({
           <Input allowClear />
         </Form.Item>
 
+        <Form.Item
+          label="Helper Text"
+          name="helperText"
+          validateTrigger={["onChange", "onBlur"]}
+          rules={[
+            { max: 255, message: "Helper text must be at most 255 characters" },
+          ]}
+        >
+          <Input allowClear />
+        </Form.Item>
+
         <Form.List name="options">
           {(fields, { add, remove }) => (
             <>
-              {fields.map(({ key, name, ...restField }) => (
-                <Space
+              {fields.map(({ key, name, ...restField }, index) => (
+                <Form.Item
                   key={key}
-                  style={{
-                    display: "flex",
-                    marginBottom: 8,
-                    justifyContent: "center",
-                  }}
-                  align="baseline"
+                  label={`Option ${index + 1}`}
+                  labelCol={{ span: 7 }}
+                  wrapperCol={{ span: 17 }}
+                  labelAlign="left"
+                  required
                 >
-                  <Form.Item
-                    {...restField}
-                    name={[name]}
-                    key={key}
-                    rules={[{ required: true, message: "Option is required" }]}
+                  <Space
+                    style={{ display: "flex", width: "100%" }}
+                    align="baseline"
                   >
-                    <Input placeholder="Enter an option" allowClear />
-                  </Form.Item>
-                  <Button
-                    type="default"
-                    icon={<RiDeleteBin6Line />}
-                    onClick={() => {
-                      remove(name);
-                      onValuesChange({}, form.getFieldsValue());
-                    }}
-                    danger
-                  />
-                </Space>
+                    <Form.Item
+                      {...restField}
+                      name={[name]}
+                      validateTrigger={["onChange", "onBlur"]}
+                      rules={[
+                        { required: true, message: "Option is required" },
+                      ]}
+                      style={{ flex: 1, marginBottom: 0 }}
+                    >
+                      <Input placeholder="Enter an option" allowClear />
+                    </Form.Item>
+                    <Button
+                      type="default"
+                      icon={<RiDeleteBin6Line />}
+                      onClick={() => {
+                        remove(name);
+                        onValuesChange({}, form.getFieldsValue());
+                      }}
+                      danger
+                    />
+                  </Space>
+                </Form.Item>
               ))}
-              <Form.Item>
+              <Form.Item
+                wrapperCol={{ span: 24 }}
+                labelCol={{ span: 0 }}
+                style={{ textAlign: "center" }}
+              >
                 <Button
                   type="dashed"
                   onClick={() => add(`Option ${fields.length + 1}`)}
@@ -113,11 +143,25 @@ const RadioSelectPropertiesComponent = ({
           )}
         </Form.List>
 
-        <Form.Item label="Inline" name="inline" valuePropName="checked">
+        <Form.Item
+          label="Inline"
+          name="inline"
+          valuePropName="checked"
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 17 }}
+          labelAlign="left"
+        >
           <Switch size="small" value={block.attributes.inline} />
         </Form.Item>
 
-        <Form.Item label="Required" name="required" valuePropName="checked">
+        <Form.Item
+          label="Required"
+          name="required"
+          valuePropName="checked"
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 17 }}
+          labelAlign="left"
+        >
           <Switch size="small" value={block.attributes.required} />
         </Form.Item>
       </Form>

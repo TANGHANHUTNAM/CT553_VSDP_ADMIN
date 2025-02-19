@@ -29,8 +29,8 @@ const FormComponents: React.FC = () => {
         {/* Layout */}
         {layoutBlocks.length > 0 && (
           <div className="mt-2">
-            <h1 className="">Layout</h1>
-            <div className="mt-1.5 grid grid-cols-2 gap-3">
+            <h1 className="text-base font-medium">Layout</h1>
+            <div className="mt-2 grid grid-cols-2 gap-3.5">
               {layoutBlocks.map((block) => (
                 <BlockBtnElement key={block.blockType} formBlock={block} />
               ))}
@@ -40,8 +40,8 @@ const FormComponents: React.FC = () => {
         {/* Field */}
         {fieldBlocks.length > 0 && (
           <div className="mt-3">
-            <h1 className="">Field</h1>
-            <div className="mt-1.5 grid grid-cols-2 gap-3">
+            <h1 className="text-base font-medium">Field</h1>
+            <div className="mt-2 grid grid-cols-2 gap-3.5">
               {fieldBlocks.map((block) => (
                 <BlockBtnElement key={block.blockType} formBlock={block} />
               ))}

@@ -20,7 +20,7 @@ const BlockBtnElement = ({
   return (
     <button
       ref={draggable.setNodeRef}
-      className={`flex cursor-pointer items-center space-x-1.5 rounded-md bg-gray-100 p-1.5 text-sm ring-1 ring-gray-300 hover:ring-primary ${draggable.isDragging ? "cursor-pointer shadow-xl ring-2 ring-primary" : ""}`}
+      className={`flex cursor-pointer items-center space-x-1.5 rounded-sm bg-gray-100 p-1.5 text-sm font-light text-gray-700 ring-1 ring-gray-300 hover:ring-primary ${draggable.isDragging ? "cursor-pointer shadow-xl ring-2 ring-primary" : ""}`}
       disabled={disabled}
       {...draggable.attributes}
       {...draggable.listeners}

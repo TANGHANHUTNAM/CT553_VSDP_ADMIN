@@ -8,7 +8,7 @@ const TextAreaFormComponent = ({
   blockInstance: FormBlockInstance;
 }) => {
   const block = blockInstance as NewInstanceTextArea;
-  const { label, placeHolder, required, helperText, rows, max, min } =
+  const { label, placeHolder, required, helperText, rows, max, min, size } =
     block.attributes;
   return (
     <div className="flex w-full flex-col gap-2">
@@ -17,9 +17,9 @@ const TextAreaFormComponent = ({
           {label}
           {required && <span className="ml-1 text-red-500">*</span>}
         </label>
-        {helperText && <p className="mt-1 text-[0.8rem]">{helperText}</p>}
+        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
       </div>
-      <Form>
+      <Form validateTrigger={["onChange", "onBlur"]}>
         <Form.Item
           validateTrigger="onBlur"
           name={block?.id}
@@ -41,9 +41,9 @@ const TextAreaFormComponent = ({
         >
           <Input.TextArea
             rows={rows}
-            size="large"
+            size={size}
             allowClear
-            className="w-full"
+            className="w-2/3"
             placeholder={placeHolder}
           />
         </Form.Item>

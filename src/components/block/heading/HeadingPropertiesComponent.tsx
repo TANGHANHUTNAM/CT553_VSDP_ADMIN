@@ -77,10 +77,14 @@ const HeadingPropertiesComponent = ({
           fontSize: block.attributes.fontSize,
           fontWeight: block.attributes.fontWeight,
         }}
+        labelCol={{ span: 7 }}
+        wrapperCol={{ span: 17 }}
+        labelAlign="left"
       >
         <Form.Item
-          label="Content"
+          label="Label"
           name="label"
+          validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: true, message: "Label is required" },
             { min: 0, message: "Label must be at least 0 characters" },

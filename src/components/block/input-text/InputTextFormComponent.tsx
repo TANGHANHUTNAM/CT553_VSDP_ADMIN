@@ -8,7 +8,7 @@ const InputTextFormComponent = ({
   blockInstance: FormBlockInstance;
 }) => {
   const block = blockInstance as NewInstanceInputText;
-  const { helperText, label, placeHolder, required, min, max, type } =
+  const { helperText, label, placeHolder, required, min, max, type, size } =
     block.attributes;
   return (
     <div className="flex w-full flex-col gap-2">
@@ -17,9 +17,9 @@ const InputTextFormComponent = ({
           {label}
           {required && <span className="ml-1 text-red-500">*</span>}
         </label>
-        {helperText && <p className="mt-1 text-[0.8rem]">{helperText}</p>}
+        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
       </div>
-      <Form>
+      <Form validateTrigger={["onChange", "onBlur"]}>
         <Form.Item
           validateTrigger="onBlur"
           name={block?.id}
@@ -53,15 +53,16 @@ const InputTextFormComponent = ({
         >
           {type === "Password" ? (
             <Input.Password
-              size="large"
+              size={size}
               allowClear
+              autoComplete="new-password"
               variant="underlined"
               className="w-2/3"
               placeholder={placeHolder}
             />
           ) : (
             <Input
-              size="large"
+              size={size}
               allowClear
               variant="underlined"
               className="w-2/3"

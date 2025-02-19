@@ -20,6 +20,7 @@ export type TextAreaAttributesType = {
   min: number;
   max: number;
   rows: number;
+  size: "small" | "middle" | "large";
 };
 
 export type NewInstanceTextArea = FormBlockInstance & {
@@ -40,6 +41,7 @@ export const TextAreaBlock: ObjectBlockType = {
       rows: 3,
       min: 0,
       max: 255,
+      size: "middle",
     },
   }),
   blockBtnElement: {

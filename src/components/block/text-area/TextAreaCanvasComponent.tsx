@@ -8,7 +8,7 @@ const TextAreaCanvasComponent = ({
   blockInstance: FormBlockInstance;
 }) => {
   const block = blockInstance as NewInstanceTextArea;
-  const { label, placeHolder, required, helperText, rows, max, min } =
+  const { label, placeHolder, required, helperText, rows, max, min, size } =
     block.attributes;
   return (
     <div className="flex w-full flex-col gap-2">
@@ -17,7 +17,7 @@ const TextAreaCanvasComponent = ({
           {label}
           {required && <span className="ml-1">*</span>}
         </label>
-        {helperText && <p className="mt-1 text-[0.8rem]">{helperText}</p>}
+        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
       </div>
       <Form>
         <Form.Item
@@ -40,10 +40,10 @@ const TextAreaCanvasComponent = ({
         >
           <Input.TextArea
             rows={rows}
-            size="large"
+            size={size}
             allowClear
             readOnly
-            className="!pointer-events-none cursor-default"
+            className="!pointer-events-none w-2/3 cursor-default"
             placeholder={placeHolder}
           />
         </Form.Item>

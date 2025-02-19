@@ -12,7 +12,7 @@ const RadioSelectFormComponent = ({
   blockInstance: FormBlockInstance;
 }) => {
   const block = blockInstance as NewInstanceRadioSelect;
-  const { label, options, required, inline } = block.attributes;
+  const { label, options, required, inline, helperText } = block.attributes;
 
   return (
     <div className="flex w-full flex-col gap-3">
@@ -21,8 +21,9 @@ const RadioSelectFormComponent = ({
           {label}
           {required && <span className="ml-1 text-base text-red-500">*</span>}
         </label>
+        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
       </div>
-      <Form>
+      <Form validateTrigger={["onChange", "onBlur"]}>
         <Form.Item
           name={block?.id}
           rules={[{ required: required, message: `Please select ${label}` }]}

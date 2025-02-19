@@ -13,7 +13,7 @@ const RowLayoutFormComponent = ({
     <div className="max-w-full">
       {blockInstance.isLocked && <Border />}
       <Card
-        className={`relative min-h-32 w-full max-w-3xl rounded-lg border-2 border-gray-200 bg-white`}
+        className={`relative min-h-32 w-full max-w-3xl ${blockInstance.isLocked ? "rounded-t-none" : ""} rounded-lg border-2 border-gray-200 bg-white`}
         style={{
           padding: "4px",
         }}

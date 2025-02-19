@@ -1,8 +1,19 @@
+import { CheckBoxBlock } from "../../components/block/check-box/CheckBoxBlock";
+import { DatePickerBlock } from "../../components/block/datepicker/DatePickerBlock";
+import { EditorTextBlock } from "../../components/block/editor-text/EditorTextBlock";
 import { HeadingBlock } from "../../components/block/heading/HeadingBlock";
+import { InputNumberBlock } from "../../components/block/input-number/InputNumberBlock";
 import { InputTextBlock } from "../../components/block/input-text/InputTextBlock";
 import { RowLayoutBlock } from "../../components/block/layouts/RowLayout";
+import { LinkBlock } from "../../components/block/link/LinkBlock";
+import { ParagraphBlock } from "../../components/block/paragraph/ParagraphBlock";
 import { RadioSelectBlock } from "../../components/block/radio-select/RadioSelectBlock";
+import { RangePickerBlock } from "../../components/block/rangepicker/RangePickerBlock";
+import { SelectOptionBlock } from "../../components/block/select-option/SelectOption";
+import { SignatureBlock } from "../../components/block/signature/SignatureBlock";
 import { TextAreaBlock } from "../../components/block/text-area/TextAreaBlock";
+import { TimePickerBlock } from "../../components/block/timepicker/TimePickerBlock";
+import { UploaderBlock } from "../../components/block/uploader/UploaderBlock";
 
 export type FormCategoryType = "Layout" | "Field";
 
@@ -11,7 +22,18 @@ export type FormBlockType =
   | "RadioSelect"
   | "InputText"
   | "TextArea"
-  | "Heading";
+  | "Heading"
+  | "Paragraph"
+  | "SelectOption"
+  | "InputNumber"
+  | "EditorText"
+  | "DatePicker"
+  | "CheckBox"
+  | "TimePicker"
+  | "RangePicker"
+  | "Signature"
+  | "Uploader"
+  | "Link";
 
 export type ObjectBlockType = {
   blockCategory: FormCategoryType;
@@ -47,5 +69,16 @@ export const FormBlocks: FormBlocksType = {
   Heading: HeadingBlock,
   InputText: InputTextBlock,
   TextArea: TextAreaBlock,
+  InputNumber: InputNumberBlock,
+  EditorText: EditorTextBlock,
+  SelectOption: SelectOptionBlock,
   RadioSelect: RadioSelectBlock,
+  Paragraph: ParagraphBlock,
+  DatePicker: DatePickerBlock,
+  CheckBox: CheckBoxBlock,
+  TimePicker: TimePickerBlock,
+  RangePicker: RangePickerBlock,
+  Signature: SignatureBlock,
+  Uploader: UploaderBlock,
+  Link: LinkBlock,
 };

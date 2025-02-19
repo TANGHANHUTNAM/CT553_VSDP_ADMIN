@@ -97,9 +97,9 @@ const BuilderCanvas = () => {
   return (
     <div
       ref={droppable.setNodeRef}
-      className={`mx-3 min-h-[calc(100vh-140px)] rounded-lg bg-blue-50 p-1.5 ring-1 ring-primary scrollbar-thin ${droppable.isOver ? "ring-2" : ""}`}
+      className={`mx-3 min-h-[calc(100vh-140px)] rounded-lg bg-blue-50 p-3 ring-1 ring-primary scrollbar-thin ${droppable.isOver ? "ring-2" : ""}`}
     >
-      <div className="mx-auto flex h-full w-full max-w-3xl flex-col items-center rounded-md bg-red-100 p-2">
+      <div className="mx-auto flex h-full w-full max-w-3xl flex-col items-center">
         <div className="h-[135px] w-full rounded-md bg-[url('./assets/1200x300.png')] bg-cover bg-center bg-no-repeat" />
         {blocksLayout.length > 0 && (
           <div className="mt-4 flex h-full w-full flex-col gap-4">

@@ -7,6 +7,7 @@ const ChildCanvasComponentWrapper = ({
 }) => {
   const CanvasComponent = FormBlocks[blockInstance.blockType]?.canvasComponent;
   if (!CanvasComponent) return null;
+
   return <CanvasComponent blockInstance={blockInstance} />;
 };
 

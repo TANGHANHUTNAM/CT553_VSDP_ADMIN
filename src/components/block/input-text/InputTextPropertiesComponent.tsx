@@ -6,6 +6,7 @@ import {
   InputTextAttributesType,
   NewInstanceInputText,
 } from "./InputTextBlock";
+import { OPTIONS_SIZE_INPUT } from "../../../constants/builderForm";
 
 const InputTextPropertiesComponent = ({
   positionIndex,
@@ -29,6 +30,7 @@ const InputTextPropertiesComponent = ({
       min: block.attributes.min,
       max: block.attributes.max,
       type: block.attributes.type,
+      size: block.attributes.size,
     });
   }, [block.attributes, form]);
 
@@ -61,7 +63,12 @@ const InputTextPropertiesComponent = ({
           min: block.attributes.min,
           max: block.attributes.max,
           type: block.attributes.type,
+          size: block.attributes.size,
         }}
+        labelCol={{ span: 7 }}
+        wrapperCol={{ span: 17 }}
+        labelAlign="left"
+        validateTrigger={["onChange", "onBlur"]}
       >
         <Form.Item
           label="Label"
@@ -97,14 +104,8 @@ const InputTextPropertiesComponent = ({
         >
           <Input allowClear />
         </Form.Item>
-        <Form.Item
-          label="Type"
-          name="type"
-          rules={[{ required: false }]}
-          valuePropName="checked"
-        >
+        <Form.Item label="Type" name="type" rules={[{ required: false }]}>
           <Select
-            defaultValue={block.attributes.type}
             options={[
               { label: "Email", value: "Email" },
               { label: "Text", value: "Text" },
@@ -137,6 +138,9 @@ const InputTextPropertiesComponent = ({
           </>
         )}
 
+        <Form.Item label="Size" name="size" rules={[{ required: false }]}>
+          <Select options={OPTIONS_SIZE_INPUT} />
+        </Form.Item>
         <Form.Item
           label="Required"
           name="required"

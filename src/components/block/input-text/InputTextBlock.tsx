@@ -20,6 +20,7 @@ export type InputTextAttributesType = {
   min: number;
   max: number;
   type: "Email" | "Text" | "Password";
+  size: "small" | "middle" | "large";
 };
 
 export type NewInstanceInputText = FormBlockInstance & {
@@ -33,18 +34,19 @@ export const InputTextBlock: ObjectBlockType = {
     id,
     blockType,
     attributes: {
-      label: "Input Field",
+      label: "Input Text",
       helperText: "Helper Text",
       required: true,
       placeHolder: "Enter text here.",
       min: 0,
       max: 255,
       type: "Text",
+      size: "middle",
     },
   }),
   blockBtnElement: {
     icon: FaPenToSquare,
-    label: "Input Field",
+    label: "Input Text",
   },
   canvasComponent: InputTextCanvasComponent,
   formComponent: InputTextFormComponent,
@@ -66,7 +68,7 @@ export const InputTextBlock: ObjectBlockType = {
 //           {label}
 //           {required && <span className="ml-1">*</span>}
 //         </label>
-//         {helperText && <p className="mt-1 text-[0.8rem]">{helperText}</p>}
+//         {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
 //       </div>
 //       <Form>
 //         <Form.Item
@@ -127,7 +129,7 @@ export const InputTextBlock: ObjectBlockType = {
 //           {label}
 //           {required && <span className="ml-1 text-red-500">*</span>}
 //         </label>
-//         {helperText && <p className="mt-1 text-[0.8rem]">{helperText}</p>}
+//         {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
 //       </div>
 //       <Form>
 //         <Form.Item

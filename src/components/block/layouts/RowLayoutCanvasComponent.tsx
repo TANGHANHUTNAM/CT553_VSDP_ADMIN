@@ -101,7 +101,7 @@ const RowLayoutCanvasComponent = ({
       <Card
         ref={droppable.setNodeRef}
         onClick={() => handleSelectedBlockLayout(blockInstance)}
-        className={`relative min-h-40 w-full max-w-3xl border border-dashed border-primary shadow-sm hover:cursor-pointer`}
+        className={`relative min-h-40 w-full max-w-3xl border border-dashed border-primary ${blockInstance.isLocked ? "rounded-t-none" : ""} shadow-sm hover:cursor-pointer`}
         style={{
           padding: "4px",
         }}
