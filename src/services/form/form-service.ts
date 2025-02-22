@@ -1,6 +1,7 @@
 import {
   IDataFormRequest,
   IDataFormsResponse,
+  IFormBuilderRequest,
   IFormResponse,
   IResponse,
 } from "../../interfaces";
@@ -33,7 +34,21 @@ export const updateFormService = async (
 
 export const updateStatusFormService = async (
   id: string,
-  status: number,
+  is_default: boolean,
 ): Promise<IResponse<IFormResponse>> => {
-  return axiosClient.patch(`/forms/${id}/status`, { status });
+  return axiosClient.patch(`/forms/${id}/status`, { is_default });
+};
+
+export const updateStyleFormService = async (
+  id: string,
+  data: FormData,
+): Promise<IResponse<IFormResponse>> => {
+  return axiosClient.patch(`/forms/${id}/style/update`, data);
+};
+
+export const saveFormBuilderService = async (
+  id: string,
+  data: IFormBuilderRequest,
+): Promise<IResponse<IFormResponse>> => {
+  return axiosClient.patch(`/forms/${id}/builder/update`, data);
 };

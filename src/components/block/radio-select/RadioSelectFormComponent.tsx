@@ -26,7 +26,7 @@ const RadioSelectFormComponent = ({
       <Form validateTrigger={["onChange", "onBlur"]}>
         <Form.Item
           name={block?.id}
-          rules={[{ required: required, message: `Please select ${label}` }]}
+          rules={[{ required: required, message: `Vui lòng chọn ${label}` }]}
         >
           <Radio.Group style={!inline ? styleRadioSelectInline : undefined}>
             {options.map((option, index) => {

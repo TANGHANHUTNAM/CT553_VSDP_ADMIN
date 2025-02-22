@@ -70,9 +70,9 @@ const UploaderPropertiesComponent = ({
           label="Label"
           name="label"
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 3, message: "Label must be at least 3 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Label là bắt buộc" },
+            { min: 3, message: "Label có ít nhất 3 ký tự" },
+            { max: 255, message: "Label có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -82,7 +82,7 @@ const UploaderPropertiesComponent = ({
           name="helperText"
           rules={[
             { required: false },
-            { max: 255, message: "Helper text must be at most 255 characters" },
+            { max: 255, message: "Helper text có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -94,7 +94,7 @@ const UploaderPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Place holder must be at most 255 characters",
+              message: "Place holder có tối đa 255 ký tự",
             },
           ]}
         >
@@ -104,7 +104,7 @@ const UploaderPropertiesComponent = ({
           label="Max Files"
           name="numberMax"
           rules={[
-            { required: true, message: "Max number of files is required" },
+            { required: true, message: "Số lượng tệp tối đa là bắt buộc" },
           ]}
         >
           <InputNumber min={1} max={10} suffix={"Files"} />
@@ -112,7 +112,9 @@ const UploaderPropertiesComponent = ({
         <Form.Item
           label="Max Size"
           name="sizeMax"
-          rules={[{ required: true, message: "Max size is required" }]}
+          rules={[
+            { required: true, message: "Kích thước tệp tối đa là bắt buộc" },
+          ]}
         >
           <InputNumber min={1} suffix={"MB"} />
         </Form.Item>

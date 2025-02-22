@@ -60,9 +60,9 @@ const LinkPropertiesComponent = ({
           label="Label"
           name="label"
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 3, message: "Label must be at least 3 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Labellà bắt buộc" },
+            { min: 3, message: "Label có ít nhất 3 ký tự" },
+            { max: 255, message: "Label có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />

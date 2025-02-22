@@ -27,15 +27,15 @@ const TextAreaFormComponent = ({
           rules={[
             {
               required: required,
-              message: `${label} is required`,
+              message: `${label} là bắt buộc`,
             },
             {
               min: min,
-              message: `${label} must be at least ${min} characters`,
+              message: `${label} có ít nhất ${min} ký tự`,
             },
             {
               max: max,
-              message: `${label} must be at most ${max} characters`,
+              message: `${label} có nhiều nhất ${max} ký tự`,
             },
           ]}
         >

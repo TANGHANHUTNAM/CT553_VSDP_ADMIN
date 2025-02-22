@@ -26,7 +26,7 @@ const TimePickerCanvasComponent = ({
           rules={[
             {
               required: required,
-              message: `${label} is required`,
+              message: `${label} là bắt buộc`,
             },
           ]}
         >

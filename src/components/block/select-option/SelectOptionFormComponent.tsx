@@ -30,7 +30,7 @@ const SelectOptionFormComponent = ({
       <Form validateTrigger={["onChange", "onBlur"]}>
         <Form.Item
           name={block?.id}
-          rules={[{ required: required, message: `Please select ${label}` }]}
+          rules={[{ required: required, message: `Vui lòng chọn ${label}` }]}
           className="w-2/3"
         >
           <Select

@@ -152,33 +152,33 @@ const LayoutAdmin: React.FC = () => {
                         },
                       ]
                     : []),
-                  {
-                    label: (
-                      <NavLink to={ROUTER_URL.FORM_VERSION_PAGE}>
-                        Phiên bản biểu mẫu
-                      </NavLink>
-                    ),
-                    key: ROUTER_URL.FORM_VERSION_PAGE,
-                    icon: <FaWpforms />,
-                  },
-                  {
-                    label: (
-                      <NavLink to={ROUTER_URL.FORM_GROUP_PAGE}>
-                        Nhóm biểu mẫu
-                      </NavLink>
-                    ),
-                    key: ROUTER_URL.FORM_GROUP_PAGE,
-                    icon: <FaWpforms />,
-                  },
-                  {
-                    label: (
-                      <NavLink to={ROUTER_URL.FORM_FIELD_PAGE}>
-                        Trường của biểu mẫu
-                      </NavLink>
-                    ),
-                    key: ROUTER_URL.FORM_FIELD_PAGE,
-                    icon: <FaWpforms />,
-                  },
+                  // {
+                  //   label: (
+                  //     <NavLink to={ROUTER_URL.FORM_VERSION_PAGE}>
+                  //       Phiên bản biểu mẫu
+                  //     </NavLink>
+                  //   ),
+                  //   key: ROUTER_URL.FORM_VERSION_PAGE,
+                  //   icon: <FaWpforms />,
+                  // },
+                  // {
+                  //   label: (
+                  //     <NavLink to={ROUTER_URL.FORM_GROUP_PAGE}>
+                  //       Nhóm biểu mẫu
+                  //     </NavLink>
+                  //   ),
+                  //   key: ROUTER_URL.FORM_GROUP_PAGE,
+                  //   icon: <FaWpforms />,
+                  // },
+                  // {
+                  //   label: (
+                  //     <NavLink to={ROUTER_URL.FORM_FIELD_PAGE}>
+                  //       Trường của biểu mẫu
+                  //     </NavLink>
+                  //   ),
+                  //   key: ROUTER_URL.FORM_FIELD_PAGE,
+                  //   icon: <FaWpforms />,
+                  // },
                 ],
               },
             ]

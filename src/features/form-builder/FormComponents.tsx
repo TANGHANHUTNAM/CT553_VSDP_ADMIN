@@ -1,7 +1,7 @@
-import { IoMdSearch } from "react-icons/io";
-import InputSearchComponent from "../../components/InputSearchComponent";
 import { useState } from "react";
+import { IoMdSearch } from "react-icons/io";
 import BlockBtnElement from "../../components/block/BlockBtnElement";
+import InputSearchComponent from "../../components/InputSearchComponent";
 import { FormBlocks } from "../../interfaces/form-block";
 
 const FormComponents: React.FC = () => {
@@ -21,7 +21,7 @@ const FormComponents: React.FC = () => {
         onSearch={(value) => setSearch(value)}
         size="middle"
         allowClear
-        placeholder="Search..."
+        placeholder="Tìm kiếm..."
         className="w-full"
         enterButton={<IoMdSearch className="text-xl" />}
       />

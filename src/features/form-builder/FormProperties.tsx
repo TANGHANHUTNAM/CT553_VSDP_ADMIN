@@ -1,26 +1,38 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
+import { LuMousePointerClick } from "react-icons/lu";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
 import { FormBlocks } from "../../interfaces/form-block";
-import { LuMousePointerClick } from "react-icons/lu";
+import { LuFileLock2 } from "react-icons/lu";
 
 const FormProperties = () => {
-  const { selectedBlockLayout, blocksLayout } = useContext(BuilderContext);
-  useEffect(() => {
-    console.log("blocksLayout", blocksLayout);
-  }, [blocksLayout]);
+  const { selectedBlockLayout, formData } = useContext(BuilderContext);
+
   const LayoutPropertyBlock =
     selectedBlockLayout &&
     FormBlocks[selectedBlockLayout.blockType]?.propertiesComponent;
   return !selectedBlockLayout ? (
     <div className="flex h-[calc(100vh-150px)] items-center justify-center gap-2">
       <LuMousePointerClick className="text-2xl text-gray-400" />
-      Select a block to view properties
+      Chọn một khối để xem và chỉnh sửa
     </div>
   ) : (
     <div className="mt-2 h-[calc(100vh-160px)] w-full overflow-y-auto p-1 text-gray-600 scrollbar-thin">
-      <h1 className="mb-2 text-lg"> Properties </h1>
+      {formData?.is_public ? (
+        <div className="flex h-[calc(100vh-210px)] flex-col items-center justify-center text-primary">
+          <LuFileLock2 className="mb-1 text-2xl" />
+          <p className="text-base">Biểu mẫu đã khóa vì đã công khai!</p>
+        </div>
+      ) : (
+        <p className="mb-2 text-lg">Thuộc tính</p>
+      )}
       {LayoutPropertyBlock && (
-        <LayoutPropertyBlock blockInstance={selectedBlockLayout} />
+        <>
+          {formData?.is_public ? (
+            <div className=""></div>
+          ) : (
+            <LayoutPropertyBlock blockInstance={selectedBlockLayout} />
+          )}
+        </>
       )}
     </div>
   );

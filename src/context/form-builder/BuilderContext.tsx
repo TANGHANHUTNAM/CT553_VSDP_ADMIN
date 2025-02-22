@@ -4,6 +4,14 @@ import { FormBlockInstance } from "../../interfaces/form-block";
 
 interface IBuilderContextProviderProps {
   formData: IFormResponse | null;
+  primaryColor: string;
+  setPrimaryColor: React.Dispatch<React.SetStateAction<string>>;
+  blockColor: string;
+  setBlockColor: React.Dispatch<React.SetStateAction<string>>;
+  backgroundColor: string;
+  setBackgroundColor: React.Dispatch<React.SetStateAction<string>>;
+  imge_url: string;
+  setImageUrl: React.Dispatch<React.SetStateAction<string>>;
   setFormData: React.Dispatch<React.SetStateAction<IFormResponse | null>>;
   blocksLayout: FormBlockInstance[];
   setBlocksLayout: React.Dispatch<React.SetStateAction<FormBlockInstance[]>>;
@@ -28,6 +36,8 @@ interface IBuilderContextProviderProps {
     childrenBlockId: string,
     updatedBlock: FormBlockInstance,
   ) => void;
+  lockBlockLayout(blockId: string): void;
+  unlockBlockLayout(blockId: string): void;
 }
 
 export const BuilderContext = createContext<IBuilderContextProviderProps>(

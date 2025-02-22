@@ -37,13 +37,13 @@ const InputTextFormComponent = ({
           rules={[
             {
               required: required,
-              message: `${label} is required`,
+              message: `${label} là bắt buộc`,
             },
             ...(type === "Email"
               ? [
                   {
                     type: "email" as const,
-                    message: "Please enter a valid email",
+                    message: "Email không hợp lệ",
                   },
                 ]
               : []),
@@ -51,11 +51,11 @@ const InputTextFormComponent = ({
               ? [
                   {
                     min: min,
-                    message: `${label} must be at least ${min} characters`,
+                    message: `${label} có ít nhất ${min} ký tự`,
                   },
                   {
                     max: max,
-                    message: `${label} must be at most ${max} characters`,
+                    message: `${label} có nhiều nhất ${max} ký tự`,
                   },
                 ]
               : []),

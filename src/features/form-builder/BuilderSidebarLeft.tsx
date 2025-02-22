@@ -4,6 +4,8 @@ import { LuSettings2 } from "react-icons/lu";
 import FormComponents from "./FormComponents";
 import FormSettings from "./FormSettings";
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
+import { FaRegListAlt } from "react-icons/fa";
+import FormSections from "./FormSections";
 
 const BuilderSidebarLeft = ({
   isCloseSidebarLeft,
@@ -12,7 +14,10 @@ const BuilderSidebarLeft = ({
   isCloseSidebarLeft: boolean;
   setIsCloseSidebarLeft: (value: boolean) => void;
 }) => {
-  const [tab, setTab] = useState<"component" | "setting">("component");
+  const [tab, setTab] = useState<"component" | "setting" | "sections">(
+    "component",
+  );
+
   return (
     <div
       className={`fixed h-full p-2 transition-all duration-300 ${isCloseSidebarLeft ? "w-0 pl-3" : "w-1/4 pr-4"}`}
@@ -31,18 +36,26 @@ const BuilderSidebarLeft = ({
               className={`${tab === "component" ? "text-primary" : "text-gray-700"} flex w-1/2 cursor-pointer flex-col items-center py-2`}
             >
               <CiCirclePlus className="text-xl" />
-              <div>Components</div>
+              <div>Thành phần</div>
+            </div>
+            <div
+              onClick={() => setTab("sections")}
+              className={`${tab === "sections" ? "text-primary" : "text-gray-700"} flex w-1/2 cursor-pointer flex-col items-center py-2`}
+            >
+              <FaRegListAlt className="text-xl" />
+              <div>Phần biểu mẫu</div>
             </div>
             <div
               onClick={() => setTab("setting")}
               className={`${tab === "setting" ? "text-primary" : "text-gray-700"} flex w-1/2 cursor-pointer flex-col items-center py-2`}
             >
               <LuSettings2 className="text-xl" />
-              <div>Settings</div>
+              <div>Cài đặt</div>
             </div>
           </div>
           <div className="">
             {tab === "component" && <FormComponents />}
+            {tab === "sections" && <FormSections />}
             {tab === "setting" && <FormSettings />}
           </div>
         </>

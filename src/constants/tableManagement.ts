@@ -26,6 +26,17 @@ export const STATUS = [
   },
 ];
 
+export const STATUS_PUBLIC = [
+  {
+    value: "active",
+    label: "Công khai",
+  },
+  {
+    value: "inactive",
+    label: "Riêng tư",
+  },
+];
+
 export const SIZE_TABLE = [
   {
     key: "lagre",

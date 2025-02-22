@@ -73,9 +73,9 @@ const DatePickerPropertiesComponent = ({
           label="Label"
           name="label"
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 3, message: "Label must be at least 3 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Label là bắt buộc" },
+            { min: 3, message: "Label phải có ít nhất 3 ký tự" },
+            { max: 255, message: "Label phải có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -85,7 +85,7 @@ const DatePickerPropertiesComponent = ({
           name="helperText"
           rules={[
             { required: false },
-            { max: 255, message: "Helper text must be at most 255 characters" },
+            { max: 255, message: "Helper text phải có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -97,7 +97,7 @@ const DatePickerPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Place holder must be at most 255 characters",
+              message: "Place holder phải có tối đa 255 ký tự",
             },
           ]}
         >
@@ -128,7 +128,7 @@ const DatePickerPropertiesComponent = ({
           <DatePicker
             allowClear
             className="w-full"
-            placeholder="Choose min date"
+            placeholder="Chọn ngày tối thiểu"
             format={form.getFieldValue("dateFormat")}
           />
         </Form.Item>
@@ -146,7 +146,7 @@ const DatePickerPropertiesComponent = ({
                   value <= form.getFieldValue("minDate")
                 ) {
                   return Promise.reject(
-                    "Max date must be greater than min date",
+                    "Ngày tối đa phải lớn hơn ngày tối thiểu",
                   );
                 }
                 return Promise.resolve();
@@ -157,7 +157,7 @@ const DatePickerPropertiesComponent = ({
           <DatePicker
             allowClear
             className="w-full"
-            placeholder="Choose max date"
+            placeholder="Chọn ngày tối đa"
             format={form.getFieldValue("dateFormat")}
           />
         </Form.Item>

@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { BuilderContext } from "./BuilderContext";
-import { IFormResponse } from "../../interfaces";
-import { FormBlockInstance } from "../../interfaces/form-block";
+import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import {
+  GLOBAL_COLOR,
+  GLOBAL_COLOR_BACKGROUND,
+  GLOBAL_COLOR_BLOCK,
+} from "../../constants/colorCustom";
+import { IFormResponse, IResponse } from "../../interfaces";
+import { FormBlockInstance } from "../../interfaces/form-block";
 import { getFormById } from "../../services";
-import { useQuery } from "@tanstack/react-query";
 import { generateUniqueId } from "../../utils/functionUtils";
+import { BuilderContext } from "./BuilderContext";
+import LoadingComponent from "../../components/LoadingComponent";
 import NotFoundComponent from "../../components/NotFoundComponent";
 
 interface IBuilderContextProviderProps {
@@ -19,19 +25,44 @@ const BuilderContextProvider: React.FC<IBuilderContextProviderProps> = ({
   const form_id = param["form_id"];
   const [formData, setFormData] = useState<IFormResponse | null>(null);
   const [blocksLayout, setBlocksLayout] = useState<FormBlockInstance[]>([]);
+  const [primaryColor, setPrimaryColor] = useState<string>(GLOBAL_COLOR);
+  const [blockColor, setBlockColor] = useState<string>(GLOBAL_COLOR_BLOCK);
+  const [backgroundColor, setBackgroundColor] = useState<string>(
+    GLOBAL_COLOR_BACKGROUND,
+  );
+  const [imge_url, setImageUrl] = useState<string>("");
+
   const [selectedBlockLayout, setSelectedBlockLayout] =
     useState<FormBlockInstance | null>(null);
-  const { data } = useQuery({
-    queryKey: ["form", form_id],
-    queryFn: () => getFormById(form_id || ""),
-    staleTime: Infinity,
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (data?.data?.json_blocks) {
-      setBlocksLayout(JSON.parse(data.data.json_blocks));
-    }
-  }, [data]);
+    const fetchFormBuilder = async () => {
+      setIsLoading(true);
+      try {
+        const res: IResponse<IFormResponse> = await getFormById(form_id || "");
+        if (res && res.data) {
+          setFormData(res.data);
+          setBlocksLayout(res.data.json_blocks || []);
+          setPrimaryColor(res.data.primary_color || GLOBAL_COLOR);
+          setBlockColor(res.data.block_color || GLOBAL_COLOR_BLOCK);
+          setBackgroundColor(
+            res.data.background_color || GLOBAL_COLOR_BACKGROUND,
+          );
+          setImageUrl(res.data.image_url || "");
+        }
+        if (res && res.error) {
+          toast.error(res.message as string);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchFormBuilder();
+  }, [form_id]);
 
   const addBlockLayout = (block: FormBlockInstance) => {
     setBlocksLayout((prevBlocks) => [...prevBlocks, block]);
@@ -133,10 +164,34 @@ const BuilderContextProvider: React.FC<IBuilderContextProviderProps> = ({
     });
   };
 
+  const lockBlockLayout = (blockId: string) => {
+    setBlocksLayout((prevBlocks) =>
+      prevBlocks.map((block) =>
+        block.id === blockId ? { ...block, isLocked: true } : block,
+      ),
+    );
+  };
+
+  const unlockBlockLayout = (blockId: string) => {
+    setBlocksLayout((prevBlocks) =>
+      prevBlocks.map((block) =>
+        block.id === blockId ? { ...block, isLocked: false } : block,
+      ),
+    );
+  };
+
   return (
     <BuilderContext.Provider
       value={{
-        formData: data?.data || formData,
+        formData,
+        primaryColor,
+        setPrimaryColor,
+        blockColor,
+        setBlockColor,
+        backgroundColor,
+        setBackgroundColor,
+        imge_url,
+        setImageUrl,
         setFormData,
         blocksLayout: blocksLayout,
         setBlocksLayout,
@@ -149,9 +204,15 @@ const BuilderContextProvider: React.FC<IBuilderContextProviderProps> = ({
         insertBlockLayoutAtIndex,
         updatedBlockLayouts,
         updateChildBlock,
+        lockBlockLayout,
+        unlockBlockLayout,
       }}
     >
-      {data?.data ? children : <NotFoundComponent />}
+      {isLoading ? (
+        <LoadingComponent />
+      ) : (
+        <>{formData ? children : <NotFoundComponent />}</>
+      )}
     </BuilderContext.Provider>
   );
 };

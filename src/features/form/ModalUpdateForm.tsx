@@ -1,10 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import { useRef } from "react";
+import toast from "react-hot-toast";
+import ReactQuill from "react-quill";
+import CustomReactQuill from "../../components/CustomReactQuill";
+import { SCOPE_FORM } from "../../constants/tableManagement";
 import { IDataFormRequest, IFormResponse } from "../../interfaces";
 import { updateFormService } from "../../services";
-import toast from "react-hot-toast";
-import dayjs, { Dayjs } from "dayjs";
-import { SCOPE_FORM } from "../../constants/tableManagement";
 const { RangePicker } = DatePicker;
 
 interface IModalUpdateFormProps {
@@ -27,7 +30,7 @@ const ModalUpdateForm: React.FC<IModalUpdateFormProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
-
+  const quillRef = useRef<ReactQuill>(null);
   const mutationUpdateForm = useMutation({
     mutationFn: async ({
       id,
@@ -72,6 +75,8 @@ const ModalUpdateForm: React.FC<IModalUpdateFormProps> = ({
         okText="Cập nhật"
         cancelText="Hủy"
         maskClosable={false}
+        centered
+        width={1000}
         afterOpenChange={(open) => {
           if (!open) {
             form.resetFields();
@@ -126,9 +131,31 @@ const ModalUpdateForm: React.FC<IModalUpdateFormProps> = ({
               required: true,
               message: "Mô tả không được để trống!",
             },
+            {
+              validator: (_: unknown, content: string) => {
+                const textContent = content.replace(/<(.|\n)*?>/g, "").trim();
+                const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(
+                  content,
+                );
+
+                if (textContent === "" && !hasImage) {
+                  return Promise.reject(new Error("Mô tả là bắt buộc!"));
+                }
+                return Promise.resolve();
+              },
+            },
           ]}
         >
-          <Input placeholder="Mô tả" />
+          <CustomReactQuill
+            quillRef={quillRef}
+            onChange={(content) => {
+              console.log(content);
+              return form.setFieldsValue({ description: content });
+            }}
+            theme="snow"
+            value={form.getFieldValue("description")}
+            placeholder="Mô tả thông tin biểu mẫu một cách chi tiết!"
+          />
         </Form.Item>
         <Form.Item
           name="scope"

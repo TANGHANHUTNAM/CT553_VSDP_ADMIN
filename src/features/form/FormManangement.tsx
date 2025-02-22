@@ -4,16 +4,20 @@ import {
   Checkbox,
   Dropdown,
   MenuProps,
+  Modal,
   Space,
   Table,
   TableColumnsType,
   TableProps,
   Tag,
 } from "antd";
+import parse from "html-react-parser";
 import { useEffect, useState } from "react";
+import { FaBan } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import { GrPowerReset } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
+import { MdOutlineEditCalendar } from "react-icons/md";
 import { RiListSettingsFill } from "react-icons/ri";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ActiveComponent from "../../components/ActiveComponent";
@@ -22,13 +26,15 @@ import EditComponent from "../../components/EditComponent";
 import InputSearchComponent from "../../components/InputSearchComponent";
 import TableSizeSettingComponent from "../../components/TableSizeSettingComponent";
 import ViewComponent from "../../components/ViewComponent";
+import { ALL_PERMISSIONS } from "../../constants/permissions";
 import {
   PER_PAGE,
   SCOPE_FORM,
   SIZE_TABLE,
-  STATUS,
+  STATUS_PUBLIC,
 } from "../../constants/tableManagement";
 import { IFormResponse } from "../../interfaces";
+import Access from "../../router/Access";
 import {
   getAllFormsWithPagination,
   updateStatusFormService,
@@ -40,8 +46,6 @@ import {
 } from "../../utils/functionUtils";
 import ModalCreateNewForm from "./ModalCreateNewForm";
 import ModalUpdateForm from "./ModalUpdateForm";
-import Access from "../../router/Access";
-import { ALL_PERMISSIONS } from "../../constants/permissions";
 
 const FormManangement: React.FC = () => {
   const queryClient = useQueryClient();
@@ -75,6 +79,11 @@ const FormManangement: React.FC = () => {
     null,
   );
 
+  const [dataDescription, setDataDescription] = useState<IFormResponse | null>(
+    null,
+  );
+  const [openModalDescription, setOpenModalDescription] =
+    useState<boolean>(false);
   useEffect(() => {
     searchParams.set("search", search);
     if (search === "") {
@@ -107,8 +116,13 @@ const FormManangement: React.FC = () => {
   });
 
   const mutationUpdateFormStatus = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: number }) =>
-      updateStatusFormService(id, status),
+    mutationFn: async ({
+      id,
+      is_default,
+    }: {
+      id: string;
+      is_default: boolean;
+    }) => updateStatusFormService(id, is_default),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["forms"] });
     },
@@ -135,6 +149,20 @@ const FormManangement: React.FC = () => {
       title: "Mô tả",
       key: "description",
       dataIndex: "description",
+      render: (_, record) => {
+        return (
+          <Tag
+            className="cursor-pointer"
+            color="geekblue-inverse"
+            onClick={() => {
+              setDataDescription(record);
+              setOpenModalDescription(true);
+            }}
+          >
+            xem chi tiết
+          </Tag>
+        );
+      },
     },
     {
       title: "Mục đích",
@@ -151,13 +179,13 @@ const FormManangement: React.FC = () => {
       filteredValue: filterScope ? [filterScope] : null,
     },
     {
-      title: "Đang sử dụng",
+      title: "Hiển thị giao diện",
       key: "is_default",
       dataIndex: "is_default",
       render: (is_default) => {
         return (
           <Tag color={is_default ? "green" : "red"}>
-            {is_default ? "Có" : "Không"}
+            {is_default ? "Đang chọn" : "Không chọn"}
           </Tag>
         );
       },
@@ -184,24 +212,26 @@ const FormManangement: React.FC = () => {
     },
 
     {
-      title: "Hoạt động",
-      dataIndex: "is_active",
-      key: "is_active",
+      title: "Công khai",
+      dataIndex: "is_public",
+      key: "is_public",
       filterIcon: (filtered) => (
         <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
       ),
       filterMultiple: false,
-      filters: STATUS.map((item) => ({ text: item.label, value: item.value })),
+      filters: STATUS_PUBLIC.map((item) => ({
+        text: item.label,
+        value: item.value,
+      })),
       filteredValue: filterStatus ? [filterStatus] : null,
-      render: (is_active) => {
+      render: (is_public) => {
         return (
-          <Tag color={is_active ? "green" : "red"}>
-            {is_active ? "Hoạt động" : "Không hoạt động"}
+          <Tag color={is_public ? "green" : "red"}>
+            {is_public ? "Đã công khai" : "Chưa công khai"}
           </Tag>
         );
       },
     },
-
     {
       title: "Thao tác",
       key: "action",
@@ -214,11 +244,11 @@ const FormManangement: React.FC = () => {
             hideChildren={false}
           >
             <ViewComponent
-              titleTooltip={`Xây dựng biểu mẫu ${record.name}`}
+              titleTooltip={`Thiết kế biểu mẫu ${record.name}`}
               onClick={() => {
                 navigate(`/form-builder/${record.id}`);
               }}
-              icon={<RiListSettingsFill className="text-lg" />}
+              icon={<MdOutlineEditCalendar className="text-lg" />}
             />
           </Access>
           <Access permission={ALL_PERMISSIONS.FORM.UPDATE} hideChildren={false}>
@@ -230,18 +260,27 @@ const FormManangement: React.FC = () => {
               }}
             />
           </Access>
-          <ActiveComponent
-            loading={mutationUpdateFormStatus.isPending}
-            titleTooltip={record.is_active ? "Đóng" : "Mở"}
-            onChange={(checked) => {
-              mutationUpdateFormStatus.mutate({
-                id: record.id,
-                status: checked ? 1 : 0,
-              });
-            }}
-            defaultChecked={record.is_active}
-            value={record.is_active}
-          />
+          {record.scope === SCOPE_FORM[0].value ? (
+            <ActiveComponent
+              loading={mutationUpdateFormStatus.isPending}
+              titleTooltip={
+                record.is_default
+                  ? "Đang hiển thị trên giao diện"
+                  : "Chọn hiển thị giao diện"
+              }
+              onChange={(checked) => {
+                mutationUpdateFormStatus.mutate({
+                  id: record.id,
+                  is_default: checked,
+                });
+              }}
+              disabled={record.is_default}
+              defaultChecked={record.is_default}
+              value={record.is_default}
+            />
+          ) : (
+            <FaBan className="cursor-not-allowed text-lg text-red-500" />
+          )}
         </Space>
       ),
     },
@@ -259,7 +298,7 @@ const FormManangement: React.FC = () => {
     }
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (key === "is_active") {
+        if (key === "is_public") {
           if (value && value[0]) {
             setFilterStatus(value[0] as string);
           }
@@ -274,7 +313,7 @@ const FormManangement: React.FC = () => {
         }
       });
     }
-    if (!filters.is_active) {
+    if (!filters.is_public) {
       setFilterStatus("");
     }
     if (!filters.scope) {
@@ -421,6 +460,19 @@ const FormManangement: React.FC = () => {
         setOpen={setOpenModalUpdateForm}
         dataDetailForm={dataDetailForm}
       />
+      <Modal
+        open={openModalDescription}
+        width={1000}
+        title="Chi tiết mô tả"
+        onCancel={() => setOpenModalDescription(false)}
+        afterClose={() => setDataDescription(null)}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelText="Hủy"
+        className=""
+        centered
+      >
+        <div className="prose">{parse(dataDescription?.description || "")}</div>
+      </Modal>
     </>
   );
 };

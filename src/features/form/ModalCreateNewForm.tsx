@@ -1,11 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import { useRef } from "react";
+import toast from "react-hot-toast";
+import ReactQuill from "react-quill";
+import { useNavigate } from "react-router-dom";
+import CustomReactQuill from "../../components/CustomReactQuill";
+import { SCOPE_FORM } from "../../constants/tableManagement";
+import { useAppSelector } from "../../hooks";
 import { IDataFormRequest } from "../../interfaces";
 import { createFormService } from "../../services";
-import toast from "react-hot-toast";
-import { SCOPE_FORM } from "../../constants/tableManagement";
-import dayjs, { Dayjs } from "dayjs";
-import { useNavigate } from "react-router-dom";
 const { RangePicker } = DatePicker;
 
 interface IModalCreateNewFormProps {
@@ -27,6 +31,7 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
+  const quillRef = useRef<ReactQuill>(null);
 
   const mutationCreateForm = useMutation({
     mutationFn: async (data: IDataFormRequest) => {
@@ -49,11 +54,15 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
     },
   });
 
+  const { user } = useAppSelector((state) => state.user);
+
   const onCreate = (data: IDataForm) => {
     mutationCreateForm.mutate({
       ...data,
       start_date: data.time[0],
       end_date: data.time[1],
+      creator_id: user?.id as number,
+      creator_name: user?.name as string,
     });
   };
   return (
@@ -71,6 +80,8 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
         }}
         onCancel={() => setOpen(false)}
         destroyOnClose
+        centered
+        width={1000}
         modalRender={(dom) => (
           <Form
             layout="vertical"
@@ -102,9 +113,31 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
               required: true,
               message: "Mô tả không được để trống!",
             },
+            {
+              validator: (_: unknown, content: string) => {
+                const textContent = content.replace(/<(.|\n)*?>/g, "").trim();
+                const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(
+                  content,
+                );
+
+                if (textContent === "" && !hasImage) {
+                  return Promise.reject(new Error("Mô tả là bắt buộc!"));
+                }
+                return Promise.resolve();
+              },
+            },
           ]}
         >
-          <Input placeholder="Mô tả" />
+          <CustomReactQuill
+            quillRef={quillRef}
+            onChange={(content) => {
+              console.log(content);
+              return form.setFieldsValue({ description: content });
+            }}
+            theme="snow"
+            value={form.getFieldValue("description")}
+            placeholder="Mô tả thông tin biểu mẫu một cách chi tiết!"
+          />
         </Form.Item>
         <Form.Item
           name="scope"

@@ -30,7 +30,7 @@ const EditorTextCanvasComponent = ({
         content === "<p><br></p>" ||
         content.replace(/<(.|\n)*?>/g, "").trim() === "")
     ) {
-      return Promise.reject(new Error(`${label} is required`));
+      return Promise.reject(new Error(`${label} là bắt buộc`));
     }
     return Promise.resolve();
   };

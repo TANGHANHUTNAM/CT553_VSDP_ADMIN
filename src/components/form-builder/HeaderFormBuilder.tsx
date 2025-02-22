@@ -1,8 +1,8 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import vsdp from "../../assets/logo.png";
-import AvatarComponent from "../AvatarComponent";
 import { ROUTER_URL } from "../../constants/routerIndex";
 import { useAppSelector } from "../../hooks";
+import AvatarComponent from "../AvatarComponent";
 
 const HeaderFormBuilder: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
@@ -16,21 +16,6 @@ const HeaderFormBuilder: React.FC = () => {
           </span>
         </Link>
         <div className="flex items-center space-x-4 text-gray-700">
-          <NavLink
-            to={ROUTER_URL.DASHBOARD_PAGE}
-            className="hover:text-primary"
-          >
-            Trở về trang quản trị
-          </NavLink>
-          <NavLink to={""} className="hover:text-primary">
-            Bảng điều khiển
-          </NavLink>
-          <NavLink to={""} className="hover:text-primary">
-            Cài đặt
-          </NavLink>
-          <NavLink to={""} className="hover:text-primary">
-            Downloads
-          </NavLink>
           <div className="flex items-center justify-center space-x-1.5 font-semibold">
             <div>{user?.name || "Người dùng"}</div>
             <AvatarComponent src={user?.avatar_url} />

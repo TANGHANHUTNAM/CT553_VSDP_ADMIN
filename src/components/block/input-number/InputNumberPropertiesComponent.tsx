@@ -82,9 +82,9 @@ const InputNumberPropertiesComponent = ({
           label="Label"
           name="label"
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 3, message: "Label must be at least 3 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Label là bắt buộc" },
+            { min: 3, message: "Label có ít nhất 3 ký tự" },
+            { max: 255, message: "Label có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -96,7 +96,7 @@ const InputNumberPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Helper text must be at most 255 characters",
+              message: "Helper text có tối đa 255 ký tự",
             },
           ]}
         >
@@ -110,7 +110,7 @@ const InputNumberPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Place holder must be at most 255 characters",
+              message: "Place holder có tối đa 255 ký tự",
             },
           ]}
         >
@@ -139,7 +139,7 @@ const InputNumberPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Prefix text must be at most 255 characters",
+              message: "Prefix có tối đa 255 ký tự",
             },
           ]}
         >
@@ -152,7 +152,7 @@ const InputNumberPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Suffix text must be at most 255 characters",
+              message: "Suffix có tối đa 255 ký tự",
             },
           ]}
         >

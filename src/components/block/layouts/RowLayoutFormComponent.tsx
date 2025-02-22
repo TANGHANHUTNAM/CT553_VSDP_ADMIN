@@ -2,24 +2,31 @@ import { Card } from "antd";
 import { FormBlockInstance } from "../../../interfaces/form-block";
 import Border from "./Border";
 import ChildFormComponentWrapper from "../ChildFormComponentWrapper";
+import { BuilderContext } from "../../../context/form-builder/BuilderContext";
+import { useContext } from "react";
 
 const RowLayoutFormComponent = ({
   blockInstance,
 }: {
   blockInstance: FormBlockInstance;
 }) => {
+  const { blockColor } = useContext(BuilderContext);
   const childBlocks = blockInstance.childBlock || [];
   return (
     <div className="max-w-full">
       {blockInstance.isLocked && <Border />}
       <Card
-        className={`relative min-h-32 w-full max-w-3xl ${blockInstance.isLocked ? "rounded-t-none" : ""} rounded-lg border-2 border-gray-200 bg-white`}
+        className={`relative w-full max-w-3xl`}
         style={{
-          padding: "4px",
+          backgroundColor: blockColor,
+          borderRadius: "0.5rem",
+          minHeight: "128px",
+          borderTopLeftRadius: blockInstance.isLocked ? 0 : "0.5rem",
+          borderTopRightRadius: blockInstance.isLocked ? 0 : "0.5rem",
         }}
         styles={{
           body: {
-            padding: "0px",
+            padding: "4px",
           },
         }}
       >

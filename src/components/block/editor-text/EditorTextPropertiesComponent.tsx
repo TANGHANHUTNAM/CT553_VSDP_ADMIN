@@ -65,9 +65,9 @@ const EditorTextPropertiesComponent = ({
           label="Label"
           name="label"
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 3, message: "Label must be at least 3 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Label là bắt buộc" },
+            { min: 3, message: "Label phải có ít nhất 3 ký tự" },
+            { max: 255, message: "Label phải có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -77,7 +77,7 @@ const EditorTextPropertiesComponent = ({
           name="helperText"
           rules={[
             { required: false },
-            { max: 255, message: "Helper text must be at most 255 characters" },
+            { max: 255, message: "Helper text phải có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -89,7 +89,7 @@ const EditorTextPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Place holder must be at most 255 characters",
+              message: "Place holder phải có tối đa 255 ký tự",
             },
           ]}
         >

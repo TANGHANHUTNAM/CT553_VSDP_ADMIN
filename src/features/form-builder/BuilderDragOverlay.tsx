@@ -3,9 +3,10 @@ import { useContext, useState } from "react";
 import BlockBtnDragOverlay from "../../components/block/BlockBtnDragOverlay";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
 import { FormBlocks, FormBlockType } from "../../interfaces/form-block";
+import { BsGrid3X2Gap } from "react-icons/bs";
 
 const BuilderDragOverlay = () => {
-  const { blocksLayout } = useContext(BuilderContext);
+  const { blocksLayout, primaryColor } = useContext(BuilderContext);
   const [draggeItem, setDraggedItem] = useState<Active | null>(null);
   useDndMonitor({
     onDragStart: (event) => {
@@ -38,17 +39,25 @@ const BuilderDragOverlay = () => {
       // const CanvasComponent = FormBlocks[blockLayout.blockType].canvasComponent;
       fallback = (
         <div
-          className={`flex min-h-28 cursor-pointer items-center justify-center space-x-1.5 rounded-sm bg-gray-100 p-1.5 text-sm ring-1 ring-gray-300 hover:ring-primary`}
+          style={{
+            color: primaryColor,
+            backgroundColor: primaryColor + "10",
+            border: `3px dashed ${primaryColor}`,
+          }}
+          className={`relative flex min-h-28 cursor-pointer items-center justify-center space-x-1.5 rounded-sm bg-gray-100 p-1.5 text-sm`}
         >
+          <div className="absolute top-1 cursor-move">
+            <BsGrid3X2Gap className="text-lg" />
+          </div>
           {/* <CanvasComponent blockInstance={blockLayout} /> */}
-          <span>{blockLayout.blockType}</span>
+          <span className="text-lg font-bold">{blockLayout.blockType}</span>
         </div>
       );
     }
   }
   return (
     <DragOverlay>
-      <div className="cursor-move opacity-75">{fallback}</div>
+      <div className="cursor-move opacity-80">{fallback}</div>
     </DragOverlay>
   );
 };

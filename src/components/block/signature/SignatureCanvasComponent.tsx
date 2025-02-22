@@ -26,7 +26,7 @@ const SignatureCanvasComponent = ({
 
   const validateEditor = async (_: unknown, content: string) => {
     if (required && !content) {
-      return Promise.reject(new Error(`${label} is required`));
+      return Promise.reject(new Error(`${label} là bắt buộc`));
     }
     return Promise.resolve();
   };

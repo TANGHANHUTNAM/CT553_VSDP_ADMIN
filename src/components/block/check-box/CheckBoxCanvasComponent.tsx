@@ -21,7 +21,7 @@ const CheckBoxCanvasComponent = ({
       <Form>
         <Form.Item
           name={block?.id}
-          rules={[{ required: required, message: `Please select ${label}` }]}
+          rules={[{ required: required, message: `Vui lòng chọn ${label}` }]}
         >
           <Checkbox.Group
             className="!pointer-events-none cursor-default"

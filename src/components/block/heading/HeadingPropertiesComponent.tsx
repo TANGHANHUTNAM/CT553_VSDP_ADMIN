@@ -86,9 +86,9 @@ const HeadingPropertiesComponent = ({
           name="label"
           validateTrigger={["onChange", "onBlur"]}
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 0, message: "Label must be at least 0 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Label là bắt buộc" },
+            { min: 3, message: "Label phải có ít nhất 3 ký tự" },
+            { max: 255, message: "Label phải có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -96,14 +96,14 @@ const HeadingPropertiesComponent = ({
         <Form.Item
           label="Font Size"
           name="fontSize"
-          rules={[{ required: true, message: "Font Size is required" }]}
+          rules={[{ required: true, message: "Font Size là bắt buộc" }]}
         >
           <Select options={fontSizeOptions} />
         </Form.Item>
         <Form.Item
           label="Font Weight"
           name="fontWeight"
-          rules={[{ required: true, message: "Font Size is required" }]}
+          rules={[{ required: true, message: "Font Weight là bắt buộc" }]}
         >
           <Select options={fontWeightOptions} />
         </Form.Item>

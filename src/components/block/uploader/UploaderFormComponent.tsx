@@ -26,17 +26,15 @@ const UploaderFormComponent = ({
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       if (!file) {
-        reject(new Error("Invalid file"));
+        reject(new Error("Tệp không hợp lệ!"));
         return;
       }
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        console.log("File converted to base64:", reader.result);
         resolve(reader.result as string);
       };
       reader.onerror = (error) => {
-        console.error("Error converting file to base64:", error);
         reject(error);
       };
     });
@@ -70,18 +68,18 @@ const UploaderFormComponent = ({
     fileList,
     beforeUpload: (file) => {
       if (fileList.length >= numberMax) {
-        toast.error(`Maximum number of files (${numberMax}) reached!`);
+        toast.error(`Đã đạt số lượng tệp tối đa: ${numberMax}!`);
         return false;
       }
 
       if (!isFileTypeValid(file)) {
-        toast.error(`You can only upload files of type: ${type.join(", ")}!`);
+        toast.error(`Chỉ có thể tệp có định dạng: ${type.join(", ")}!`);
         return false;
       }
 
       const isLtSizeMax = file.size / 1024 / 1024 <= sizeMax;
       if (!isLtSizeMax) {
-        toast.error(`File size must be smaller than ${sizeMax}MB!`);
+        toast.error(`Kích thước tệp phải nhỏ hơn ${sizeMax}MB!`);
         return false;
       }
 
@@ -103,7 +101,7 @@ const UploaderFormComponent = ({
           if (file.originFileObj) {
             try {
               const base64 = await convertFileToBase64(file.originFileObj);
-              console.log("File converted:", file.name, base64);
+
               return { name: file.name, base64 };
             } catch (error) {
               console.error("Base64 conversion error:", error);
@@ -120,13 +118,12 @@ const UploaderFormComponent = ({
         [block.id]:
           filteredBase64Files.length > 0 ? filteredBase64Files : undefined,
       });
-      console.log("form.getFieldValue(block.id)", form.getFieldValue(block.id));
       form.validateFields([block.id]);
 
       if (info.file.status === "done") {
-        toast.success(`${info.file.name} file uploaded successfully`);
+        toast.success(`${info.file.name} tệp được tải lên thành công`);
       } else if (info.file.status === "error") {
-        toast.error(`${info.file.name} file upload failed.`);
+        toast.error(`${info.file.name} tệp tải lên thất bại`);
       }
     },
     maxCount: numberMax,
@@ -137,9 +134,6 @@ const UploaderFormComponent = ({
     },
   };
 
-  // const isImage = (file: UploadFile) => {
-  //   return file.type?.startsWith("image/");
-  // };
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="mb-3 text-base">
@@ -157,7 +151,7 @@ const UploaderFormComponent = ({
             {
               validator: async (_, value) => {
                 if (required && (!value || value.length === 0)) {
-                  return Promise.reject(new Error(`${label} is required`));
+                  return Promise.reject(new Error(`${label} là bắt buộc`));
                 }
                 return Promise.resolve();
               },

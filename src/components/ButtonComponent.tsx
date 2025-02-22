@@ -13,6 +13,7 @@ interface IButtonComponentProps {
   onclick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   danger?: boolean;
   variant?: BaseButtonProps["variant"];
+  disabled?: boolean;
 }
 
 const ButtonComponent: React.FC<IButtonComponentProps> = ({
@@ -27,6 +28,7 @@ const ButtonComponent: React.FC<IButtonComponentProps> = ({
   onclick,
   danger,
   variant,
+  disabled,
 }) => {
   return (
     <>
@@ -41,6 +43,7 @@ const ButtonComponent: React.FC<IButtonComponentProps> = ({
           onClick={onclick}
           danger={danger}
           variant={variant}
+          disabled={disabled}
         >
           {text}
         </Button>

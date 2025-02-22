@@ -1,23 +1,64 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaGlobeAmericas, FaSave } from "react-icons/fa";
-import { MdPlayArrow } from "react-icons/md";
-import { IFormResponse } from "../../interfaces";
 import { FaPaintbrush } from "react-icons/fa6";
+import { MdPlayArrow } from "react-icons/md";
+import {
+  IFormBuilderRequest,
+  IFormResponse,
+  IResponse,
+} from "../../interfaces";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ButtonComponent from "../../components/ButtonComponent";
+import { BuilderContext } from "../../context/form-builder/BuilderContext";
+import { saveFormBuilderService } from "../../services";
 import BuilderCanvas from "./BuilderCanvas";
 import BuilderSidebarLeft from "./BuilderSidebarLeft";
 import BuilderSidebarRight from "./BuilderSidebarRight";
 import FormPreview from "./FormPreview";
-interface IBuilderFormProps {
-  form?: IFormResponse | null;
-}
+import toast from "react-hot-toast";
+import { GrPowerReset } from "react-icons/gr";
 
-const BuilderForm: React.FC<IBuilderFormProps> = () => {
+const BuilderForm: React.FC = () => {
   const [isCloseSidebarLeft, setIsCloseSidebarLeft] = useState<boolean>(false);
   const [isCloseSidebarRight, setIsCloseSidebarRight] =
     useState<boolean>(false);
   const [isPreviewForm, setIsPreviewForm] = useState<boolean>(false);
+  const {
+    primaryColor,
+    backgroundColor,
+    blockColor,
+    formData,
+    handleSelectedBlockLayout,
+    blocksLayout,
+    setBlocksLayout,
+  } = useContext(BuilderContext);
+  const queryClient = useQueryClient();
+  const mutationSaveFormBuilder = useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: IFormBuilderRequest;
+    }) => {
+      const res: IResponse<IFormResponse> = await saveFormBuilderService(
+        id,
+        data,
+      );
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data && data.data) {
+        toast.success(data.message as string);
+        handleSelectedBlockLayout(null);
+        queryClient.invalidateQueries({ queryKey: ["form", data.data.id] });
+      }
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
+  });
   return (
     <div className="flex bg-white">
       {/* LEFT SIDEBAR */}
@@ -40,13 +81,37 @@ const BuilderForm: React.FC<IBuilderFormProps> = () => {
         <div
           className={`${isPreviewForm ? "mx-auto max-w-screen-md" : ""} flex items-center justify-between p-3`}
         >
-          <div className="flex items-center justify-center gap-1">
+          <div className="flex items-center justify-center gap-2">
             <ButtonComponent
+              disabled={formData?.is_public}
+              loading={mutationSaveFormBuilder.isPending}
               type="primary"
-              text="Save"
+              text="Lưu"
               size="middle"
               icon={<FaSave className="text-base" />}
-              textTooltip="Save"
+              textTooltip="Lưu"
+              onclick={() => {
+                mutationSaveFormBuilder.mutate({
+                  id: formData?.id || "",
+                  data: {
+                    primary_color: primaryColor,
+                    block_color: blockColor,
+                    background_color: backgroundColor,
+                    json_blocks: blocksLayout,
+                  },
+                });
+              }}
+            />
+            <ButtonComponent
+              disabled={formData?.is_public}
+              type="primary"
+              text=""
+              size="middle"
+              icon={<GrPowerReset className="text-base" />}
+              textTooltip="Khởi tạo lại"
+              onclick={() => {
+                setBlocksLayout([]);
+              }}
             />
           </div>
           {isPreviewForm ? (
@@ -54,8 +119,8 @@ const BuilderForm: React.FC<IBuilderFormProps> = () => {
               className="shadow-xl"
               type="primary"
               icon={<FaPaintbrush className="text-base" />}
-              text="Edit"
-              textTooltip="Edit"
+              text="Chỉnh sửa"
+              textTooltip="Chỉnh sửa"
               size="middle"
               onclick={() => setIsPreviewForm(!isPreviewForm)}
             />
@@ -64,8 +129,8 @@ const BuilderForm: React.FC<IBuilderFormProps> = () => {
               className="shadow-xl"
               type="primary"
               icon={<MdPlayArrow className="text-xl" />}
-              text="Preview"
-              textTooltip="Preview"
+              text="Xem trước"
+              textTooltip="Xem trước"
               size="middle"
               onclick={() => setIsPreviewForm(!isPreviewForm)}
             />
@@ -77,6 +142,7 @@ const BuilderForm: React.FC<IBuilderFormProps> = () => {
             text="Public"
             textTooltip="Public"
             size="middle"
+            loading={mutationSaveFormBuilder.isPending}
           />
         </div>
         {/* FORM */}

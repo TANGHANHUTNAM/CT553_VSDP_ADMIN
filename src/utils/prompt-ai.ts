@@ -1,4 +1,3 @@
-// THIS PROMPT GENERATE QUESTIONS OR CREATE FORM  WITH THE "actionType" ["addQuestions"** or **"createForm"]
 import { FormBlockInstance } from "../interfaces/form-block";
 
 export const generateFormQuestionPrompt = (
@@ -170,7 +169,11 @@ export const generateFormQuestionPrompt = (
         - \`size\`: (string) Size, e.g., "small", "middle", "large".
         - \`prefix\`: (string) Prefix text.
         - \`suffix\`: (string) Suffix text.
-        - \`fixed\`: (boolean) If the field is fixed.
+        - \`fixed\`: (boolean) When true, formats the number with thousands separators (commas). For example: 1000 becomes "1,000", 1000000 becomes "1,000,000" - 1234.56 becomes "1,234.56"
+                                When false, displays the number without formatting. For example: 1000 remains "1000", 1000000 remains "1000000"1234.56 remains "1234.56" 
+        - \`min\`: (number) Minimum value. default 0.
+        - \`max\`: (number) Maximum value.
+        - \`precision\`: (number) Decimal places for the number, default 0.
 ---
 
 

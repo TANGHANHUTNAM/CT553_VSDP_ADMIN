@@ -64,9 +64,9 @@ const CheckBoxPropertiesComponent = ({
           name="label"
           validateTrigger={["onChange", "onBlur"]}
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 3, message: "Label must be at least 3 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Label là bắt buộc" },
+            { min: 3, message: "Label phải có ít nhất 3 ký tự" },
+            { max: 255, message: "Label phải có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -77,7 +77,7 @@ const CheckBoxPropertiesComponent = ({
           name="helperText"
           validateTrigger={["onChange", "onBlur"]}
           rules={[
-            { max: 255, message: "Helper text must be at most 255 characters" },
+            { max: 255, message: "Helper text phải có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -104,7 +104,7 @@ const CheckBoxPropertiesComponent = ({
                       name={[name]}
                       validateTrigger={["onChange", "onBlur"]}
                       rules={[
-                        { required: true, message: "Option is required" },
+                        { required: true, message: "Option là bắt buộc" },
                       ]}
                       style={{ flex: 1, marginBottom: 0 }}
                     >
@@ -133,7 +133,7 @@ const CheckBoxPropertiesComponent = ({
                   block
                   icon={<BsPlusCircle />}
                 >
-                  Add Option
+                  Thêm
                 </Button>
               </Form.Item>
             </>

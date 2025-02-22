@@ -1,22 +1,26 @@
+import { FormBlockInstance } from "../form-block";
 import { IPaginationResponse } from "../response";
 
 export interface IFormResponse {
   id: string;
   name: string;
   description: string;
-  is_active: boolean;
-  layout: string;
-  scope: string;
   creator_name: string | null;
   creator_id: string | null;
-  json_blocks: string;
-  primary_color: string | null;
-  background_color: string | null;
+  is_public: boolean;
+  is_default: boolean;
   start_date: string;
   end_date: string;
-  is_default: boolean;
+  scope: string;
+  json_blocks: FormBlockInstance[];
+  primary_color: string | null;
+  block_color: string | null;
+  background_color: string | null;
+  image_url: string | null;
+  public_id: string | null;
   created_at: string;
   updated_at: string;
+  form_sections: IFormSectionResponse[];
 }
 
 export interface IDataFormsResponse {
@@ -30,4 +34,33 @@ export interface IDataFormRequest {
   start_date: string;
   end_date: string;
   scope: string;
+  creator_name?: string;
+  creator_id?: number;
+}
+
+export interface IFormUploadImageRequest {
+  image: File;
+  public_id: string;
+}
+
+export interface IFormBuilderRequest {
+  json_blocks: FormBlockInstance[];
+  primary_color: string;
+  block_color: string;
+  background_color: string;
+}
+
+export interface IFormSectionResponse {
+  id: number;
+  name: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ISectionVersionResponse {
+  id: number;
+  vertion: number;
+  json_blocks: FormBlockInstance[];
+  created_at: string;
 }

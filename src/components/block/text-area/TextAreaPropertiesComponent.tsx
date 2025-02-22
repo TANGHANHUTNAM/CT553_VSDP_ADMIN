@@ -68,9 +68,9 @@ const TextAreaPropertiesComponent = ({
           name="label"
           validateTrigger={["onChange", "onBlur"]}
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 3, message: "Label must be at least 3 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Label là bắt buộc" },
+            { min: 3, message: "Label có ít nhất 3 ký tự" },
+            { max: 255, message: "Label có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -81,7 +81,7 @@ const TextAreaPropertiesComponent = ({
           validateTrigger={["onChange", "onBlur"]}
           rules={[
             { required: false },
-            { max: 255, message: "Helper text must be at most 255 characters" },
+            { max: 255, message: "Helper text có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -94,7 +94,7 @@ const TextAreaPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Place holder must be at most 255 characters",
+              message: "Place holder có tối đa 255 ký tự",
             },
           ]}
         >
@@ -112,7 +112,7 @@ const TextAreaPropertiesComponent = ({
             {
               validator: async (_, value) => {
                 if (value <= form.getFieldValue("min")) {
-                  return Promise.reject("Max must be greater than min");
+                  return Promise.reject("Max phải lớn hơn Min");
                 }
               },
             },

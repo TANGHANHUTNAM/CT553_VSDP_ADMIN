@@ -10,7 +10,7 @@ const HeadingCanvasFormComponent = ({
   const { label, fontSize, fontWeight } = block.attributes;
   return (
     <div className="flex w-full">
-      <h1 className={`${fontSize} ${fontWeight}`}>{label}</h1>
+      <p className={`${fontSize} ${fontWeight}`}>{label}</p>
     </div>
   );
 };

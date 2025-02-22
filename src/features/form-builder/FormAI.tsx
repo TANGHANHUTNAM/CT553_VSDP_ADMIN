@@ -15,20 +15,35 @@ const FormAI = () => {
 
   const suggestQuestions = () => {
     return (
-      <div className="">
-        <ul className="flex list-inside list-disc flex-col gap-1">
-          <li>What is your name?</li>
-          <li>What is your email?</li>
-          <li>What is your phone number?</li>
-          <li>What is your address?</li>
-        </ul>
+      <div className="flex flex-col gap-4">
+        <div>
+          <h4 className="mb-2 font-medium text-primary">Tạo biểu mẫu mới:</h4>
+          <ul className="flex list-inside list-disc flex-col gap-1 text-gray-600">
+            <li>
+              Bạn muốn tạo loại biểu mẫu nào (ví dụ: biểu mẫu liên hệ, khảo sát,
+              đăng ký)?
+            </li>
+            <li>Mục đích chính của biểu mẫu này là gì?</li>
+            <li>Bạn cần thu thập những thông tin gì trong biểu mẫu này?</li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="mb-2 font-medium text-primary">
+            Thêm trường vào biểu mẫu hiện tại:
+          </h4>
+          <ul className="flex list-inside list-disc flex-col gap-1 text-gray-600">
+            <li>Bạn muốn thêm trường nào vào biểu mẫu?</li>
+            <li>Bạn cần thu thập thông tin gì tiếp theo?</li>
+            <li>Bạn muốn thêm loại trường nhập liệu nào?</li>
+          </ul>
+        </div>
       </div>
     );
   };
 
   const generateFormWithAI = async () => {
     if (!userRequest) {
-      toast.error("Please describe your form requirements");
+      toast.error("Vui lòng mô tả yêu cầu của bạn");
       return;
     }
     try {
@@ -42,13 +57,15 @@ const FormAI = () => {
         blocksLayout,
       );
       const result = await AIChatSession.sendMessage(PROMPT);
+
       const responseText = result.response.text();
+
       const parsedResponse = JSON?.parse(responseText);
       const actionType = parsedResponse?.actionType;
       const generatedBlocks = parsedResponse?.blocks;
-      console.log("parsedResponse", parsedResponse);
+
       const updatedUniqueIds = updateUniqueId(generatedBlocks);
-      console.log("updatedUniqueIds", updatedUniqueIds);
+
       setBlocksLayout((prev) => {
         if (actionType === "addQuestions") {
           return [...prev, ...updatedUniqueIds];
@@ -59,34 +76,34 @@ const FormAI = () => {
         }
       });
       setUserRequest("");
-      toast.success("Form generated successfully");
+      toast.success("AI đã trả lời yêu cầu của bạn thành công!");
     } catch (error) {
-      toast.error("Failed to generate form with AI");
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
       console.log(error);
     } finally {
       setUserRequest("");
       setLoading(false);
     }
   };
+
   return (
     <div className="mt-2 h-[calc(100vh-160px)] w-full overflow-y-auto p-1 pr-3 text-gray-600 scrollbar-thin">
       <div className="mb-3 flex items-center justify-start gap-2 font-medium text-primary">
-        <FaRobot className="text-base" />
-        <span>Ask AI for generated form:</span>
+        <FaRobot className="text-lg" />
+        <span>Hỏi AI để tạo biểu mẫu:</span>
       </div>
-
       <Input.TextArea
         rows={5}
         size="large"
         allowClear
-        placeholder="Describe your form requirements..."
+        placeholder="Mô tả yêu cầu của bạn..."
         className="ring-1 ring-primary"
         value={userRequest}
         onChange={(e) => setUserRequest(e.target.value)}
       />
       <div className="mt-4 flex items-center justify-between">
         <Popconfirm
-          title="AI can suggest questions based on your input"
+          title="AI sẽ giúp bạn tạo biểu mẫu dựa trên yêu cầu của bạn. Hãy mô tả yêu cầu của bạn"
           icon={null}
           description={suggestQuestions}
           trigger={"hover"}
@@ -95,17 +112,18 @@ const FormAI = () => {
           okButtonProps={{ className: "hidden" }}
         >
           <div className="flex cursor-help items-center justify-center rounded-full text-sm font-medium text-primary/50">
-            <u>Help?</u>
+            <u>Gợi ý?</u>
           </div>
         </Popconfirm>
         <Button
+          disabled={formData?.is_public || userRequest === ""}
           onClick={() => {
             generateFormWithAI();
           }}
           loading={loading}
           type="primary"
         >
-          Generate Form
+          Gửi yêu cầu
         </Button>
       </div>
     </div>

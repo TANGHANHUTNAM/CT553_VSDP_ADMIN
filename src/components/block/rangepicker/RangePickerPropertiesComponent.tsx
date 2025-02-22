@@ -76,9 +76,9 @@ const RangePickerPropertiesComponent = ({
           label="Label"
           name="label"
           rules={[
-            { required: true, message: "Label is required" },
-            { min: 3, message: "Label must be at least 3 characters" },
-            { max: 255, message: "Label must be at most 255 characters" },
+            { required: true, message: "Label là bắt buộc" },
+            { min: 3, message: "Label có ít nhất 3 ký tự" },
+            { max: 255, message: "Label có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -88,7 +88,7 @@ const RangePickerPropertiesComponent = ({
           name="helperText"
           rules={[
             { required: false },
-            { max: 255, message: "Helper text must be at most 255 characters" },
+            { max: 255, message: "Helper text có tối đa 255 ký tự" },
           ]}
         >
           <Input allowClear />
@@ -103,7 +103,7 @@ const RangePickerPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Place holder must be at most 255 characters",
+              message: "Place holder start có tối đa 255 ký tự",
             },
           ]}
         >
@@ -119,7 +119,7 @@ const RangePickerPropertiesComponent = ({
             { required: false },
             {
               max: 255,
-              message: "Place holder must be at most 255 characters",
+              message: "Place holder end có tối đa 255 ký tự",
             },
           ]}
         >
@@ -151,7 +151,7 @@ const RangePickerPropertiesComponent = ({
           <DatePicker
             allowClear
             className="w-full"
-            placeholder="Choose min date"
+            placeholder="Chọn ngày tối thiểu"
             format={form.getFieldValue("dateFormat")}
           />
         </Form.Item>
@@ -169,7 +169,7 @@ const RangePickerPropertiesComponent = ({
                   value <= form.getFieldValue("minDate")
                 ) {
                   return Promise.reject(
-                    "Max date must be greater than min date",
+                    "Ngày tối đa phải lớn hơn ngày tối thiểu",
                   );
                 }
                 return Promise.resolve();
@@ -180,7 +180,7 @@ const RangePickerPropertiesComponent = ({
           <DatePicker
             allowClear
             className="w-full"
-            placeholder="Choose max date"
+            placeholder="Chọn ngày tối đa"
             format={form.getFieldValue("dateFormat")}
           />
         </Form.Item>

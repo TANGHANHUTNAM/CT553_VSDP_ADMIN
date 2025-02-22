@@ -60,14 +60,14 @@ const ParagraphPropertiesComponent = ({
           label="Text"
           name="text"
           validateTrigger={["onChange", "onBlur"]}
-          rules={[{ required: true, message: "Text is required" }]}
+          rules={[{ required: true, message: "Text là bắt buộc" }]}
         >
           <Input.TextArea rows={5} allowClear />
         </Form.Item>
         <Form.Item
           label="Font Size"
           name="fontSize"
-          rules={[{ required: true, message: "Font Size is required" }]}
+          rules={[{ required: true, message: "Font Size là bắt buộc" }]}
         >
           <Select
             options={[
@@ -89,7 +89,7 @@ const ParagraphPropertiesComponent = ({
         <Form.Item
           label="Font Weight"
           name="fontWeight"
-          rules={[{ required: true, message: "Font Size is required" }]}
+          rules={[{ required: true, message: "Font Weight là bắt buộc" }]}
         >
           <Select
             options={[

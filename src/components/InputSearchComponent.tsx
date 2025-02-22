@@ -34,7 +34,7 @@ const InputSearchComponent: React.FC<IInputSearchComponentProps> = ({
   return (
     <>
       <Input.Search
-        className={`${className} rounded-md border border-solid border-gray-300 dark:border-dark-600`}
+        className={`${className} rounded-md`}
         placeholder={placeholder || "Search..."}
         allowClear={allowClear || true}
         size={size || "large"}

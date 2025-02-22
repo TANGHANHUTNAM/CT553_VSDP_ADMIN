@@ -15,6 +15,8 @@ const BuilderCanvas = () => {
     setBlocksLayout,
     repositionBlockLayout,
     insertBlockLayoutAtIndex,
+    backgroundColor,
+    imge_url,
   } = useContext(BuilderContext);
   const [activeBlock, setActiveBlock] = useState<Active | null>(null);
   const droppable = useDroppable({
@@ -97,13 +99,19 @@ const BuilderCanvas = () => {
   return (
     <div
       ref={droppable.setNodeRef}
-      className={`mx-3 min-h-[calc(100vh-140px)] rounded-lg bg-blue-50 p-3 ring-1 ring-primary scrollbar-thin ${droppable.isOver ? "ring-2" : ""}`}
+      style={{ backgroundColor }}
+      className={`mx-3 min-h-[calc(100vh-140px)] rounded-lg p-3 ring-1 ring-primary scrollbar-thin ${droppable.isOver ? "ring-2" : ""}`}
     >
       <div className="mx-auto flex h-full w-full max-w-3xl flex-col items-center">
-        <div className="h-[135px] w-full rounded-md bg-[url('./assets/1200x300.png')] bg-cover bg-center bg-no-repeat" />
+        <div
+          style={{
+            backgroundImage: `url(${imge_url})`,
+          }}
+          className={`h-[135px] w-full rounded-md bg-gray-300 bg-cover bg-center bg-no-repeat`}
+        />
         {blocksLayout.length > 0 && (
           <div className="mt-4 flex h-full w-full flex-col gap-4">
-            {blocksLayout.map((blockLayout) => (
+            {blocksLayout?.map((blockLayout) => (
               <CanvasBlockLayoutWrapper
                 key={blockLayout.id}
                 blockLayout={blockLayout}
@@ -141,6 +149,7 @@ function CanvasBlockLayoutWrapper({
       isBelow: true,
     },
   });
+  const { primaryColor } = useContext(BuilderContext);
   return (
     <div className="relative">
       {/* Top */}
@@ -151,7 +160,12 @@ function CanvasBlockLayoutWrapper({
             className="pointer-events-none absolute top-0 h-1/2 w-full"
           >
             {topCorner.isOver && (
-              <div className="absolute -top-[3px] h-[7px] w-full rounded-t-md bg-primary" />
+              <div
+                style={{
+                  backgroundColor: primaryColor,
+                }}
+                className="absolute -top-0.5 h-[12px] w-full rounded-t-3xl"
+              />
             )}
           </div>
         )}
@@ -163,7 +177,12 @@ function CanvasBlockLayoutWrapper({
             className="pointer-events-none absolute bottom-0 h-1/2 w-full"
           >
             {bottomCorner.isOver && (
-              <div className="absolute -bottom-[3px] h-[7px] w-full rounded-b-md bg-primary" />
+              <div
+                style={{
+                  backgroundColor: primaryColor,
+                }}
+                className="absolute -bottom-0.5 h-[12px] w-full rounded-b-3xl"
+              />
             )}
           </div>
         )}
