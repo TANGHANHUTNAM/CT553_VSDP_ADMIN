@@ -20,7 +20,7 @@ export interface IFormResponse {
   public_id: string | null;
   created_at: string;
   updated_at: string;
-  form_sections: IFormSectionResponse[];
+  // form_sections: IDataFormSectionResponse[];
 }
 
 export interface IDataFormsResponse {
@@ -48,19 +48,4 @@ export interface IFormBuilderRequest {
   primary_color: string;
   block_color: string;
   background_color: string;
-}
-
-export interface IFormSectionResponse {
-  id: number;
-  name: string;
-  description: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ISectionVersionResponse {
-  id: number;
-  vertion: number;
-  json_blocks: FormBlockInstance[];
-  created_at: string;
 }

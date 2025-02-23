@@ -41,6 +41,7 @@ export type HeadingAttributesType = {
   label: string;
   fontSize: fontSizeType;
   fontWeight: fontWeightType;
+  uppercase: boolean;
 };
 
 export type NewInstanceHeading = FormBlockInstance & {
@@ -57,6 +58,7 @@ export const HeadingBlock: ObjectBlockType = {
       label: "Header",
       fontSize: "text-lg",
       fontWeight: "font-normal",
+      uppercase: false,
     },
   }),
   blockBtnElement: {

@@ -2,22 +2,20 @@ import { useContext, useState } from "react";
 import { FaGlobeAmericas, FaSave } from "react-icons/fa";
 import { FaPaintbrush } from "react-icons/fa6";
 import { MdPlayArrow } from "react-icons/md";
-import {
-  IFormBuilderRequest,
-  IFormResponse,
-  IResponse,
-} from "../../interfaces";
+import { IResponse } from "../../interfaces";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { GrPowerReset } from "react-icons/gr";
 import ButtonComponent from "../../components/ButtonComponent";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
-import { saveFormBuilderService } from "../../services";
+import { FormBlockInstance } from "../../interfaces/form-block";
+import { IDataFormSectionLastVersionResponse } from "../../interfaces/form-sections";
+import { updateVersionSectionService } from "../../services/form-sections/form-sections-service";
 import BuilderCanvas from "./BuilderCanvas";
 import BuilderSidebarLeft from "./BuilderSidebarLeft";
 import BuilderSidebarRight from "./BuilderSidebarRight";
 import FormPreview from "./FormPreview";
-import toast from "react-hot-toast";
-import { GrPowerReset } from "react-icons/gr";
 
 const BuilderForm: React.FC = () => {
   const [isCloseSidebarLeft, setIsCloseSidebarLeft] = useState<boolean>(false);
@@ -25,34 +23,33 @@ const BuilderForm: React.FC = () => {
     useState<boolean>(false);
   const [isPreviewForm, setIsPreviewForm] = useState<boolean>(false);
   const {
-    primaryColor,
-    backgroundColor,
-    blockColor,
     formData,
     handleSelectedBlockLayout,
     blocksLayout,
+    selectedSection,
     setBlocksLayout,
+    setSelectedSection,
   } = useContext(BuilderContext);
   const queryClient = useQueryClient();
-  const mutationSaveFormBuilder = useMutation({
+
+  const mutationUpdateVersion = useMutation({
     mutationFn: async ({
       id,
-      data,
+      json_blocks,
     }: {
-      id: string;
-      data: IFormBuilderRequest;
+      id: number;
+      json_blocks: FormBlockInstance[];
     }) => {
-      const res: IResponse<IFormResponse> = await saveFormBuilderService(
-        id,
-        data,
-      );
+      const res: IResponse<IDataFormSectionLastVersionResponse> =
+        await updateVersionSectionService(id, json_blocks);
       return res;
     },
     onSuccess: (data) => {
       if (data && data.data) {
         toast.success(data.message as string);
+        queryClient.invalidateQueries({ queryKey: ["sections"] });
+        setSelectedSection(data.data);
         handleSelectedBlockLayout(null);
-        queryClient.invalidateQueries({ queryKey: ["form", data.data.id] });
       }
     },
     onError: () => {
@@ -83,22 +80,17 @@ const BuilderForm: React.FC = () => {
         >
           <div className="flex items-center justify-center gap-2">
             <ButtonComponent
-              disabled={formData?.is_public}
-              loading={mutationSaveFormBuilder.isPending}
+              disabled={formData?.is_public || !selectedSection}
+              loading={mutationUpdateVersion.isPending}
               type="primary"
               text="Lưu"
               size="middle"
               icon={<FaSave className="text-base" />}
               textTooltip="Lưu"
               onclick={() => {
-                mutationSaveFormBuilder.mutate({
-                  id: formData?.id || "",
-                  data: {
-                    primary_color: primaryColor,
-                    block_color: blockColor,
-                    background_color: backgroundColor,
-                    json_blocks: blocksLayout,
-                  },
+                mutationUpdateVersion.mutate({
+                  id: +(selectedSection?.section_versions.id ?? 0),
+                  json_blocks: blocksLayout,
                 });
               }}
             />
@@ -142,7 +134,7 @@ const BuilderForm: React.FC = () => {
             text="Public"
             textTooltip="Public"
             size="middle"
-            loading={mutationSaveFormBuilder.isPending}
+            loading={mutationUpdateVersion.isPending}
           />
         </div>
         {/* FORM */}

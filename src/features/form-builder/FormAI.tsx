@@ -1,14 +1,14 @@
 import { Button, Input, Popconfirm } from "antd";
 import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 import { FaRobot } from "react-icons/fa6";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
-import toast from "react-hot-toast";
-import { generateFormQuestionPrompt } from "../../utils/prompt-ai";
-import { AIChatSession } from "../../utils/google-ai";
 import { updateUniqueId } from "../../utils/functionUtils";
+import { AIChatSession } from "../../utils/google-ai";
+import { generateFormQuestionPrompt } from "../../utils/prompt-ai";
 
 const FormAI = () => {
-  const { blocksLayout, setBlocksLayout, formData } =
+  const { blocksLayout, setBlocksLayout, selectedSection, formData } =
     useContext(BuilderContext);
   const [userRequest, setUserRequest] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -48,8 +48,8 @@ const FormAI = () => {
     }
     try {
       setLoading(true);
-      const formName = formData?.name || "";
-      const formDescription = formData?.description || "";
+      const formName = selectedSection?.name || "";
+      const formDescription = selectedSection?.description || "";
       const PROMPT = generateFormQuestionPrompt(
         userRequest,
         formName,

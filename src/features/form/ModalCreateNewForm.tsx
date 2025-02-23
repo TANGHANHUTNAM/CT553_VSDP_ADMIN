@@ -36,6 +36,7 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
   const mutationCreateForm = useMutation({
     mutationFn: async (data: IDataFormRequest) => {
       const response = await createFormService(data);
+      console.log(response);
       return response;
     },
     onSuccess: (data) => {
@@ -131,7 +132,6 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
           <CustomReactQuill
             quillRef={quillRef}
             onChange={(content) => {
-              console.log(content);
               return form.setFieldsValue({ description: content });
             }}
             theme="snow"

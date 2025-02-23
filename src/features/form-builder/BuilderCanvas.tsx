@@ -1,5 +1,6 @@
 import { Active, useDndMonitor, useDroppable } from "@dnd-kit/core";
 import { useContext, useState } from "react";
+import LoadingComponent from "../../components/LoadingComponent";
 import { ALL_LAYOUT } from "../../constants/blockLayout";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
 import {
@@ -8,14 +9,17 @@ import {
   FormBlockType,
 } from "../../interfaces/form-block";
 import { generateUniqueId } from "../../utils/functionUtils";
+import { CiEdit } from "react-icons/ci";
 
 const BuilderCanvas = () => {
   const {
+    isLoadingSection,
     blocksLayout,
     setBlocksLayout,
     repositionBlockLayout,
     insertBlockLayoutAtIndex,
     backgroundColor,
+    selectedSection,
     imge_url,
   } = useContext(BuilderContext);
   const [activeBlock, setActiveBlock] = useState<Active | null>(null);
@@ -102,25 +106,38 @@ const BuilderCanvas = () => {
       style={{ backgroundColor }}
       className={`mx-3 min-h-[calc(100vh-140px)] rounded-lg p-3 ring-1 ring-primary scrollbar-thin ${droppable.isOver ? "ring-2" : ""}`}
     >
-      <div className="mx-auto flex h-full w-full max-w-3xl flex-col items-center">
-        <div
-          style={{
-            backgroundImage: `url(${imge_url})`,
-          }}
-          className={`h-[135px] w-full rounded-md bg-gray-300 bg-cover bg-center bg-no-repeat`}
-        />
-        {blocksLayout.length > 0 && (
-          <div className="mt-4 flex h-full w-full flex-col gap-4">
-            {blocksLayout?.map((blockLayout) => (
-              <CanvasBlockLayoutWrapper
-                key={blockLayout.id}
-                blockLayout={blockLayout}
-                activeBlock={activeBlock}
+      {isLoadingSection ? (
+        <LoadingComponent />
+      ) : (
+        <div className="mx-auto flex h-full w-full max-w-3xl flex-col items-center">
+          {!selectedSection && (
+            <div className="flex min-h-[calc(100vh-200px)] w-full flex-col items-center justify-center font-medium text-black">
+              <CiEdit className="text-3xl" /> Chọn phần biểu mẫu để chỉnh
+            </div>
+          )}
+          {selectedSection && (
+            <>
+              <div
+                style={{
+                  backgroundImage: `url(${imge_url})`,
+                }}
+                className={`h-[135px] w-full rounded-md bg-gray-300 bg-cover bg-center bg-no-repeat`}
               />
-            ))}
-          </div>
-        )}
-      </div>
+              {blocksLayout.length > 0 && (
+                <div className="mt-4 flex h-full w-full flex-col gap-4">
+                  {blocksLayout?.map((blockLayout) => (
+                    <CanvasBlockLayoutWrapper
+                      key={blockLayout.id}
+                      blockLayout={blockLayout}
+                      activeBlock={activeBlock}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

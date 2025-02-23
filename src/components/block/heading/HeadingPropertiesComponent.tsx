@@ -1,4 +1,4 @@
-import { Form, Input, Select } from "antd";
+import { Form, Input, Select, Switch } from "antd";
 import { FormBlockInstance } from "../../../interfaces/form-block";
 import { HeadingAttributesType, NewInstanceHeading } from "./HeadingBlock";
 import { BuilderContext } from "../../../context/form-builder/BuilderContext";
@@ -49,6 +49,7 @@ const HeadingPropertiesComponent = ({
       label: block.attributes.label,
       fontSize: block.attributes.fontSize,
       fontWeight: block.attributes.fontWeight,
+      uppercase: block.attributes.uppercase,
     });
   }, [block.attributes, form]);
 
@@ -76,6 +77,7 @@ const HeadingPropertiesComponent = ({
           label: block.attributes.label,
           fontSize: block.attributes.fontSize,
           fontWeight: block.attributes.fontWeight,
+          uppercase: block.attributes.uppercase,
         }}
         labelCol={{ span: 7 }}
         wrapperCol={{ span: 17 }}
@@ -106,6 +108,13 @@ const HeadingPropertiesComponent = ({
           rules={[{ required: true, message: "Font Weight là bắt buộc" }]}
         >
           <Select options={fontWeightOptions} />
+        </Form.Item>
+        <Form.Item
+          label="Uppercase"
+          name="uppercase"
+          rules={[{ required: true, message: "Font Weight là bắt buộc" }]}
+        >
+          <Switch size="small" />
         </Form.Item>
       </Form>
     </div>

@@ -7,10 +7,14 @@ const HeadingCanvasFormComponent = ({
   blockInstance: FormBlockInstance;
 }) => {
   const block = blockInstance as NewInstanceHeading;
-  const { label, fontSize, fontWeight } = block.attributes;
+  const { label, fontSize, fontWeight, uppercase } = block.attributes;
   return (
     <div className="flex w-full">
-      <p className={`${fontSize} ${fontWeight}`}>{label}</p>
+      <p
+        className={`${fontSize} ${fontWeight} ${uppercase ? "uppercase" : "lowercase"} `}
+      >
+        {label}
+      </p>
     </div>
   );
 };
