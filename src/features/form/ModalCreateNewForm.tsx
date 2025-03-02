@@ -1,11 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-import { useRef } from "react";
 import toast from "react-hot-toast";
-import ReactQuill from "react-quill";
 import { useNavigate } from "react-router-dom";
-import CustomReactQuill from "../../components/CustomReactQuill";
+import EditorJodit from "../../components/EditorJodit";
 import { SCOPE_FORM } from "../../constants/tableManagement";
 import { useAppSelector } from "../../hooks";
 import { IDataFormRequest } from "../../interfaces";
@@ -31,12 +29,11 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
-  const quillRef = useRef<ReactQuill>(null);
 
   const mutationCreateForm = useMutation({
     mutationFn: async (data: IDataFormRequest) => {
       const response = await createFormService(data);
-      console.log(response);
+
       return response;
     },
     onSuccess: (data) => {
@@ -116,7 +113,7 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
             },
             {
               validator: (_: unknown, content: string) => {
-                const textContent = content.replace(/<(.|\n)*?>/g, "").trim();
+                const textContent = content?.replace(/<(.|\n)*?>/g, "").trim();
                 const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(
                   content,
                 );
@@ -129,14 +126,13 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
             },
           ]}
         >
-          <CustomReactQuill
-            quillRef={quillRef}
-            onChange={(content) => {
-              return form.setFieldsValue({ description: content });
-            }}
-            theme="snow"
-            value={form.getFieldValue("description")}
-            placeholder="Mô tả thông tin biểu mẫu một cách chi tiết!"
+          <EditorJodit
+            content={form.getFieldValue({
+              name: "description",
+            })}
+            setContent={(content: string) =>
+              form.setFieldValue("description", content)
+            }
           />
         </Form.Item>
         <Form.Item

@@ -32,33 +32,28 @@ const EditorTextFormComponent = ({
   };
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="mb-3 text-base">
-        <label className={`font-medium`}>
-          {label}
-          {required && <span className="ml-1 text-red-500">*</span>}
-        </label>
-        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
-      </div>
-      <Form form={form} validateTrigger={["onChange", "onBlur"]}>
-        <Form.Item
-          name={block?.id}
-          required={required}
-          rules={[
-            {
-              validator: validateEditor,
-            },
-          ]}
-        >
-          <ReactQuill
-            ref={quillRef}
-            theme="snow"
-            value={value}
-            onChange={handleChange}
-            placeholder={placeHolder}
-            className="w-2/3"
-          />
-        </Form.Item>
-      </Form>
+      <Form.Item
+        colon={true}
+        label={label}
+        extra={helperText}
+        htmlFor={block?.id}
+        name={block?.id}
+        required={required}
+        rules={[
+          {
+            validator: validateEditor,
+          },
+        ]}
+      >
+        <ReactQuill
+          ref={quillRef}
+          theme="snow"
+          value={value}
+          onChange={handleChange}
+          placeholder={placeHolder}
+          className="w-2/3"
+        />
+      </Form.Item>
     </div>
   );
 };

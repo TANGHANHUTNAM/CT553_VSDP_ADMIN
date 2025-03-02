@@ -23,16 +23,22 @@ const ModalUpdateDescriptionForm: React.FC<
         onOk={() => setOpen(false)}
         title={`Xem miêu tả`}
         onCancel={() => setOpen(false)}
-        cancelText="Hủy"
-        maskClosable={false}
+        cancelText="Đóng"
         centered
-        width={1000}
+        width={800}
         destroyOnClose
         okButtonProps={{
           className: "hidden",
         }}
       >
-        <div className="prose">{parse(value)}</div>
+        <p
+          style={{
+            width: "100%",
+          }}
+          className="prose"
+        >
+          {parse(value)}
+        </p>
       </Modal>
     </>
   );

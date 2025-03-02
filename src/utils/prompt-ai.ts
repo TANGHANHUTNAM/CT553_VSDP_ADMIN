@@ -44,10 +44,11 @@ export const generateFormQuestionPrompt = (
      - \`placeHolder\`: (string) Placeholder text.
       - \`min\`: (number) Minimum length default 0.
       - \`max\`: (number) Maximum length default 255.
-      - \`type\`: (string) Field type, e.g., "Email", "Text", "Password".
-      - \`size\`: (string) Size, e.g., "small", "medium", "large".
+      - \`type\`: (string) Field type, e.g., "email", "string", "url", "boolean", "number".
+      - \`size\`: (string) Size, e.g., "small", "middle", "large".
       - \`prefix\`: (string) Prefix text.
       - \`suffix\`: (string) Suffix text.
+      - \`readOnly\`: (boolean) If the field is read-only.
 
 3. **TextArea**
    - Attributes:
@@ -56,7 +57,7 @@ export const generateFormQuestionPrompt = (
      - \`required\`: (boolean) If the field is required.
      - \`placeHolder\`: (string) Placeholder text.
      - \`rows\`: (number) Default rows = 3.
-      - \`size\`: (string) Size, e.g., "small", "medium", "large".
+      - \`size\`: (string) Size, e.g., "small", "middle", "large".
       - \`min\`: (number) Minimum length default 0.
       - \`max\`: (number) Maximum length default 255.
 
@@ -70,6 +71,7 @@ export const generateFormQuestionPrompt = (
      - \`label\`: (string) The heading label (e.g., the section or subsection title).
      - \`fontSize\`: (string) Font size, e.g., "text-lg".
      - \`fontWeight\`: (string) Font weight, e.g., "font-normal".
+     - \`uppercase\`: (boolean) If the text should be in uppercase.
 
 6. **Paragraph**
    - Attributes:
@@ -281,7 +283,7 @@ ${stringifiedBlocks}
             "options": ["Very satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very dissatisfied"],
             "required": true,
             "helperText": "Select one option.",
-            "inline": true
+            "inline": false
           }
         }
       ]

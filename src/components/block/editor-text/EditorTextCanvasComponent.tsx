@@ -37,35 +37,29 @@ const EditorTextCanvasComponent = ({
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="mb-3 text-base">
-        <label className={`font-medium ${required ? "text-red-500" : ""}`}>
-          {label}
-          {required && <span className="ml-1">*</span>}
-        </label>
-        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
-      </div>
-      <Form form={form}>
-        <Form.Item
-          name={block?.id}
-          required={required}
-          rules={[
-            {
-              validator: validateEditor,
-            },
-          ]}
-          className="!pointer-events-none"
-        >
-          <ReactQuill
-            key={placeHolder}
-            readOnly
-            theme="snow"
-            value={value}
-            onChange={handleChange}
-            placeholder={placeHolder}
-            className="!pointer-events-none w-2/3 cursor-default"
-          />
-        </Form.Item>
-      </Form>
+      <Form.Item
+        name={block?.id}
+        label={label}
+        extra={helperText}
+        colon={true}
+        required={required}
+        rules={[
+          {
+            validator: validateEditor,
+          },
+        ]}
+        className="!pointer-events-none"
+      >
+        <ReactQuill
+          key={placeHolder}
+          readOnly
+          theme="snow"
+          value={value}
+          onChange={handleChange}
+          placeholder={placeHolder}
+          className="!pointer-events-none w-2/3 cursor-default"
+        />
+      </Form.Item>
 
       <div className="prose mt-4" dangerouslySetInnerHTML={{ __html: value }} />
     </div>

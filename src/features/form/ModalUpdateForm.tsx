@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-import { useRef } from "react";
 import toast from "react-hot-toast";
-import ReactQuill from "react-quill";
-import CustomReactQuill from "../../components/CustomReactQuill";
+import EditorJodit from "../../components/EditorJodit";
 import { SCOPE_FORM } from "../../constants/tableManagement";
 import { IDataFormRequest, IFormResponse } from "../../interfaces";
 import { updateFormService } from "../../services";
@@ -30,7 +28,7 @@ const ModalUpdateForm: React.FC<IModalUpdateFormProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
-  const quillRef = useRef<ReactQuill>(null);
+
   const mutationUpdateForm = useMutation({
     mutationFn: async ({
       id,
@@ -67,6 +65,7 @@ const ModalUpdateForm: React.FC<IModalUpdateFormProps> = ({
       },
     });
   };
+  const descriptionValue = Form.useWatch("description", form);
   return (
     <>
       <Modal
@@ -146,15 +145,11 @@ const ModalUpdateForm: React.FC<IModalUpdateFormProps> = ({
             },
           ]}
         >
-          <CustomReactQuill
-            quillRef={quillRef}
-            onChange={(content) => {
-              console.log(content);
-              return form.setFieldsValue({ description: content });
-            }}
-            theme="snow"
-            value={form.getFieldValue("description")}
-            placeholder="Mô tả thông tin biểu mẫu một cách chi tiết!"
+          <EditorJodit
+            content={descriptionValue}
+            setContent={(content: string) =>
+              form.setFieldValue("description", content)
+            }
           />
         </Form.Item>
         <Form.Item

@@ -46,6 +46,7 @@ import {
 } from "../../utils/functionUtils";
 import ModalCreateNewForm from "./ModalCreateNewForm";
 import ModalUpdateForm from "./ModalUpdateForm";
+import { ROUTER_URL } from "../../constants/routerIndex";
 
 const FormManangement: React.FC = () => {
   const queryClient = useQueryClient();
@@ -246,7 +247,7 @@ const FormManangement: React.FC = () => {
             <ViewComponent
               titleTooltip={`Thiết kế biểu mẫu ${record.name}`}
               onClick={() => {
-                navigate(`/form-builder/${record.id}`);
+                navigate(ROUTER_URL.FORM_BUILDER_PAGE(record.id));
               }}
               icon={<MdOutlineEditCalendar className="text-lg" />}
             />
@@ -462,7 +463,7 @@ const FormManangement: React.FC = () => {
       />
       <Modal
         open={openModalDescription}
-        width={1000}
+        width={800}
         title="Chi tiết mô tả"
         onCancel={() => setOpenModalDescription(false)}
         afterClose={() => setDataDescription(null)}

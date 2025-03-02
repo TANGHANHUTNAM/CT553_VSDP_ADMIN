@@ -1,17 +1,21 @@
 import { useContext, useState } from "react";
-import { FaGlobeAmericas, FaSave } from "react-icons/fa";
-import { FaPaintbrush } from "react-icons/fa6";
+import { FaSave } from "react-icons/fa";
+import { FaLock, FaPaintbrush, FaUnlock } from "react-icons/fa6";
 import { MdPlayArrow } from "react-icons/md";
-import { IResponse } from "../../interfaces";
+import { IFormResponse, IResponse } from "../../interfaces";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { GrPowerReset } from "react-icons/gr";
 import ButtonComponent from "../../components/ButtonComponent";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
-import { FormBlockInstance } from "../../interfaces/form-block";
-import { IDataFormSectionLastVersionResponse } from "../../interfaces/form-sections";
-import { updateVersionSectionService } from "../../services/form-sections/form-sections-service";
+
+import {
+  IDataFormSectionRequest,
+  IDataFormSectionResponse,
+} from "../../interfaces/form-sections";
+import { updateStatusPublicFormService } from "../../services";
+import { updateSectionFormService } from "../../services/form-sections/form-sections-service";
 import BuilderCanvas from "./BuilderCanvas";
 import BuilderSidebarLeft from "./BuilderSidebarLeft";
 import BuilderSidebarRight from "./BuilderSidebarRight";
@@ -28,28 +32,52 @@ const BuilderForm: React.FC = () => {
     blocksLayout,
     selectedSection,
     setBlocksLayout,
-    setSelectedSection,
+    setSectionsForm,
+    setFormData,
   } = useContext(BuilderContext);
-  const queryClient = useQueryClient();
 
-  const mutationUpdateVersion = useMutation({
-    mutationFn: async ({
-      id,
-      json_blocks,
-    }: {
-      id: number;
-      json_blocks: FormBlockInstance[];
-    }) => {
-      const res: IResponse<IDataFormSectionLastVersionResponse> =
-        await updateVersionSectionService(id, json_blocks);
+  const mutationUpdaeStatusPublicForm = useMutation({
+    mutationFn: async (is_public: boolean) => {
+      const res: IResponse<IFormResponse> = await updateStatusPublicFormService(
+        formData?.id as string,
+        is_public,
+      );
       return res;
     },
     onSuccess: (data) => {
       if (data && data.data) {
         toast.success(data.message as string);
-        queryClient.invalidateQueries({ queryKey: ["sections"] });
-        setSelectedSection(data.data);
+        setFormData(data.data);
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
+  });
+
+  const mutationUpdateSectionId = useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: IDataFormSectionRequest;
+    }) => {
+      const res: IResponse<IDataFormSectionResponse[]> =
+        await updateSectionFormService(id, data);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data && data.data) {
         handleSelectedBlockLayout(null);
+        setSectionsForm(data.data);
+        toast.success(data.message as string);
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
       }
     },
     onError: () => {
@@ -73,7 +101,9 @@ const BuilderForm: React.FC = () => {
       )}
 
       {/* MAIN CONTENT */}
-      <div className="relative flex-1 pb-3">
+      <div
+        className={`relative flex-1 ${!isPreviewForm ? "pb-3" : "bg-slate-100"}`}
+      >
         {/* HEADER */}
         <div
           className={`${isPreviewForm ? "mx-auto max-w-screen-md" : ""} flex items-center justify-between p-3`}
@@ -81,21 +111,23 @@ const BuilderForm: React.FC = () => {
           <div className="flex items-center justify-center gap-2">
             <ButtonComponent
               disabled={formData?.is_public || !selectedSection}
-              loading={mutationUpdateVersion.isPending}
+              loading={mutationUpdateSectionId.isPending}
               type="primary"
               text="Lưu"
               size="middle"
               icon={<FaSave className="text-base" />}
               textTooltip="Lưu"
               onclick={() => {
-                mutationUpdateVersion.mutate({
-                  id: +(selectedSection?.section_versions.id ?? 0),
-                  json_blocks: blocksLayout,
+                mutationUpdateSectionId.mutate({
+                  id: +(selectedSection?.id ?? 0),
+                  data: {
+                    json_blocks: blocksLayout,
+                  },
                 });
               }}
             />
             <ButtonComponent
-              disabled={formData?.is_public}
+              disabled={formData?.is_public || !selectedSection}
               type="primary"
               text=""
               size="middle"
@@ -108,7 +140,7 @@ const BuilderForm: React.FC = () => {
           </div>
           {isPreviewForm ? (
             <ButtonComponent
-              className="shadow-xl"
+              className="shadow-lg"
               type="primary"
               icon={<FaPaintbrush className="text-base" />}
               text="Chỉnh sửa"
@@ -120,9 +152,10 @@ const BuilderForm: React.FC = () => {
             <ButtonComponent
               className="shadow-xl"
               type="primary"
+              disabled={!selectedSection}
               icon={<MdPlayArrow className="text-xl" />}
-              text="Xem trước"
-              textTooltip="Xem trước"
+              text="Xem"
+              textTooltip="Xem"
               size="middle"
               onclick={() => setIsPreviewForm(!isPreviewForm)}
             />
@@ -130,11 +163,21 @@ const BuilderForm: React.FC = () => {
 
           <ButtonComponent
             type="primary"
-            icon={<FaGlobeAmericas className="text-base" />}
-            text="Public"
-            textTooltip="Public"
+            onclick={() => {
+              mutationUpdaeStatusPublicForm.mutate(!formData?.is_public);
+            }}
+            icon={
+              !formData?.is_public ? (
+                <FaLock className="text-base" />
+              ) : (
+                <FaUnlock className="text-base" />
+              )
+            }
+            text={`${formData?.is_public ? "Mở khóa biểu mẫu" : "Khóa biểu mẫu"}`}
+            textTooltip={`${formData?.is_public ? "Mở khóa biểu mẫu" : "Khóa biểu mẫu"}`}
             size="middle"
-            loading={mutationUpdateVersion.isPending}
+            loading={mutationUpdaeStatusPublicForm.isPending}
+            danger={formData?.is_public}
           />
         </div>
         {/* FORM */}

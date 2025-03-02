@@ -1,4 +1,5 @@
 import { FormBlockInstance } from "../form-block";
+import { IDataFormSectionResponse } from "../form-sections";
 import { IPaginationResponse } from "../response";
 
 export interface IFormResponse {
@@ -12,7 +13,6 @@ export interface IFormResponse {
   start_date: string;
   end_date: string;
   scope: string;
-  json_blocks: FormBlockInstance[];
   primary_color: string | null;
   block_color: string | null;
   background_color: string | null;
@@ -20,7 +20,7 @@ export interface IFormResponse {
   public_id: string | null;
   created_at: string;
   updated_at: string;
-  // form_sections: IDataFormSectionResponse[];
+  form_sections: IDataFormSectionResponse[];
 }
 
 export interface IDataFormsResponse {

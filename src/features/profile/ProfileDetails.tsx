@@ -25,23 +25,23 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
 
   return (
     <Form
-      disabled
       layout="vertical"
       style={{ marginTop: "20px" }}
       initialValues={{
         status: "Active",
       }}
       form={formUserDetail}
+      className="!pointer-events-none"
     >
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item label="Họ tên" name="name">
-            <Input placeholder="Họ tên" />
+            <Input readOnly placeholder="Họ tên" />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item label="Số điện thoại" name="phone_number">
-            <Input placeholder="Số điện thoại" />
+            <Input readOnly placeholder="Số điện thoại" />
           </Form.Item>
         </Col>
       </Row>
@@ -49,7 +49,11 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
       <Row gutter={16}>
         <Col span={8}>
           <Form.Item label="Giới tính" name="gender">
-            <Select options={GENDER} placeholder="Chọn giới tính" />
+            <Select
+              options={GENDER}
+              placeholder="Chọn giới tính"
+              className="!pointer-events-none cursor-default"
+            />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -64,6 +68,9 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
             }
           >
             <DatePicker
+              className="!pointer-events-none cursor-default"
+              readOnly
+              inputReadOnly
               format={"DD/MM/YYYY"}
               placeholder="Chọn ngày sinh"
               style={{
@@ -74,7 +81,7 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
         </Col>
         <Col span={8}>
           <Form.Item label="Thế hệ" name="generation">
-            <Input placeholder="Thế hệ" />
+            <Input readOnly placeholder="Thế hệ" />
           </Form.Item>
         </Col>
       </Row>
@@ -82,12 +89,12 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item label="Vai trò" name="role">
-            <Input placeholder="Vai trò" />
+            <Input readOnly placeholder="Vai trò" />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item label="Mô tả vai trò" name="role_description">
-            <Input placeholder="Mô tả vai trò" />
+            <Input readOnly placeholder="Mô tả vai trò" />
           </Form.Item>
         </Col>
       </Row>
@@ -95,12 +102,12 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item label="Ngành học" name="major">
-            <Input placeholder="Ngành học" />
+            <Input readOnly placeholder="Ngành học" />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item label="Trường học" name="school">
-            <Input placeholder="Trường học" />
+            <Input readOnly placeholder="Trường học" />
           </Form.Item>
         </Col>
       </Row>
@@ -108,12 +115,12 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item label="Nghề nghiệp" name="job_title">
-            <Input placeholder="Nghề nghiệp" />
+            <Input readOnly placeholder="Nghề nghiệp" />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item label="Công ty" name="company">
-            <Input placeholder="Công ty" />
+            <Input readOnly placeholder="Công ty" />
           </Form.Item>
         </Col>
       </Row>
@@ -123,6 +130,7 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
         <Col span={12}>
           <Form.Item label="Khách mời" name="is_external_guest">
             <Select
+              className="!pointer-events-none cursor-default"
               options={[
                 {
                   label: "Khách mời",
@@ -139,7 +147,7 @@ const ProfileDetails: React.FC<IProfileDetailsProps> = ({
         </Col>
         <Col span={12}>
           <Form.Item label="Ngày được cấp tài khoản" name="created_at">
-            <Input placeholder="Ngày được cấp tài khoản" />
+            <Input readOnly placeholder="Ngày được cấp tài khoản" />
           </Form.Item>
         </Col>
       </Row>

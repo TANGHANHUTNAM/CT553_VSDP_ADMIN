@@ -15,34 +15,29 @@ const RadioSelectCanvasComponent = ({
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <div className="text-base">
-        <label className={`font-medium ${required ? "text-red-500" : ""}`}>
-          {label}
-          {required && <span className="ml-1 text-base text-red-500">*</span>}
-        </label>
-        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
-      </div>
-      <Form>
-        <Form.Item
-          name={block?.id}
-          rules={[{ required: required, message: `Vui lòng chọn ${label}` }]}
+      <Form.Item
+        colon={true}
+        label={label}
+        extra={helperText}
+        htmlFor={block?.id}
+        name={block?.id}
+        rules={[{ required: required, message: `Vui lòng chọn ${label}` }]}
+      >
+        <Radio.Group
+          size="large"
+          style={!inline ? styleRadioSelectInline : undefined}
         >
-          <Radio.Group
-            size="large"
-            style={!inline ? styleRadioSelectInline : undefined}
-          >
-            {options.map((option, index) => (
-              <Radio
-                key={index}
-                value={`${option}-${index}`}
-                className="pointer-events-none"
-              >
-                {option}
-              </Radio>
-            ))}
-          </Radio.Group>
-        </Form.Item>
-      </Form>
+          {options.map((option, index) => (
+            <Radio
+              key={index}
+              value={`${option}-${index}`}
+              className="pointer-events-none"
+            >
+              {option}
+            </Radio>
+          ))}
+        </Radio.Group>
+      </Form.Item>
     </div>
   );
 };

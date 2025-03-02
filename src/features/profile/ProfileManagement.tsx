@@ -64,34 +64,34 @@ const ProfileManagement: React.FC = () => {
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={8}>
-              <p className="mb-4">
+              <div className="mb-4">
                 <span className="text-gray-400">Họ tên: </span>{" "}
                 {dataUserProfile?.data?.name}
-              </p>
-              <p>
+              </div>
+              <div>
                 <span className="text-gray-400">Giới tính: </span>
                 {formatGender(dataUserProfile?.data?.gender || "")}
-              </p>
+              </div>
             </Col>
             <Col span={8}>
               <p className="mb-4">
                 <span className="text-gray-400">Email: </span>{" "}
                 {dataUserProfile?.data?.email}
               </p>
-              <p>
+              <div>
                 <span className="text-gray-400">Ngày sinh: </span>
                 {formatDate(dataUserProfile?.data?.date_of_birth || "")}
-              </p>
+              </div>
             </Col>
             <Col span={8}>
               <p className="mb-4">
                 <span className="text-gray-400">Vai trò: </span>
                 {dataUserProfile?.data?.role?.name}
               </p>
-              <p>
+              <div>
                 <span className="text-gray-400">Số điện thoại: </span>
                 {dataUserProfile?.data?.phone_number || "Chưa cập nhật"}
-              </p>
+              </div>
             </Col>
           </Row>
         </Col>

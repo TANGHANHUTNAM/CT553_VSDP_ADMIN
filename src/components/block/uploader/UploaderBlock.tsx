@@ -38,7 +38,7 @@ export const UploaderBlock: ObjectBlockType = {
       helperText: "Helper Text",
       required: true,
       sizeMax: 5,
-      numberMax: 5,
+      numberMax: 1,
       textButton: "Click to Upload",
       type: [],
       size: "middle",

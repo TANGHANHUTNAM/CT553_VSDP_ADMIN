@@ -1,11 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { RouterProvider } from "react-router-dom";
 import { ConfigProvider, theme } from "antd";
-import { Toaster } from "react-hot-toast";
-import LoadingBar from "react-top-loading-bar";
 import viVN from "antd/es/locale/vi_VN";
-import router from "./router";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import { Toaster } from "react-hot-toast";
+import { RouterProvider } from "react-router-dom";
+import LoadingBar from "react-top-loading-bar";
 import {
   dark,
   GLOBAL_COLOR,
@@ -14,12 +16,9 @@ import {
   GLOBAL_COLOR_TEXT_PRIMARY,
   GLOBAL_COLOR_TEXT_SECONDARY,
 } from "./constants/colorCustom";
-import "dayjs/locale/vi";
-import { loadingBarRef } from "./services/apiClient";
 import { useAppSelector } from "./hooks";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+import router from "./router";
+import { loadingBarRef } from "./services/apiClient";
 
 dayjs.locale("vi");
 dayjs.extend(utc);
@@ -38,7 +37,7 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         <ConfigProvider
           locale={viVN}
           theme={{

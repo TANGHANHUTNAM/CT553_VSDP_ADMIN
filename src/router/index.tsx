@@ -5,10 +5,7 @@ import LayoutAdmin from "../layout/LayoutAdmin";
 import LayoutFormBuilder from "../layout/LayoutFormBuilder";
 import DashboardPage from "../pages/DashboardPage";
 import FormBuilderPage from "../pages/FormBuilderPage";
-import FormFieldPage from "../pages/FormFieldPage";
-import FormGroupPage from "../pages/FormGroupPage";
 import FormPage from "../pages/FormPage";
-import FormVersionPage from "../pages/FormVersionPage";
 import LoginPage from "../pages/LoginPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import PermissionPage from "../pages/PermissionPage";
@@ -18,6 +15,9 @@ import SettingPage from "../pages/SettingPage";
 import UserPage from "../pages/UserPage";
 import Access from "./Access";
 import ProtectRoute from "./ProtectRoute";
+import FormBuilderPreviewPage from "../pages/FormBuilderPreviewPage";
+import FormBuilderResponsePage from "../pages/FormBuilderResponsePage";
+import FormBuilderStatisticsPage from "../pages/FormBuilderStatisticsPage";
 
 export type CustomRouteObject = RouteObject & {
   breadcrumb?: string;
@@ -88,25 +88,10 @@ export const routerCustom: CustomRouteObject[] = [
         ),
         breadcrumb: PAGE_NAME.FORM,
       },
-      {
-        path: ROUTER_URL.FORM_VERSION_PAGE,
-        element: <FormVersionPage />,
-        breadcrumb: PAGE_NAME.FORM_VERSION,
-      },
-      {
-        path: ROUTER_URL.FORM_GROUP_PAGE,
-        element: <FormGroupPage />,
-        breadcrumb: PAGE_NAME.FORM_GROUP,
-      },
-      {
-        path: ROUTER_URL.FORM_FIELD_PAGE,
-        element: <FormFieldPage />,
-        breadcrumb: PAGE_NAME.FORM_FIELD,
-      },
     ],
   },
   {
-    path: ROUTER_URL.FORM_BUILDER_PAGE,
+    path: ROUTER_URL.FORM_BUILDER_PAGE(":form_id"),
     element: (
       <ProtectRoute>
         <LayoutFormBuilder />
@@ -125,6 +110,21 @@ export const routerCustom: CustomRouteObject[] = [
           </Access>
         ),
         breadcrumb: PAGE_NAME.FORM_BUILDER,
+      },
+      {
+        path: ROUTER_URL.FORM_BUILDER_PREVIEW_PAGE,
+        element: <FormBuilderPreviewPage />,
+        breadcrumb: PAGE_NAME.FORM_BUILDER_PREVIEW,
+      },
+      {
+        path: ROUTER_URL.FORM_BUILDER_RESPONSE_PAGE,
+        element: <FormBuilderResponsePage />,
+        breadcrumb: PAGE_NAME.FORM_BUILDER_RESPONSE,
+      },
+      {
+        path: ROUTER_URL.FORM_BUILDER_STATISTICS_PAGE,
+        element: <FormBuilderStatisticsPage />,
+        breadcrumb: PAGE_NAME.FORM_BUILDER_STATISTICS,
       },
     ],
   },

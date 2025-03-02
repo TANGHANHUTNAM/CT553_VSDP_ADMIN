@@ -9,29 +9,26 @@ const CheckBoxFormComponent = ({
 }) => {
   const block = blockInstance as NewInstanceCheckBox;
   const { helperText, label, required, inline, options } = block.attributes;
+  console.log("block", block.id);
   return (
-    <div className="flex w-full flex-col gap-2">
-      <div className="mb-3 text-base">
-        <label className={`font-medium`}>
-          {label}
-          {required && <span className="ml-1 text-red-500">*</span>}
-        </label>
-        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
-      </div>
-      <Form>
-        <Form.Item
-          name={block?.id}
-          rules={[{ required: required, message: `Vui lòng chọn ${label}` }]}
-        >
-          <Checkbox.Group
-            style={!inline ? styleCheckBoxInline : {}}
-            options={options.map((option, index) => ({
-              label: <div key={index}>{option}</div>,
-              value: `${option}-${index}`,
-            }))}
-          />
-        </Form.Item>
-      </Form>
+    <div className="flex h-full w-full flex-col gap-2">
+      <Form.Item
+        colon={true}
+        label={label}
+        extra={helperText}
+        htmlFor={block?.id}
+        name={block?.id}
+        rules={[{ required: required, message: `Vui lòng chọn ${label}` }]}
+      >
+        <Checkbox.Group
+          className=""
+          style={!inline ? styleCheckBoxInline : {}}
+          options={options.map((option, index) => ({
+            label: <div key={index}>{option}</div>,
+            value: `${option}`,
+          }))}
+        />
+      </Form.Item>
     </div>
   );
 };

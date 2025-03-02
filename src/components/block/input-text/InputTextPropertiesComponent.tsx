@@ -111,36 +111,34 @@ const InputTextPropertiesComponent = ({
         <Form.Item label="Type" name="type" rules={[{ required: false }]}>
           <Select
             options={[
-              { label: "Email", value: "Email" },
-              { label: "Text", value: "Text" },
-              { label: "Password", value: "Password" },
+              { label: "Text", value: "string" },
+              { label: "Email", value: "email" },
+              { label: "Number", value: "number" },
+              { label: "Boolean", value: "boolean" },
+              { label: "Url", value: "url" },
             ]}
           />
         </Form.Item>
-        {(block.attributes.type === "Text" ||
-          block.attributes.type === "Password") && (
-          <>
-            <Form.Item label="Min" name="min" rules={[{ required: false }]}>
-              <InputNumber min={0} />
-            </Form.Item>
-            <Form.Item
-              label="Max"
-              name="max"
-              rules={[
-                { required: false },
-                {
-                  validator: async (_, value) => {
-                    if (value <= form.getFieldValue("min")) {
-                      return Promise.reject("Max must be greater than min");
-                    }
-                  },
-                },
-              ]}
-            >
-              <InputNumber min={0} />
-            </Form.Item>
-          </>
-        )}
+
+        <Form.Item label="Min" name="min" rules={[{ required: false }]}>
+          <InputNumber min={0} />
+        </Form.Item>
+        <Form.Item
+          label="Max"
+          name="max"
+          rules={[
+            { required: false },
+            {
+              validator: async (_, value) => {
+                if (value <= form.getFieldValue("min")) {
+                  return Promise.reject("Max must be greater than min");
+                }
+              },
+            },
+          ]}
+        >
+          <InputNumber min={0} />
+        </Form.Item>
 
         <Form.Item label="Size" name="size" rules={[{ required: false }]}>
           <Select options={OPTIONS_SIZE_INPUT} />
@@ -151,6 +149,14 @@ const InputTextPropertiesComponent = ({
         </Form.Item>
         <Form.Item label="Suffix" name="suffix" rules={[{ required: false }]}>
           <Input allowClear />
+        </Form.Item>
+        <Form.Item
+          label="ReadOnly"
+          name="readOnly"
+          valuePropName="checked"
+          rules={[{ required: false }]}
+        >
+          <Switch size="small" />
         </Form.Item>
         <Form.Item
           label="Required"

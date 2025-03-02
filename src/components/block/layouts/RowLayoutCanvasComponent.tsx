@@ -102,8 +102,9 @@ const RowLayoutCanvasComponent = ({
 
   return (
     <div ref={draggable.setNodeRef} className="max-w-full">
-      {blockInstance.isLocked && <Border />}
-
+      {blockInstance.isLocked && (
+        <Border color={formData?.primary_color as string} />
+      )}
       <Card
         ref={droppable.setNodeRef}
         onClick={() => handleSelectedBlockLayout(blockInstance)}
@@ -114,6 +115,7 @@ const RowLayoutCanvasComponent = ({
           minHeight: "128px",
           borderTopLeftRadius: blockInstance.isLocked ? 0 : "0.5rem",
           borderTopRightRadius: blockInstance.isLocked ? 0 : "0.5rem",
+          border: 0,
         }}
         styles={{
           body: {
@@ -132,7 +134,7 @@ const RowLayoutCanvasComponent = ({
               className="absolute -left-[1px] top-0 h-full w-[10px] rounded-l-lg"
             ></div>
           )}
-          {!blockInstance.isLocked && (
+          {!blockInstance.isLocked && !formData?.is_public && (
             <div
               {...draggable.listeners}
               {...draggable.attributes}
@@ -182,16 +184,18 @@ const RowLayoutCanvasComponent = ({
                     className="flex w-full items-center justify-center gap-1"
                   >
                     <ChildCanvasComponentWrapper blockInstance={childBlock} />
-                    {isSelected && !blockInstance.isLocked && (
-                      <button
-                        className="p-1"
-                        onClick={(e) => {
-                          removeChildBlock(e, childBlock.id);
-                        }}
-                      >
-                        <IoClose className="text-base" />
-                      </button>
-                    )}
+                    {isSelected &&
+                      !blockInstance.isLocked &&
+                      !formData?.is_public && (
+                        <button
+                          className="p-1"
+                          onClick={(e) => {
+                            removeChildBlock(e, childBlock.id);
+                          }}
+                        >
+                          <IoClose className="text-base" />
+                        </button>
+                      )}
                   </div>
                 ))}
               </div>
@@ -240,7 +244,7 @@ const RowLayoutCanvasComponent = ({
           </div>
         )}
         {blockInstance.isLocked && (
-          <div className="flex items-center justify-end gap-3 border-t px-1 py-2">
+          <div className="flex items-center justify-end gap-3 px-1 py-2">
             <ButtonComponent
               onclick={(e) => {
                 e.stopPropagation();

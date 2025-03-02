@@ -108,6 +108,7 @@ const FormSettings: React.FC = () => {
               <div className="text-lg font-medium">Thông tin biểu mẫu</div>
             </div>
             <Button
+              disabled={formData?.is_public}
               loading={mutationUploadImageForm.isPending}
               onClick={() => {
                 const data = new FormData();

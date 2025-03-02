@@ -137,39 +137,35 @@ const UploaderCanvasComponent = ({
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="mb-3 text-base">
-        <label className={`font-medium ${required ? "text-red-500" : ""}`}>
-          {label}
-          {required && <span className="ml-1">*</span>}
-        </label>
-        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
-      </div>
-      <Form form={form} validateTrigger={["onChange", "onBlur"]}>
-        <Form.Item
-          name={block.id}
-          required={required}
-          rules={[
-            {
-              validator: async (_, value) => {
-                if (required && (!value || value.length === 0)) {
-                  return Promise.reject(new Error(`${label} là bắt buộc`));
-                }
-                return Promise.resolve();
-              },
+      <Form.Item
+        label={label}
+        colon={true}
+        extra={helperText}
+        htmlFor={block.id}
+        name={block.id}
+        required={required}
+        rules={[
+          {
+            validator: async (_, value) => {
+              if (required && (!value || value.length === 0)) {
+                return Promise.reject(new Error(`${label} là bắt buộc`));
+              }
+              return Promise.resolve();
             },
-          ]}
-          validateTrigger={["onChange", "onBlur"]}
+          },
+        ]}
+        validateTrigger={["onChange", "onBlur"]}
+      >
+        <Upload
+          className="!pointer-events-none cursor-default"
+          {...propsUpload}
         >
-          <Upload
-            className="!pointer-events-none cursor-default"
-            {...propsUpload}
-          >
-            <Button size={size} icon={<UploadOutlined />}>
-              {textButton}
-            </Button>
-          </Upload>
-        </Form.Item>
-      </Form>
+          <Button size={size} icon={<UploadOutlined />}>
+            {textButton}
+          </Button>
+        </Upload>
+      </Form.Item>
+
       <div className="flex flex-col gap-1 text-xs text-gray-700">
         <span>
           Loại file cho phép: {type.length > 0 ? type.join(",") : "*"}

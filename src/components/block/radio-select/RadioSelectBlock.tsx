@@ -29,7 +29,7 @@ export const RadioSelectBlock: ObjectBlockType = {
   },
   createInstance: (id: string) => {
     return {
-      id: `field-${id}`,
+      id: `${id}`,
       blockType,
       isLocked: false,
       attributes: {

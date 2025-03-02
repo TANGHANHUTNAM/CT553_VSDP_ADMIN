@@ -1,9 +1,8 @@
+import { Button, Form } from "antd";
 import { useEffect, useRef, useState } from "react";
+import SignatureCanvas from "react-signature-canvas";
 import { FormBlockInstance } from "../../../interfaces/form-block";
 import { NewInstanceSignature } from "./SignatureBlock";
-import SignatureCanvas from "react-signature-canvas";
-import { Button, Form } from "antd";
-import { GrPowerReset } from "react-icons/gr";
 
 const SignatureCanvasComponent = ({
   blockInstance,
@@ -32,51 +31,42 @@ const SignatureCanvasComponent = ({
   };
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="mb-3 text-base">
-        <label className={`font-medium ${required ? "text-red-500" : ""}`}>
-          {label}
-          {required && <span className="ml-1">*</span>}
-        </label>
-        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
+      <Form.Item
+        label={label}
+        colon={true}
+        extra={helperText}
+        htmlFor={block?.id}
+        name={block?.id}
+        required={required}
+        rules={[
+          {
+            validator: validateEditor,
+          },
+        ]}
+        className="!pointer-events-none cursor-default"
+      >
+        <SignatureCanvas
+          ref={signatureRef}
+          penColor="black"
+          canvasProps={{
+            className: "w-2/3 border border-gray-300 cursor-default",
+            style: { touchAction: "none" },
+          }}
+          clearOnResize={false}
+          onEnd={() => {
+            handleChange(signatureRef.current?.toDataURL());
+            form.validateFields([block.id]);
+          }}
+        />
+      </Form.Item>
+      <div className="!pointer-events-none flex w-2/3 justify-end">
+        <Button className="mr-2" size="small" type="default">
+          Xóa
+        </Button>
+        <Button className="mr-2" size="small" type="primary">
+          Lưu
+        </Button>
       </div>
-      <Form form={form} validateTrigger={["onChange", "onBlur"]}>
-        <Form.Item
-          name={block?.id}
-          required={required}
-          rules={[
-            {
-              validator: validateEditor,
-            },
-          ]}
-          className="!pointer-events-none cursor-default"
-        >
-          <SignatureCanvas
-            ref={signatureRef}
-            penColor="black"
-            canvasProps={{
-              className: "w-2/3 border border-gray-300 cursor-default",
-              style: { touchAction: "none" },
-            }}
-            clearOnResize={false}
-            onEnd={() => {
-              handleChange(signatureRef.current?.toDataURL());
-              form.validateFields([block.id]);
-            }}
-          />
-        </Form.Item>
-        <Form.Item className="flex w-2/3 justify-end">
-          <Button
-            onClick={() => {
-              setValue("");
-              form.setFieldsValue({ [block.id]: "" });
-              signatureRef.current?.clear();
-              form.validateFields([block.id]);
-            }}
-            type="primary"
-            icon={<GrPowerReset />}
-          />
-        </Form.Item>
-      </Form>
     </div>
   );
 };

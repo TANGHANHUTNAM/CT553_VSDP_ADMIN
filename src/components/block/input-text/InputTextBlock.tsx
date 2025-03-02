@@ -19,10 +19,11 @@ export type InputTextAttributesType = {
   placeHolder: string;
   min: number;
   max: number;
-  type: "Email" | "Text" | "Password";
+  type: "string" | "number" | "boolean" | "url" | "email";
   size: "small" | "middle" | "large";
   prefix: string;
   suffix: string;
+  readOnly: boolean;
 };
 
 export type NewInstanceInputText = FormBlockInstance & {
@@ -42,10 +43,11 @@ export const InputTextBlock: ObjectBlockType = {
       placeHolder: "Enter text here.",
       min: 0,
       max: 255,
-      type: "Text",
+      type: "string",
       size: "middle",
       prefix: "",
       suffix: "",
+      readOnly: false,
     },
   }),
   blockBtnElement: {

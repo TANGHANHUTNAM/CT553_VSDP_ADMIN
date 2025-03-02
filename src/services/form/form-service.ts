@@ -46,9 +46,22 @@ export const updateStyleFormService = async (
   return axiosClient.patch(`/forms/${id}/style/update`, data);
 };
 
+export const updateStatusPublicFormService = async (
+  id: string,
+  is_public: boolean,
+): Promise<IResponse<IFormResponse>> => {
+  return axiosClient.patch(`/forms/${id}/status/public`, { is_public });
+};
+
 export const saveFormBuilderService = async (
   id: string,
   data: IFormBuilderRequest,
 ): Promise<IResponse<IFormResponse>> => {
   return axiosClient.patch(`/forms/${id}/builder/update`, data);
+};
+
+export const getFormBuilderPreviewService = async (
+  id: string,
+): Promise<IResponse<IFormResponse>> => {
+  return axiosClient.get(`/forms/preview/${id}`);
 };

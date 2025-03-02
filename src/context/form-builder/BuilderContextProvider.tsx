@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import LoadingComponent from "../../components/LoadingComponent";
+import NotFoundComponent from "../../components/NotFoundComponent";
 import {
   GLOBAL_COLOR,
   GLOBAL_COLOR_BACKGROUND,
@@ -11,11 +13,8 @@ import { FormBlockInstance } from "../../interfaces/form-block";
 import { getFormById } from "../../services";
 import { generateUniqueId } from "../../utils/functionUtils";
 import { BuilderContext } from "./BuilderContext";
-import LoadingComponent from "../../components/LoadingComponent";
-import NotFoundComponent from "../../components/NotFoundComponent";
-import { IDataFormSectionLastVersionResponse } from "../../interfaces/form-sections";
-import { getAllSectionsLastVersionByFormIdService } from "../../services/form-sections/form-sections-service";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { IDataFormSectionResponse } from "../../interfaces/form-sections";
 
 interface IBuilderContextProviderProps {
   children: React.ReactNode;
@@ -34,61 +33,23 @@ const BuilderContextProvider: React.FC<IBuilderContextProviderProps> = ({
     GLOBAL_COLOR_BACKGROUND,
   );
   const [imge_url, setImageUrl] = useState<string>("");
-  const [sectionsForm, setSectionsForm] = useState<
-    IDataFormSectionLastVersionResponse[]
-  >([]);
+  const [sectionsForm, setSectionsForm] = useState<IDataFormSectionResponse[]>(
+    [],
+  );
 
   const [selectedBlockLayout, setSelectedBlockLayout] =
     useState<FormBlockInstance | null>(null);
   const [selectedSection, setSelectedSection] =
-    useState<IDataFormSectionLastVersionResponse | null>(null);
+    useState<IDataFormSectionResponse | null>(null);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingSection, setIsLoadingSection] = useState<boolean>(false);
 
-  console.log(blocksLayout);
-  const queryClient = useQueryClient();
-  const { data, isLoading: loadingSection } = useQuery({
-    queryKey: ["sections"],
-    queryFn: async () =>
-      getAllSectionsLastVersionByFormIdService(form_id || ""),
-    enabled: !!formData,
-  });
-
   useEffect(() => {
-    setIsLoadingSection(loadingSection);
-  }, [loadingSection]);
-
-  useEffect(() => {
-    if (data && data.data) {
-      setSectionsForm(data.data);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    setBlocksLayout(selectedSection?.section_versions?.json_blocks || []);
+    setBlocksLayout(selectedSection?.json_blocks || []);
   }, [selectedSection]);
 
   useEffect(() => {
-    // const fetchSectionsForm = async () => {
-    //   setIsLoadingSection(true);
-    //   try {
-    //     const res: IResponse<IDataFormSectionLastVersionResponse[]> =
-    //       await getAllSectionsLastVersionByFormIdService(form_id || "");
-
-    //     if (res && res.data) {
-    //       setSectionsForm(res.data);
-    //       setSelectedSection(res.data[0] || null);
-    //     }
-    //     if (res && res.error) {
-    //       toast.error(res.message as string);
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //     toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
-    //   } finally {
-    //     setIsLoadingSection(false);
-    //   }
-    // };
     const fetchFormBuilder = async () => {
       setIsLoading(true);
       try {
@@ -101,8 +62,7 @@ const BuilderContextProvider: React.FC<IBuilderContextProviderProps> = ({
             res.data.background_color || GLOBAL_COLOR_BACKGROUND,
           );
           setImageUrl(res.data.image_url || "");
-          queryClient.invalidateQueries({ queryKey: ["sections"] });
-          // fetchSectionsForm();
+          setSectionsForm(res.data.form_sections);
         }
         if (res && res.error) {
           toast.error(res.message as string);
@@ -115,7 +75,7 @@ const BuilderContextProvider: React.FC<IBuilderContextProviderProps> = ({
       }
     };
     fetchFormBuilder();
-  }, [form_id, queryClient]);
+  }, [form_id]);
 
   const addBlockLayout = (block: FormBlockInstance) => {
     setBlocksLayout((prevBlocks) => [...prevBlocks, block]);

@@ -1,80 +1,174 @@
+import { Button, Form, FormInstance } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { FormBlockInstance } from "../../../interfaces/form-block";
-import { NewInstanceSignature } from "./SignatureBlock";
+import toast from "react-hot-toast";
 import SignatureCanvas from "react-signature-canvas";
-import { Button, Form } from "antd";
-import { GrPowerReset } from "react-icons/gr";
+import { IResponse } from "../../../interfaces";
+import { FormBlockInstance } from "../../../interfaces/form-block";
+import {
+  deleteFileService,
+  uploadFileService,
+} from "../../../services/upload/upload-service";
+import { NewInstanceSignature } from "./SignatureBlock";
+
 const SignatureFormComponent = ({
   blockInstance,
+  form,
 }: {
   blockInstance: FormBlockInstance;
+  form: FormInstance;
 }) => {
-  const [form] = Form.useForm();
+  const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
   const signatureRef = useRef<SignatureCanvas>(null);
   const block = blockInstance as NewInstanceSignature;
   const { helperText, label, required } = block.attributes;
-  const [value, setValue] = useState<string | undefined>("");
+  const [value, setValue] = useState<
+    | {
+        public_id?: string;
+        url?: string;
+      }
+    | undefined
+  >(undefined); // Khởi tạo là undefined thay vì {}
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleChange = (content: string | undefined) => {
-    setValue(content);
-    form.setFieldsValue({ [block.id]: content });
-  };
+  console.log("value", value);
+
   useEffect(() => {
     form.setFieldsValue({ [block.id]: value });
   }, [value, form, block.id]);
 
-  const validateEditor = async (_: unknown, content: string) => {
-    if (required && !content) {
-      return Promise.reject(new Error(`${label} là bắt buộc`));
+  const uploadToCloudinary = async (dataUrl: string) => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", dataUrl);
+      formData.append("upload_preset", UPLOAD_PRESET);
+
+      const response = await uploadFileService("auto", formData);
+      if (!response.data || !response.data.secure_url) {
+        throw new Error("Không nhận được URL từ Cloudinary");
+      }
+      toast.success("Tải lên thành công!");
+      return {
+        public_id: response.data.public_id,
+        url: response.data.secure_url,
+      };
+    } catch (error) {
+      console.error("Error uploading to Cloudinary:", error);
+      toast.error("Có lỗi xảy ra khi tải lên");
+      throw error;
+    } finally {
+      setLoading(false);
     }
-    return Promise.resolve();
   };
+
+  const deleteFromCloudinary = async (publicId: string) => {
+    try {
+      const res: IResponse<string> = await deleteFileService(publicId);
+      if (res && res.data) {
+        toast.success(res.message as string);
+      }
+      if (res && res.error) {
+        toast.error(res.message as string);
+      }
+    } catch (error) {
+      console.error("Error deleting from Cloudinary:", error);
+      toast.error("Có lỗi xảy ra khi xóa ảnh");
+      throw error;
+    }
+  };
+
+  const handleSave = async () => {
+    if (signatureRef.current?.isEmpty()) {
+      setValue(undefined); // Reset về undefined
+      form.setFieldsValue({ [block.id]: undefined });
+      try {
+        await form.validateFields([block.id]);
+      } catch (error) {
+        console.error("Failed to save signature:", error);
+      }
+      return;
+    }
+
+    const signatureData = signatureRef.current?.toDataURL();
+    try {
+      const { public_id, url } = await uploadToCloudinary(signatureData!);
+      setValue({ public_id, url });
+      form.setFieldsValue({ [block.id]: { public_id, url } });
+      await form.validateFields([block.id]);
+    } catch (error) {
+      console.error("Failed to save signature:", error);
+    }
+  };
+
+  const handleClear = async () => {
+    if (value?.public_id) {
+      try {
+        await deleteFromCloudinary(value.public_id);
+      } catch (error) {
+        console.error("Failed to delete signature:", error);
+      }
+    }
+    setValue(undefined);
+    form.setFieldsValue({ [block.id]: undefined });
+    signatureRef.current?.clear();
+    try {
+      await form.validateFields([block.id]);
+    } catch (error) {
+      console.error("Failed to clear signature:", error);
+    }
+  };
+
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="mb-3 text-base">
-        <label className={`font-medium`}>
-          {label}
-          {required && <span className="ml-1 text-red-500">*</span>}
-        </label>
-        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
-      </div>
-      <Form form={form} validateTrigger={["onChange", "onBlur"]}>
-        <Form.Item
-          name={block?.id}
-          required={required}
-          rules={[
-            {
-              validator: validateEditor,
+      <Form.Item
+        label={label}
+        colon={true}
+        extra={helperText}
+        htmlFor={block?.id}
+        name={block?.id}
+        required={required}
+        rules={[
+          {
+            validator: async (
+              _: unknown,
+              content: { public_id?: string; url?: string } | undefined,
+            ) => {
+              if (required && (!content || !content.url)) {
+                return Promise.reject(new Error(`${label} là bắt buộc`));
+              }
+              return Promise.resolve();
             },
-          ]}
+          },
+        ]}
+      >
+        <SignatureCanvas
+          ref={signatureRef}
+          penColor="black"
+          canvasProps={{
+            className: "w-2/3 border border-gray-300 cursor-default",
+          }}
+          clearOnResize={false}
+        />
+      </Form.Item>
+      <div className="flex w-2/3 justify-end">
+        <Button
+          className="mr-2"
+          size="small"
+          onClick={handleClear}
+          type="default"
         >
-          <SignatureCanvas
-            ref={signatureRef}
-            penColor="black"
-            canvasProps={{
-              className: "w-2/3 border border-gray-300 cursor-default",
-              style: { touchAction: "none" },
-            }}
-            clearOnResize={false}
-            onEnd={() => {
-              handleChange(signatureRef.current?.toDataURL());
-              form.validateFields([block.id]);
-            }}
-          />
-        </Form.Item>
-        <Form.Item className="flex w-2/3 justify-end">
-          <Button
-            onClick={() => {
-              setValue("");
-              form.setFieldsValue({ [block.id]: "" });
-              signatureRef.current?.clear();
-              form.validateFields([block.id]);
-            }}
-            type="primary"
-            icon={<GrPowerReset />}
-          />
-        </Form.Item>
-      </Form>
+          Xóa
+        </Button>
+        <Button
+          loading={loading}
+          className="mr-2"
+          size="small"
+          onClick={handleSave}
+          type="primary"
+        >
+          Lưu
+        </Button>
+      </div>
     </div>
   );
 };

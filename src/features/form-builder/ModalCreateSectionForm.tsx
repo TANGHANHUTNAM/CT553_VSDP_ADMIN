@@ -1,32 +1,31 @@
 import { Button, Form, Input, Modal } from "antd";
 import { useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { BuilderContext } from "../../context/form-builder/BuilderContext";
 import { IResponse } from "../../interfaces";
 import {
   IDataFormSectionRequest,
   IDataFormSectionResponse,
 } from "../../interfaces/form-sections";
 import { createNewSectionFormService } from "../../services/form-sections/form-sections-service";
-import toast from "react-hot-toast";
-import { BuilderContext } from "../../context/form-builder/BuilderContext";
-import { useQueryClient } from "@tanstack/react-query";
 
 const ModalCreateSectionForm: React.FC = () => {
-  const { formData, isLoadingSection, setIsLoadingSection } =
+  const { formData, isLoadingSection, setIsLoadingSection, setSectionsForm } =
     useContext(BuilderContext);
   const [form] = Form.useForm();
   const [open, setOpen] = useState<boolean>(false);
-  const queryClient = useQueryClient();
+
   const createNewSection = async (data: IDataFormSectionRequest) => {
     setIsLoadingSection(true);
     try {
-      const res: IResponse<IDataFormSectionResponse> =
+      const res: IResponse<IDataFormSectionResponse[]> =
         await createNewSectionFormService({
           ...data,
           form_id: formData?.id || "",
         });
       if (res && res.data) {
         toast.success(res.message as string);
-        queryClient.invalidateQueries({ queryKey: ["sections"] });
+        setSectionsForm(res.data);
         setOpen(false);
       }
       if (res && res.error) {
@@ -42,6 +41,7 @@ const ModalCreateSectionForm: React.FC = () => {
   return (
     <>
       <Button
+        disabled={formData?.is_public}
         onClick={() => {
           setOpen(true);
         }}
@@ -55,8 +55,8 @@ const ModalCreateSectionForm: React.FC = () => {
         title={`Thêm phần mới cho biểu mẫu`}
         onCancel={() => setOpen(false)}
         cancelText="Hủy"
+        okText="Thêm mới"
         okButtonProps={{
-          autoFocus: true,
           htmlType: "submit",
           loading: isLoadingSection,
         }}

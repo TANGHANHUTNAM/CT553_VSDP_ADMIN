@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { IFormResponse } from "../../interfaces";
 import { FormBlockInstance } from "../../interfaces/form-block";
-import { IDataFormSectionLastVersionResponse } from "../../interfaces/form-sections";
+import { IDataFormSectionResponse } from "../../interfaces/form-sections";
 
 interface IBuilderContextProviderProps {
   formData: IFormResponse | null;
@@ -39,15 +39,15 @@ interface IBuilderContextProviderProps {
   ) => void;
   lockBlockLayout(blockId: string): void;
   unlockBlockLayout(blockId: string): void;
-  sectionsForm: IDataFormSectionLastVersionResponse[];
+  sectionsForm: IDataFormSectionResponse[];
   setSectionsForm: React.Dispatch<
-    React.SetStateAction<IDataFormSectionLastVersionResponse[]>
+    React.SetStateAction<IDataFormSectionResponse[]>
   >;
   isLoadingSection: boolean;
   setIsLoadingSection: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedSection: IDataFormSectionLastVersionResponse | null;
+  selectedSection: IDataFormSectionResponse | null;
   setSelectedSection: React.Dispatch<
-    React.SetStateAction<IDataFormSectionLastVersionResponse | null>
+    React.SetStateAction<IDataFormSectionResponse | null>
   >;
 }
 

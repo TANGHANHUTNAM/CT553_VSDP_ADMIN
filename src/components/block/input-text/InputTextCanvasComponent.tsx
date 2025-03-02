@@ -19,61 +19,47 @@ const InputTextCanvasComponent = ({
     size,
     prefix,
     suffix,
+    readOnly,
   } = block.attributes;
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="mb-3 text-base">
-        <label className={`font-medium ${required ? "text-red-500" : ""}`}>
-          {label}
-          {required && <span className="ml-1">*</span>}
-        </label>
-        {helperText && <p className="mt-1 text-[0.9rem]">{helperText}</p>}
-      </div>
-      <Form>
-        <Form.Item
-          name={block?.id}
-          required={required}
-          rules={[
-            {
-              required: required,
-              message: `${label} là bắt buộc`,
-            },
-            {
-              min: min,
-              message: `${label} có ít nhất ${min} ký tự`,
-            },
-            {
-              max: max,
-              message: `${label} có nhiều nhất ${max} ký tự`,
-            },
-          ]}
-        >
-          {type === "Password" ? (
-            <Input.Password
-              size={size}
-              allowClear
-              readOnly
-              autoComplete="new-password"
-              variant="underlined"
-              className="!pointer-events-none w-2/3 cursor-default"
-              placeholder={placeHolder}
-              prefix={prefix}
-              suffix={suffix}
-            />
-          ) : (
-            <Input
-              size={size}
-              allowClear
-              readOnly
-              variant="underlined"
-              className="!pointer-events-none w-2/3 cursor-default"
-              placeholder={placeHolder}
-              prefix={prefix}
-              suffix={suffix}
-            />
-          )}
-        </Form.Item>
-      </Form>
+      <Form.Item
+        label={label}
+        htmlFor={block?.id}
+        colon={true}
+        extra={helperText}
+        name={block?.id}
+        required={required}
+        rules={[
+          {
+            required: required,
+            message: `${label} là bắt buộc`,
+          },
+          {
+            type: type,
+            message: `${label} không đúng định dạng`,
+          },
+          {
+            min: min,
+            message: `${label} phải lớn hơn ${min}`,
+          },
+          {
+            max: max,
+            message: `${label} phải nhỏ hơn ${max}`,
+          },
+        ]}
+      >
+        <Input
+          size={size}
+          allowClear
+          readOnly={readOnly}
+          variant="underlined"
+          className="!pointer-events-none w-2/3 cursor-default"
+          placeholder={placeHolder}
+          prefix={prefix}
+          suffix={suffix}
+        />
+      </Form.Item>
     </div>
   );
 };

@@ -61,6 +61,7 @@ const FormAI = () => {
       const responseText = result.response.text();
 
       const parsedResponse = JSON?.parse(responseText);
+      console.log("parsedResponse", parsedResponse);
       const actionType = parsedResponse?.actionType;
       const generatedBlocks = parsedResponse?.blocks;
 
@@ -116,7 +117,9 @@ const FormAI = () => {
           </div>
         </Popconfirm>
         <Button
-          disabled={formData?.is_public || userRequest === ""}
+          disabled={
+            formData?.is_public || userRequest === "" || !selectedSection
+          }
           onClick={() => {
             generateFormWithAI();
           }}

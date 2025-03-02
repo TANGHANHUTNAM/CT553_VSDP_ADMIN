@@ -1,3 +1,4 @@
+import { FormInstance } from "antd";
 import { CheckBoxBlock } from "../../components/block/check-box/CheckBoxBlock";
 import { DatePickerBlock } from "../../components/block/datepicker/DatePickerBlock";
 import { EditorTextBlock } from "../../components/block/editor-text/EditorTextBlock";
@@ -14,9 +15,9 @@ import { SignatureBlock } from "../../components/block/signature/SignatureBlock"
 import { TextAreaBlock } from "../../components/block/text-area/TextAreaBlock";
 import { TimePickerBlock } from "../../components/block/timepicker/TimePickerBlock";
 import { UploaderBlock } from "../../components/block/uploader/UploaderBlock";
+import { EditorDescriptionBlock } from "../../components/block/description/EditorDescriptionBlock";
 
 export type FormCategoryType = "Layout" | "Field";
-
 export type FormBlockType =
   | "RowLayout"
   | "RadioSelect"
@@ -33,7 +34,15 @@ export type FormBlockType =
   | "RangePicker"
   | "Signature"
   | "Uploader"
-  | "Link";
+  | "Link"
+  | "EditorDescription";
+
+export const FormNotInputBlockTypes: FormBlockType[] = [
+  "RowLayout",
+  "Heading",
+  "Paragraph",
+  "Link",
+];
 
 export type ObjectBlockType = {
   blockCategory: FormCategoryType;
@@ -44,7 +53,12 @@ export type ObjectBlockType = {
   };
   createInstance: (id: string) => FormBlockInstance;
   canvasComponent: React.FC<{ blockInstance: FormBlockInstance }>;
-  formComponent: React.FC<{ blockInstance: FormBlockInstance }>;
+  formComponent: React.FC<{
+    blockInstance: FormBlockInstance;
+    primary_color: string;
+    block_color: string;
+    form: FormInstance;
+  }>;
   propertiesComponent: React.FC<{
     positionIndex?: number;
     blockInstance: FormBlockInstance;
@@ -81,4 +95,5 @@ export const FormBlocks: FormBlocksType = {
   Signature: SignatureBlock,
   Uploader: UploaderBlock,
   Link: LinkBlock,
+  EditorDescription: EditorDescriptionBlock,
 };

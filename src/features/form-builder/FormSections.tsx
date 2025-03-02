@@ -1,49 +1,45 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { Collapse, Descriptions, Tag, Tooltip } from "antd";
+import { Collapse, Descriptions, Popconfirm, Tooltip } from "antd";
 import { useContext } from "react";
-import { FaListOl, FaRegEdit, FaRegPlusSquare } from "react-icons/fa";
+import { FaListOl } from "react-icons/fa";
 import { LuMousePointerClick } from "react-icons/lu";
-import LoadingComponent from "../../components/LoadingComponent";
+import { MdDelete } from "react-icons/md";
 import { GLOBAL_COLOR } from "../../constants/colorCustom";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
-import { IResponse } from "../../interfaces";
-import {
-  IDataSectionVersionRequest,
-  IDataSectionVersionResponse,
-} from "../../interfaces/section-versions";
-import { createNewVersionSectionService } from "../../services/section-versions/section-versions-service";
 import ModalCreateSectionForm from "./ModalCreateSectionForm";
+import ModalUpdateSectionForm from "./ModalUpdateSectionForm";
 import toast from "react-hot-toast";
+import { IResponse } from "../../interfaces";
+import { deleteSectionFormService } from "../../services/form-sections/form-sections-service";
+import { IDataFormSectionResponse } from "../../interfaces/form-sections";
 
 const FormSections: React.FC = () => {
   const {
+    formData,
     sectionsForm,
-    isLoadingSection,
     selectedSection,
-    setBlocksLayout,
     setSelectedSection,
+    setSectionsForm,
   } = useContext(BuilderContext);
-  const queryClient = useQueryClient();
-  const createNewVersionSection = async (data: IDataSectionVersionRequest) => {
+
+  const handleDeleteSection = async (sectionId: number) => {
     try {
-      const res: IResponse<IDataSectionVersionResponse> =
-        await createNewVersionSectionService(data);
+      const res: IResponse<IDataFormSectionResponse[]> =
+        await deleteSectionFormService(sectionId);
       if (res && res.data) {
-        queryClient.invalidateQueries({ queryKey: ["sections"] });
-        setBlocksLayout([]);
+        setSectionsForm(res.data);
+        if (selectedSection?.id === sectionId) {
+          setSelectedSection(null);
+        }
         toast.success(res.message as string);
-      }
-      if (res && res.error) {
-        toast.error(res.message as string);
       }
     } catch (error) {
       console.log(error);
+      toast.error("Có lỗi xảy ra khi xóa phần của biểu mẫu");
     }
   };
 
   return (
     <div className="h-[calc(100vh-155px)] w-full overflow-y-auto p-2 text-gray-600 scrollbar-thin">
-      {isLoadingSection && <LoadingComponent />}
       <Descriptions
         bordered
         styles={{
@@ -68,9 +64,17 @@ const FormSections: React.FC = () => {
         }
         items={sectionsForm.map((section) => ({
           key: section.id,
+          styles: {
+            content: {
+              backgroundColor: "#fcfcfc",
+            },
+          },
           children: (
             <Collapse
-              defaultActiveKey={[selectedSection?.id || ""]}
+              defaultActiveKey={
+                selectedSection ? [`${selectedSection.id as number}`] : []
+              }
+              ghost
               size="small"
               items={[
                 {
@@ -83,30 +87,27 @@ const FormSections: React.FC = () => {
                   key: section.id,
                   label: (
                     <div className="flex justify-between">
-                      <div className="w-3/4 truncate">{section.name}</div>
-                      <div className="w-1/4 text-end">
-                        <Tag color="default" className="font-semibold">
-                          v{`${section.section_versions.version}.0`}
-                        </Tag>
+                      <div className="w-3/4 overflow-hidden truncate whitespace-nowrap font-medium">
+                        {section.name}
                       </div>
+                      <div className="w-1/4 text-end"></div>
                     </div>
                   ),
                   children: (
                     <div className="flex w-full items-center justify-between">
                       <div className="flex items-center space-x-4">
-                        <Tooltip title="Tạo phiên bản mới">
-                          <FaRegPlusSquare
-                            onClick={() => {
-                              createNewVersionSection({
-                                form_section_id: section?.id,
-                              });
-                            }}
-                            className="cursor-pointer text-xl text-blue-400"
-                          />
-                        </Tooltip>
-                        <Tooltip title="Chỉnh sửa tên phần">
-                          <FaRegEdit className="cursor-pointer text-xl text-yellow-300" />
-                        </Tooltip>
+                        <ModalUpdateSectionForm section={section} />
+                        <Popconfirm
+                          disabled={formData?.is_public}
+                          onConfirm={() => {
+                            handleDeleteSection(section.id as number);
+                          }}
+                          title={`Xóa ${section.name}?`}
+                          okText="Xóa"
+                          cancelText="Hủy"
+                        >
+                          <MdDelete className="cursor-pointer text-2xl text-red-500" />
+                        </Popconfirm>
                       </div>
                       <Tooltip title="Chọn để thiết kế">
                         <div

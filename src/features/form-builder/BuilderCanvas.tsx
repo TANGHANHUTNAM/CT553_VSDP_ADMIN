@@ -1,6 +1,6 @@
 import { Active, useDndMonitor, useDroppable } from "@dnd-kit/core";
 import { useContext, useState } from "react";
-import LoadingComponent from "../../components/LoadingComponent";
+import { CiEdit } from "react-icons/ci";
 import { ALL_LAYOUT } from "../../constants/blockLayout";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
 import {
@@ -9,11 +9,10 @@ import {
   FormBlockType,
 } from "../../interfaces/form-block";
 import { generateUniqueId } from "../../utils/functionUtils";
-import { CiEdit } from "react-icons/ci";
+import { Card, Form } from "antd";
 
 const BuilderCanvas = () => {
   const {
-    isLoadingSection,
     blocksLayout,
     setBlocksLayout,
     repositionBlockLayout,
@@ -21,6 +20,8 @@ const BuilderCanvas = () => {
     backgroundColor,
     selectedSection,
     imge_url,
+    blockColor,
+    primaryColor,
   } = useContext(BuilderContext);
   const [activeBlock, setActiveBlock] = useState<Active | null>(null);
   const droppable = useDroppable({
@@ -100,30 +101,72 @@ const BuilderCanvas = () => {
       setActiveBlock(null);
     },
   });
+
+  const [form] = Form.useForm();
   return (
     <div
       ref={droppable.setNodeRef}
       style={{ backgroundColor }}
       className={`mx-3 min-h-[calc(100vh-140px)] rounded-lg p-3 ring-1 ring-primary scrollbar-thin ${droppable.isOver ? "ring-2" : ""}`}
     >
-      {isLoadingSection ? (
-        <LoadingComponent />
-      ) : (
-        <div className="mx-auto flex h-full w-full max-w-3xl flex-col items-center">
-          {!selectedSection && (
-            <div className="flex min-h-[calc(100vh-200px)] w-full flex-col items-center justify-center font-medium text-black">
-              <CiEdit className="text-3xl" /> Chọn phần biểu mẫu để chỉnh
-            </div>
-          )}
-          {selectedSection && (
-            <>
-              <div
-                style={{
-                  backgroundImage: `url(${imge_url})`,
-                }}
-                className={`h-[135px] w-full rounded-md bg-gray-300 bg-cover bg-center bg-no-repeat`}
-              />
-              {blocksLayout.length > 0 && (
+      <div className="mx-auto flex h-full w-full max-w-screen-sm flex-col items-center">
+        {!selectedSection && (
+          <div className="flex min-h-[calc(100vh-200px)] w-full flex-col items-center justify-center font-medium text-black">
+            <CiEdit className="text-3xl" /> Chọn phần biểu mẫu để chỉnh sửa
+          </div>
+        )}
+        {selectedSection && (
+          <>
+            <div
+              style={{
+                backgroundImage: `url(${imge_url})`,
+              }}
+              className={`h-[135px] w-full rounded-md bg-gray-300 bg-cover bg-center bg-no-repeat`}
+            />
+            {selectedSection && (
+              <div className="mt-4 w-full max-w-full">
+                <div
+                  style={{
+                    backgroundColor: primaryColor,
+                  }}
+                  className="min-h-[24px] w-full rounded-t-lg px-5"
+                >
+                  <div className="py-2 text-lg font-medium uppercase">
+                    {selectedSection?.name}
+                  </div>
+                </div>
+                <Card
+                  className={`relative w-full max-w-3xl cursor-default shadow-sm`}
+                  style={{
+                    backgroundColor: blockColor,
+                    borderRadius: "0.5rem",
+                    borderTopLeftRadius: "0",
+                    borderTopRightRadius: "0",
+                    minHeight: "128px",
+                    border: 0,
+                  }}
+                  styles={{
+                    body: {
+                      padding: "4px",
+                    },
+                  }}
+                >
+                  {/* Content */}
+                  <div className="px-5 py-5">
+                    <p className="flex flex-wrap gap-2 font-medium">
+                      {selectedSection?.description}
+                    </p>
+                  </div>
+                </Card>
+              </div>
+            )}
+            {blocksLayout.length > 0 && (
+              <Form
+                form={form}
+                className="w-full"
+                layout="vertical"
+                validateTrigger={["onChange", "onBlur"]}
+              >
                 <div className="mt-4 flex h-full w-full flex-col gap-4">
                   {blocksLayout?.map((blockLayout) => (
                     <CanvasBlockLayoutWrapper
@@ -133,11 +176,11 @@ const BuilderCanvas = () => {
                     />
                   ))}
                 </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
+              </Form>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
