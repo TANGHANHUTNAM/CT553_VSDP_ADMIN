@@ -275,7 +275,7 @@ const FormManangement: React.FC = () => {
                   is_default: checked,
                 });
               }}
-              disabled={record.is_default}
+              // disabled={record.is_default}
               defaultChecked={record.is_default}
               value={record.is_default}
             />

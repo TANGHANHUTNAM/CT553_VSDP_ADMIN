@@ -1,5 +1,4 @@
 import { Form } from "antd";
-import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { FormBlockInstance } from "../../../interfaces/form-block";
@@ -10,18 +9,10 @@ const EditorTextCanvasComponent = ({
 }: {
   blockInstance: FormBlockInstance;
 }) => {
-  const [form] = Form.useForm();
-  const [value, setValue] = useState<string>("");
+  // const [value, setValue] = useState<string>("");
 
   const block = blockInstance as NewInstanceEditorText;
   const { helperText, label, placeHolder, required } = block.attributes;
-  const handleChange = (content: string) => {
-    setValue(content);
-    form.setFieldsValue({ [block.id]: content });
-  };
-  useEffect(() => {
-    form.setFieldsValue({ [block.id]: value });
-  }, [value, form, block.id]);
 
   const validateEditor = (_: unknown, content: string) => {
     if (
@@ -54,14 +45,14 @@ const EditorTextCanvasComponent = ({
           key={placeHolder}
           readOnly
           theme="snow"
-          value={value}
-          onChange={handleChange}
+          // value={value}
+          // onChange={handleChange}
           placeholder={placeHolder}
           className="!pointer-events-none w-2/3 cursor-default"
         />
       </Form.Item>
 
-      <div className="prose mt-4" dangerouslySetInnerHTML={{ __html: value }} />
+      {/* <div className="prose mt-4" dangerouslySetInnerHTML={{ __html: value }} /> */}
     </div>
   );
 };

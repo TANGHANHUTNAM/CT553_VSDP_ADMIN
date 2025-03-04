@@ -1,4 +1,4 @@
-import { Form } from "antd";
+import { Form, FormInstance } from "antd";
 import { useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import { FormBlockInstance } from "../../../interfaces/form-block";
@@ -6,10 +6,11 @@ import { NewInstanceEditorText } from "./EditorTextBlock";
 import "react-quill/dist/quill.snow.css";
 const EditorTextFormComponent = ({
   blockInstance,
+  form,
 }: {
   blockInstance: FormBlockInstance;
+  form: FormInstance;
 }) => {
-  const [form] = Form.useForm();
   const [value, setValue] = useState<string>("");
   const quillRef = useRef<ReactQuill | null>(null);
   const block = blockInstance as NewInstanceEditorText;

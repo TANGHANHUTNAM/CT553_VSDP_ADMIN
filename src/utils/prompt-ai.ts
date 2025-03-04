@@ -176,6 +176,11 @@ export const generateFormQuestionPrompt = (
         - \`min\`: (number) Minimum value. default 0.
         - \`max\`: (number) Maximum value.
         - \`precision\`: (number) Decimal places for the number, default 0.
+
+17. **EditorDescription**
+    - Attributes:
+        - \`content\`: (string) The content of the description. default "Enter description".
+     
 ---
 
 

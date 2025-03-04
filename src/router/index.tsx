@@ -18,6 +18,7 @@ import ProtectRoute from "./ProtectRoute";
 import FormBuilderPreviewPage from "../pages/FormBuilderPreviewPage";
 import FormBuilderResponsePage from "../pages/FormBuilderResponsePage";
 import FormBuilderStatisticsPage from "../pages/FormBuilderStatisticsPage";
+import UniversityPage from "../pages/UniversityPage";
 
 export type CustomRouteObject = RouteObject & {
   breadcrumb?: string;
@@ -87,6 +88,11 @@ export const routerCustom: CustomRouteObject[] = [
           </Access>
         ),
         breadcrumb: PAGE_NAME.FORM,
+      },
+      {
+        path: ROUTER_URL.UNIVERSITY_PAGE,
+        element: <UniversityPage />,
+        breadcrumb: PAGE_NAME.UNIVERSITY,
       },
     ],
   },

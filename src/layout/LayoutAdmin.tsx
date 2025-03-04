@@ -34,6 +34,7 @@ import { logout } from "../redux/authReducer";
 import { clearUser } from "../redux/userReducer";
 import { routerCustom } from "../router";
 import { logoutService } from "../services";
+import { FaSchoolFlag } from "react-icons/fa6";
 
 const LayoutAdmin: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -75,8 +76,14 @@ const LayoutAdmin: React.FC = () => {
           item.api_path === ALL_PERMISSIONS.FORM.VIEW.api_path &&
           item.method === ALL_PERMISSIONS.FORM.VIEW.method,
       );
-
       const hasFormChildren: boolean = Boolean(viewForm);
+      // Hệ thống quản lý trường học
+      const viewUniversity = permissions?.find(
+        (item: IPermissionResponse) =>
+          item.api_path === ALL_PERMISSIONS.UNIVERSITY.VIEW.api_path &&
+          item.method === ALL_PERMISSIONS.UNIVERSITY.VIEW.method,
+      );
+      const hasUniversityChildren: boolean = Boolean(viewUniversity);
 
       const menu_full = [
         {
@@ -152,33 +159,30 @@ const LayoutAdmin: React.FC = () => {
                         },
                       ]
                     : []),
-                  // {
-                  //   label: (
-                  //     <NavLink to={ROUTER_URL.FORM_VERSION_PAGE}>
-                  //       Phiên bản biểu mẫu
-                  //     </NavLink>
-                  //   ),
-                  //   key: ROUTER_URL.FORM_VERSION_PAGE,
-                  //   icon: <FaWpforms />,
-                  // },
-                  // {
-                  //   label: (
-                  //     <NavLink to={ROUTER_URL.FORM_GROUP_PAGE}>
-                  //       Nhóm biểu mẫu
-                  //     </NavLink>
-                  //   ),
-                  //   key: ROUTER_URL.FORM_GROUP_PAGE,
-                  //   icon: <FaWpforms />,
-                  // },
-                  // {
-                  //   label: (
-                  //     <NavLink to={ROUTER_URL.FORM_FIELD_PAGE}>
-                  //       Trường của biểu mẫu
-                  //     </NavLink>
-                  //   ),
-                  //   key: ROUTER_URL.FORM_FIELD_PAGE,
-                  //   icon: <FaWpforms />,
-                  // },
+                ],
+              },
+            ]
+          : []),
+        ...(hasUniversityChildren || ACL_ENABLE === "true"
+          ? [
+              {
+                label: "Quản lý trường học",
+                key: "university",
+                icon: <FaSchoolFlag />,
+                children: [
+                  ...(viewUniversity || ACL_ENABLE === "true"
+                    ? [
+                        {
+                          label: (
+                            <NavLink to={ROUTER_URL.UNIVERSITY_PAGE}>
+                              Trường học
+                            </NavLink>
+                          ),
+                          key: ROUTER_URL.UNIVERSITY_PAGE,
+                          icon: <FaSchoolFlag />,
+                        },
+                      ]
+                    : []),
                 ],
               },
             ]

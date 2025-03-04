@@ -1,4 +1,4 @@
-import { Card, Form, Input } from "antd";
+import { Card, Form, Input, Select } from "antd";
 import { IFormResponse } from "../../interfaces";
 import parse from "html-react-parser";
 
@@ -140,6 +140,23 @@ export const renderInforForm = (formPreview: IFormResponse | undefined) => {
                 maxLength={10}
               />
             </Form.Item>
+            {formPreview?.universities && (
+              <Form.Item
+                name="university"
+                label="Trường học"
+                className="w-2/3"
+                rules={[
+                  { required: true, message: "Vui lòng chọn trường học" },
+                ]}
+              >
+                <Select
+                  allowClear
+                  options={formPreview.universities.map((university) => {
+                    return { label: university.name, value: university.id };
+                  })}
+                />
+              </Form.Item>
+            )}
           </div>
         </Card>
       </div>

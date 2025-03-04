@@ -14,6 +14,7 @@ export const ROUTER_URL = {
   FORM_BUILDER_RESPONSE_PAGE: `response`,
   FORM_BUILDER_STATISTICS_PAGE: `statistics`,
   NOT_FOUND_PAGE: "*",
+  UNIVERSITY_PAGE: "/university",
 };
 
 export const PAGE_NAME = {
@@ -31,4 +32,5 @@ export const PAGE_NAME = {
   FORM_BUILDER_PREVIEW: "Xem trước biểu mẫu",
   FORM_BUILDER_RESPONSE: "Phản hồi biểu mẫu",
   FORM_BUILDER_STATISTICS: "Thống kê biểu mẫu",
+  UNIVERSITY: "Quản lý trường học",
 };

@@ -1,22 +1,18 @@
+import { BiCommentEdit } from "react-icons/bi";
 import {
   FormBlockInstance,
   FormBlockType,
   FormCategoryType,
   ObjectBlockType,
 } from "../../../interfaces/form-block";
-import { BiCommentEdit } from "react-icons/bi";
-import EditorDescriptionCanvasComponent from "./EditorDescriptionCanvasComponent";
-import EditorDescriptionFormComponent from "./EditorDescriptionFormComponent";
 import EditorDescriptionPropertiesComponent from "./EditorDescriptionPropertiesComponent";
+import EditorDescriptionCanvasFormComponent from "./EditorDescriptionCanvasFormComponent";
 
 const blockCategory: FormCategoryType = "Field";
 const blockType: FormBlockType = "EditorDescription";
 
 export type EditorDescriptionAttributesType = {
-  label: string;
-  helperText: string;
-  required: boolean;
-  placeHolder: string;
+  content: string;
 };
 
 export type NewInstanceEditorDescription = FormBlockInstance & {
@@ -30,17 +26,14 @@ export const EditorDescriptionBlock: ObjectBlockType = {
     id,
     blockType,
     attributes: {
-      label: "Editor Description",
-      helperText: "Helper Text",
-      required: true,
-      placeHolder: "Enter text here.",
+      content: "Editor Description",
     },
   }),
   blockBtnElement: {
     icon: BiCommentEdit,
     label: "Editor Description",
   },
-  canvasComponent: EditorDescriptionCanvasComponent,
-  formComponent: EditorDescriptionFormComponent,
+  canvasComponent: EditorDescriptionCanvasFormComponent,
+  formComponent: EditorDescriptionCanvasFormComponent,
   propertiesComponent: EditorDescriptionPropertiesComponent,
 };

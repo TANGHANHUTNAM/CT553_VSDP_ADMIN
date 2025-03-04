@@ -23,9 +23,9 @@ const CheckBoxFormComponent = ({
         <Checkbox.Group
           className=""
           style={!inline ? styleCheckBoxInline : {}}
-          options={options.map((option, index) => ({
-            label: <div key={index}>{option}</div>,
-            value: `${option}`,
+          options={options.map((option) => ({
+            label: option,
+            value: option,
           }))}
         />
       </Form.Item>

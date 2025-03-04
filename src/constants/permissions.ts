@@ -51,6 +51,7 @@ export const ALL_MODULES = {
   ROLE: "ROLE",
   PERMISSION: "PERMISSION",
   FORM: "FORM",
+  UNIVERSITY: "UNIVERSITY",
 };
 
 export const ALL_PERMISSIONS = {
@@ -190,6 +191,23 @@ export const ALL_PERMISSIONS = {
       module: ALL_MODULES.FORM,
       api_path: VER + "/forms/:id",
       method: "GET",
+    },
+  },
+  UNIVERSITY: {
+    VIEW: {
+      module: ALL_MODULES.UNIVERSITY,
+      api_path: VER + "/universities",
+      method: "GET",
+    },
+    CREATE: {
+      module: ALL_MODULES.UNIVERSITY,
+      api_path: VER + "/universities",
+      method: "POST",
+    },
+    UPDATE: {
+      module: ALL_MODULES.UNIVERSITY,
+      api_path: VER + "/universities/:id",
+      method: "PATCH",
     },
   },
 };

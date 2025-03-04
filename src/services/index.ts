@@ -3,3 +3,6 @@ export * from "./user/user-service";
 export * from "./role/role-service";
 export * from "./permission/permission-service";
 export * from "./form/form-service";
+export * from "./form-sections/form-sections-service";
+export * from "./university/university-service";
+export * from "./upload/upload-service";

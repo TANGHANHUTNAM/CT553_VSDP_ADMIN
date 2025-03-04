@@ -11,11 +11,6 @@ const DashboardPage: React.FC = () => {
       <LayoutPage>
         <div className="">DashboardPage</div>
         <img src={logo} alt="" />
-        <img src={logo} alt="" />
-        <img src={logo} alt="" />
-        <img src={logo} alt="" />
-        <img src={logo} alt="" />
-        <img src={logo} alt="" />
       </LayoutPage>
     </>
   );

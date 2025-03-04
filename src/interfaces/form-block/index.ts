@@ -42,6 +42,7 @@ export const FormNotInputBlockTypes: FormBlockType[] = [
   "Heading",
   "Paragraph",
   "Link",
+  "EditorDescription",
 ];
 
 export type ObjectBlockType = {

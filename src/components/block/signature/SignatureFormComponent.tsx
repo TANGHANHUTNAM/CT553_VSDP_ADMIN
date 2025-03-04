@@ -27,15 +27,28 @@ const SignatureFormComponent = ({
         url?: string;
       }
     | undefined
-  >(undefined); // Khởi tạo là undefined thay vì {}
+  >(undefined);
   const [loading, setLoading] = useState<boolean>(false);
 
-  console.log("value", value);
-
+  // Khôi phục giá trị từ form khi component mount hoặc block.id thay đổi
   useEffect(() => {
-    form.setFieldsValue({ [block.id]: value });
-  }, [value, form, block.id]);
+    const initialValue = form.getFieldValue(block.id);
+    if (initialValue && initialValue.url) {
+      setValue(initialValue); // Đồng bộ giá trị từ form vào state
+    }
+  }, [form, block.id]);
 
+  // Cập nhật canvas khi value.url thay đổi
+  useEffect(() => {
+    if (value?.url && signatureRef.current) {
+      signatureRef.current.clear();
+      signatureRef.current.fromDataURL(value.url);
+    } else if (!value?.url && signatureRef.current) {
+      signatureRef.current.clear(); // Xóa canvas nếu không có giá trị
+    }
+  }, [value?.url]);
+
+  // Tải chữ ký lên Cloudinary
   const uploadToCloudinary = async (dataUrl: string) => {
     setLoading(true);
     try {
@@ -61,6 +74,7 @@ const SignatureFormComponent = ({
     }
   };
 
+  // Xóa chữ ký khỏi Cloudinary
   const deleteFromCloudinary = async (publicId: string) => {
     try {
       const res: IResponse<string> = await deleteFileService(publicId);
@@ -77,14 +91,15 @@ const SignatureFormComponent = ({
     }
   };
 
+  // Xử lý lưu chữ ký
   const handleSave = async () => {
     if (signatureRef.current?.isEmpty()) {
-      setValue(undefined); // Reset về undefined
+      setValue(undefined);
       form.setFieldsValue({ [block.id]: undefined });
       try {
         await form.validateFields([block.id]);
       } catch (error) {
-        console.error("Failed to save signature:", error);
+        console.error("Failed to validate signature:", error);
       }
       return;
     }
@@ -100,6 +115,7 @@ const SignatureFormComponent = ({
     }
   };
 
+  // Xử lý xóa chữ ký
   const handleClear = async () => {
     if (value?.public_id) {
       try {

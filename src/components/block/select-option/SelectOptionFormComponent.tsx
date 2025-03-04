@@ -37,7 +37,7 @@ const SelectOptionFormComponent = ({
           placeholder={placeHolder}
         >
           {options.map((option, index) => (
-            <Select.Option key={index} value={`${option}`}>
+            <Select.Option key={index} value={option}>
               {option}
             </Select.Option>
           ))}

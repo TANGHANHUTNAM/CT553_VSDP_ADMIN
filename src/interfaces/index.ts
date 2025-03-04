@@ -4,3 +4,4 @@ export * from "./user";
 export * from "./permission";
 export * from "./role";
 export * from "./form";
+export * from "./university";

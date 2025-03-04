@@ -34,6 +34,9 @@ const BuilderPreview = () => {
 
   const getFieldsToValidate = () => {
     if (currentStep === 0) {
+      if (formPreview?.universities) {
+        return ["name", "email", "phone_number", "university"];
+      }
       return ["name", "email", "phone_number"];
     } else {
       const currentSection = formSections[currentStep - 1];
@@ -50,6 +53,7 @@ const BuilderPreview = () => {
       await form.validateFields(fieldsToValidate);
       setCurrentStep(currentStep + 1);
     } catch (error) {
+      toast.error("Vui lòng điền đầy đủ thông tin!");
       console.log("Validation failed:", error);
     }
   };
@@ -103,6 +107,16 @@ const BuilderPreview = () => {
                   <span className="font-medium">- Số điện thoại:</span>{" "}
                   {form.getFieldValue("phone_number")}
                 </div>
+                {formPreview?.universities && (
+                  <div>
+                    <span className="font-medium">- Trường học:</span>{" "}
+                    {
+                      formPreview.universities.find(
+                        (uni) => uni.id === form.getFieldValue("university"),
+                      )?.name
+                    }
+                  </div>
+                )}
               </div>
             </div>
           </div>

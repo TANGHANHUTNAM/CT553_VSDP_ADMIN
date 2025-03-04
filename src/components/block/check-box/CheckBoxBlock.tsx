@@ -40,7 +40,7 @@ export const CheckBoxBlock: ObjectBlockType = {
       label: "CheckBox",
       helperText: "Helper Text",
       required: true,
-      options: ["Option 1", "Option 1", "Option 3"],
+      options: ["Option 1", "Option 2", "Option 3"],
       inline: false,
     },
   }),

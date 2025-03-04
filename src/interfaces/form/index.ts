@@ -1,6 +1,7 @@
 import { FormBlockInstance } from "../form-block";
 import { IDataFormSectionResponse } from "../form-sections";
 import { IPaginationResponse } from "../response";
+import { IUniversityResponse } from "../university";
 
 export interface IFormResponse {
   id: string;
@@ -21,6 +22,7 @@ export interface IFormResponse {
   created_at: string;
   updated_at: string;
   form_sections: IDataFormSectionResponse[];
+  universities?: IUniversityResponse[];
 }
 
 export interface IDataFormsResponse {
