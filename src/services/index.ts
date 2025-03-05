@@ -6,3 +6,4 @@ export * from "./form/form-service";
 export * from "./form-sections/form-sections-service";
 export * from "./university/university-service";
 export * from "./upload/upload-service";
+export * from "./form-response/form-response-service";

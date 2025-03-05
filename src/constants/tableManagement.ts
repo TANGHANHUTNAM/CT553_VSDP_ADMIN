@@ -29,11 +29,11 @@ export const STATUS = [
 export const STATUS_PUBLIC = [
   {
     value: "active",
-    label: "Công khai",
+    label: "Đã công khai",
   },
   {
     value: "inactive",
-    label: "Riêng tư",
+    label: "Đã khóa",
   },
 ];
 

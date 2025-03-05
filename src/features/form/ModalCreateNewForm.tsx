@@ -55,10 +55,11 @@ const ModalCreateNewForm: React.FC<IModalCreateNewFormProps> = ({
   const { user } = useAppSelector((state) => state.user);
 
   const onCreate = (data: IDataForm) => {
+    const { time, ...rest } = data;
     mutationCreateForm.mutate({
-      ...data,
-      start_date: data.time[0],
-      end_date: data.time[1],
+      ...rest,
+      start_date: time[0],
+      end_date: time[1],
       creator_id: user?.id as number,
       creator_name: user?.name as string,
     });

@@ -4,7 +4,7 @@ import { FaLock, FaPaintbrush, FaUnlock } from "react-icons/fa6";
 import { MdPlayArrow } from "react-icons/md";
 import { IFormResponse, IResponse } from "../../interfaces";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { GrPowerReset } from "react-icons/gr";
 import ButtonComponent from "../../components/ButtonComponent";
@@ -22,6 +22,7 @@ import BuilderSidebarRight from "./BuilderSidebarRight";
 import FormPreview from "./FormPreview";
 
 const BuilderForm: React.FC = () => {
+  const queryClient = useQueryClient();
   const [isCloseSidebarLeft, setIsCloseSidebarLeft] = useState<boolean>(false);
   const [isCloseSidebarRight, setIsCloseSidebarRight] =
     useState<boolean>(false);
@@ -74,6 +75,9 @@ const BuilderForm: React.FC = () => {
       if (data && data.data) {
         handleSelectedBlockLayout(null);
         setSectionsForm(data.data);
+        queryClient.invalidateQueries({
+          queryKey: ["forms"],
+        });
         toast.success(data.message as string);
       }
       if (data && data.error) {

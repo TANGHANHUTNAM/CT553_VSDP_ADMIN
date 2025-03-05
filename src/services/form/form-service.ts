@@ -32,6 +32,12 @@ export const updateFormService = async (
   return axiosClient.patch(`/forms/${id}`, data);
 };
 
+export const copyFormService = async (
+  id: string,
+): Promise<IResponse<IFormResponse>> => {
+  return axiosClient.post(`/forms/${id}/copy`);
+};
+
 export const updateStatusFormService = async (
   id: string,
   is_default: boolean,

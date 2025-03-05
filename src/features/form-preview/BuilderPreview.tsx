@@ -126,7 +126,11 @@ const BuilderPreview = () => {
   };
 
   const onFinish = (values: unknown) => {
-    console.log(values);
+    const newValues = {
+      ...(values as unknown as Record<string, unknown>),
+      form_id: formPreview?.id,
+    };
+    console.log(newValues);
     toast.success("Gửi biểu mẫu thành công");
   };
 

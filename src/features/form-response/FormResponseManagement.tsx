@@ -1,4 +1,9 @@
-import type { MenuProps, TableColumnsType, TableProps } from "antd";
+import type {
+  MenuProps,
+  TableColumnsType,
+  TablePaginationConfig,
+  TableProps,
+} from "antd";
 import { Checkbox, ConfigProvider, Table } from "antd";
 import { createStyles } from "antd-style";
 import Dropdown from "antd/es/dropdown/dropdown";
@@ -7,12 +12,14 @@ import { RiListSettingsFill } from "react-icons/ri";
 import ButtonComponent from "../../components/ButtonComponent";
 import InputSearchComponent from "../../components/InputSearchComponent";
 
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { BiExport, BiReset } from "react-icons/bi";
 import { GrPowerReset } from "react-icons/gr";
+import { GLOBAL_COLOR } from "../../constants/colorCustom";
 import { PER_PAGE } from "../../constants/tableManagement";
 import { IFormResponse } from "../../interfaces";
-import { BiExport, BiReset } from "react-icons/bi";
-import { GLOBAL_COLOR } from "../../constants/colorCustom";
+import { getFormResponseService } from "../../services";
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
     .ant-table {
@@ -27,107 +34,99 @@ const useStyle = createStyles(({ css }) => ({
     }
   `,
 }));
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
-
-const dataSource = Array.from({ length: 100 }).map<DataType>((_, i) => ({
-  key: i,
-  name: `Edward King ${i}`,
-  age: 32,
-  address: `London, Park Lane no. ${i}`,
-}));
 
 interface IFormResponseManagementProps {
   formResponse: IFormResponse;
+  columns: TableColumnsType<unknown>;
+  pagination: TablePaginationConfig;
+  setPagination: (pagination: TablePaginationConfig) => void;
 }
 
 const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
   formResponse,
+  columns,
+  pagination,
+  setPagination,
 }) => {
   const { styles } = useStyle();
-  const [current, setCurrent] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(PER_PAGE);
-  const columns: TableColumnsType<DataType> = [
-    {
-      title: "STT",
-      key: "STT",
-      width: 50,
-      align: "center",
-      render: (_, __, index) => (
-        <span className="font-semibold">
-          {(current - 1) * pageSize + index + 1}
-        </span>
-      ),
-      fixed: "left",
-    },
-    {
-      title: "Họ tên",
-      width: 150,
-      dataIndex: "name",
-      key: "name",
-      fixed: "left",
-    },
-    {
-      title: "Column 1",
-      dataIndex: "address",
-      key: "1",
-      width: 150,
-    },
-    {
-      title: "Column 2",
-      dataIndex: "address",
-      key: "2",
-      width: 150,
-    },
-    {
-      title: "Column 3",
-      dataIndex: "address",
-      key: "3",
-      width: 150,
-    },
-    {
-      title: "Column 4",
-      dataIndex: "address",
-      key: "4",
-      width: 150,
-    },
-    {
-      title: "Column 5",
-      dataIndex: "address",
-      key: "5",
-      width: 150,
-    },
-    {
-      title: "Column 6",
-      dataIndex: "address",
-      key: "6",
-      width: 150,
-    },
-    {
-      title: "Column 7",
-      dataIndex: "address",
-      key: "7",
-      width: 150,
-    },
-    { title: "Column 8", dataIndex: "address", key: "8" },
-    { title: "Column 9", dataIndex: "address", key: "9" },
-    { title: "Column 10", dataIndex: "address", key: "10" },
-    { title: "Column 11", dataIndex: "address", key: "11" },
-    {
-      title: "Hành động",
-      key: "operation",
-      fixed: "right",
-      width: 100,
-      render: () => <span>action</span>,
-    },
-  ];
+  const [searchText, setSearchText] = useState<string>("");
+  const [filters, setFilters] = useState<Record<string, string[]>>({});
+  const [universityId, setUniversityId] = useState<number | null>(null);
+  const [sort, setSort] = useState({
+    field: "created_at",
+    order: "ascend",
+  });
+
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+    setPagination({ ...pagination, current: 1 });
+  };
+
+  const { data: dataResponses, isFetching } = useQuery({
+    queryKey: [
+      "formResponses",
+      {
+        formId: formResponse.id,
+        searchText,
+        filters,
+        sort,
+        pagination,
+        universityId,
+      },
+    ],
+    queryFn: async () =>
+      getFormResponseService({
+        current: pagination.current || 1,
+        formId: formResponse.id,
+        pageSize: pagination.pageSize || PER_PAGE,
+        search: searchText,
+        filters: Object.keys(filters).length > 0 ? filters : undefined,
+        universityId: universityId,
+        sortField: sort.field,
+        sortOrder: sort.order as "ascend" | "descend",
+      }),
+    refetchOnWindowFocus: false,
+  });
+
+  const handleTableChange: TableProps<any>["onChange"] = (
+    newPagination: TablePaginationConfig,
+    newFilters,
+    sorter,
+  ) => {
+    setPagination({
+      ...pagination,
+      current: newPagination.current,
+      pageSize: newPagination.pageSize,
+      total: newPagination.total || 0,
+    });
+
+    const updatedFilters = Object.fromEntries(
+      Object.entries(newFilters)
+        .filter(([key, value]) => key !== "university")
+        .filter(([_, value]) => value !== null && value?.length > 0),
+    );
+
+    setFilters(updatedFilters as Record<string, string[]>);
+
+    if (newFilters?.university?.length > 0) {
+      setUniversityId(newFilters.university[0]);
+    } else {
+      setUniversityId(null);
+    }
+
+    if (sorter.field && sorter.order) {
+      setSort({
+        field: sorter.field,
+        order: sorter.order,
+      });
+    } else if (!sorter.order) {
+      setSort({ field: "created_at", order: "ascend" });
+    }
+  };
+
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
-  const newColumns = columns.map((item) => ({
+  const newColumns = columns?.map((item) => ({
     ...item,
     hidden: !checkedList.includes(item.key as string),
   }));
@@ -179,7 +178,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
       },
     ],
   };
-  const headerTableRender: TableProps<DataType>["title"] = () => (
+  const headerTableRender: TableProps<unknown>["title"] = () => (
     <div className="flex items-center justify-between">
       <div className="w-1/2 text-lg font-semibold">Phản hồi người dùng</div>
       <div className="flex w-1/2 items-center justify-end space-x-2">
@@ -206,7 +205,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
       <div className="flex w-full items-center justify-between">
         <div>
           <InputSearchComponent
-            // onSearch={handleSearch}
+            onSearch={handleSearch}
             size="middle"
             allowClear
             placeholder="name, email, phone..."
@@ -243,19 +242,22 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
           },
         }}
       >
-        <Table<DataType>
+        <Table
           title={headerTableRender}
           className={`${styles.customTable}`}
           loading={{
-            spinning: false,
+            spinning: isFetching,
             tip: "Đang tải dữ liệu...",
           }}
           columns={newColumns}
-          dataSource={dataSource}
+          dataSource={dataResponses?.data?.data || []}
           bordered
           sticky={true}
           size="small"
           scroll={{ x: "max-content", y: 55 * 6 }}
+          rowKey="id"
+          pagination={pagination}
+          onChange={handleTableChange}
         />
       </ConfigProvider>
     </div>

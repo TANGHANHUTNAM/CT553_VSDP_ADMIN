@@ -56,12 +56,13 @@ const ModalUpdateForm: React.FC<IModalUpdateFormProps> = ({
   });
 
   const onCreate = (data: IDataForm) => {
+    const { time, ...rest } = data;
     mutationUpdateForm.mutate({
       id: dataDetailForm?.id as string,
       data: {
-        ...data,
-        start_date: data.time[0],
-        end_date: data.time[1],
+        ...rest,
+        start_date: time[0],
+        end_date: time[1],
       },
     });
   };

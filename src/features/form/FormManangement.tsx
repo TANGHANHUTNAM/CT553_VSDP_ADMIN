@@ -36,6 +36,7 @@ import {
 import { IFormResponse } from "../../interfaces";
 import Access from "../../router/Access";
 import {
+  copyFormService,
   getAllFormsWithPagination,
   updateStatusFormService,
 } from "../../services";
@@ -47,6 +48,8 @@ import {
 import ModalCreateNewForm from "./ModalCreateNewForm";
 import ModalUpdateForm from "./ModalUpdateForm";
 import { ROUTER_URL } from "../../constants/routerIndex";
+import toast from "react-hot-toast";
+import { TbCopyPlusFilled } from "react-icons/tb";
 
 const FormManangement: React.FC = () => {
   const queryClient = useQueryClient();
@@ -124,8 +127,27 @@ const FormManangement: React.FC = () => {
       id: string;
       is_default: boolean;
     }) => updateStatusFormService(id, is_default),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["forms"] });
+    onSuccess: (data) => {
+      if (data && data.data) {
+        toast.success(data.message as string);
+        queryClient.invalidateQueries({ queryKey: ["forms"] });
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
+    },
+  });
+
+  const mutationCopyForm = useMutation({
+    mutationFn: async (id: string) => copyFormService(id),
+    onSuccess: (data) => {
+      if (data && data.data) {
+        toast.success(data.message as string);
+        queryClient.invalidateQueries({ queryKey: ["forms"] });
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
     },
   });
 
@@ -213,7 +235,7 @@ const FormManangement: React.FC = () => {
     },
 
     {
-      title: "Công khai",
+      title: "Trạng thái",
       dataIndex: "is_public",
       key: "is_public",
       filterIcon: (filtered) => (
@@ -228,7 +250,7 @@ const FormManangement: React.FC = () => {
       render: (is_public) => {
         return (
           <Tag color={is_public ? "green" : "red"}>
-            {is_public ? "Đã công khai" : "Chưa công khai"}
+            {is_public ? "Đã công khai" : "Đã khóa"}
           </Tag>
         );
       },
@@ -250,6 +272,18 @@ const FormManangement: React.FC = () => {
                 navigate(ROUTER_URL.FORM_BUILDER_PAGE(record.id));
               }}
               icon={<MdOutlineEditCalendar className="text-lg" />}
+            />
+          </Access>
+          <Access
+            permission={ALL_PERMISSIONS.FORM.GET_BY_ID}
+            hideChildren={false}
+          >
+            <ViewComponent
+              titleTooltip={`Sao chép biểu mẫu ${record.name}`}
+              onClick={() => {
+                mutationCopyForm.mutate(record.id);
+              }}
+              icon={<TbCopyPlusFilled className="text-lg text-orange-400" />}
             />
           </Access>
           <Access permission={ALL_PERMISSIONS.FORM.UPDATE} hideChildren={false}>
