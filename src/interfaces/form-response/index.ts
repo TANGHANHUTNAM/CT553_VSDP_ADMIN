@@ -9,6 +9,7 @@ export interface IDataFormResponsesQueryRequest {
   filters: Record<string, unknown> | undefined;
   sortField: string | null;
   sortOrder: "ascend" | "descend";
+  status: string | null;
 }
 
 export interface IFormResponsesResponse {

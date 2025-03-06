@@ -1,11 +1,18 @@
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { TableColumnsType, Tag } from "antd";
-import { ColumnType, TablePaginationConfig } from "antd/es/table";
-import { useParams } from "react-router-dom";
+import { Space, TableColumnsType, Tag } from "antd";
+import { ColumnType } from "antd/es/table";
+import { useParams, useSearchParams } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
 import NotFoundComponent from "../components/NotFoundComponent";
 import { PAGE_NAME } from "../constants/routerIndex";
+import { PER_PAGE, STATUS_RESPONSE_FORM } from "../constants/tableManagement";
 import FormResponseManagement from "../features/form-response/FormResponseManagement";
+import { RenderResponseData } from "../features/form-response/RenderResponseData";
 import { useDynamicTitle, useScrollTop } from "../hooks";
 import {
   FormBlockInstance,
@@ -16,41 +23,24 @@ import {
   colorFilterIcon,
   colorSortDownIcon,
   colorSortUpIcon,
-  formatDate,
+  colorStatusSubmit,
   formatDateTime,
 } from "../utils/functionUtils";
-import {
-  CaretDownFilled,
-  CaretUpFilled,
-  FilterFilled,
-} from "@ant-design/icons";
-import { PER_PAGE } from "../constants/tableManagement";
-import { useState } from "react";
+import React from "react";
+import ModalViewInforResponseForm from "../features/form-response/ModalViewInforResponseForm";
+import ModalEditInforResponse from "../features/form-response/ModalEditInforResponse";
 
 const FormBuilderResponsePage: React.FC = () => {
   useDynamicTitle(PAGE_NAME.FORM_BUILDER_RESPONSE);
   useScrollTop();
-  const params = useParams<{ form_id: string }>();
-  const form_id = params.form_id;
+  const { form_id } = useParams<{ form_id: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { data, isFetching } = useQuery({
     queryKey: ["getFormById", form_id],
     queryFn: async () => getFormById(form_id || ""),
     enabled: !!form_id,
     refetchOnWindowFocus: false,
-  });
-
-  const [pagination, setPagination] = useState<TablePaginationConfig>({
-    current: 1,
-    pageSize: PER_PAGE,
-    total: 0,
-    onShowSizeChange: (current, pageSize) => {
-      setPagination({ ...pagination, current, pageSize });
-    },
-    showSizeChanger: true,
-    pageSizeOptions: ["5", "10", "20", "30"],
-    showTotal(total, range) {
-      return `${range[0]}-${range[1]} của ${total} phản hồi `;
-    },
   });
 
   const columns: TableColumnsType<unknown> = data?.data
@@ -60,15 +50,15 @@ const FormBuilderResponsePage: React.FC = () => {
           dataIndex: "index",
           key: "index",
           render: (_, __, index) => {
-            const currentPage = pagination.current || 1;
-            const pageSize = pagination.pageSize || PER_PAGE;
+            const currentPage = Number(searchParams.get("page")) || 1;
+            const pageSize = Number(searchParams.get("pageSize")) || PER_PAGE;
             return (
               <span className="font-semibold">
                 {(currentPage - 1) * pageSize + index + 1}
               </span>
             );
           },
-          width: 50,
+
           align: "center",
           fixed: "left",
         },
@@ -77,23 +67,20 @@ const FormBuilderResponsePage: React.FC = () => {
           dataIndex: "name",
           key: "name",
           fixed: "left",
-          width: 150,
         },
         {
           title: "Email",
           dataIndex: "email",
           key: "email",
-          width: 150,
         },
         {
           title: "Số điện thoại",
           dataIndex: "phone_number",
           key: "phone_number",
-          width: 120,
         },
         ...((data.data.scope === "SCHOLARSHIP" && [
           {
-            title: "University",
+            title: "Trường học",
             dataIndex: "university",
             key: "university",
             filterIcon: (filtered: boolean) => (
@@ -108,14 +95,20 @@ const FormBuilderResponsePage: React.FC = () => {
                 : undefined,
             filterMultiple: false,
             render: (value: string) => value || "-",
-            width: 150,
+          },
+          {
+            title: "Điểm từng phần",
+            dataIndex: "final_scores",
+            key: "final_scores",
+
+            render: (value: Record<string, unknown>[]) =>
+              value.length > 0 ? JSON.stringify(value) : "-",
           },
           {
             title: "Tổng điểm",
             dataIndex: "total_final_score",
             key: "total_final_score",
             sorter: true,
-
             render: (value: number) => value ?? "-",
             sortIcon: ({
               sortOrder,
@@ -129,15 +122,6 @@ const FormBuilderResponsePage: React.FC = () => {
                 />
               </div>
             ),
-            width: 100,
-          },
-          {
-            title: "Final Scores",
-            dataIndex: "final_scores",
-            key: "final_scores",
-            width: 150,
-            render: (value: Record<string, unknown>[]) =>
-              value.length > 0 ? JSON.stringify(value) : "-",
           },
         ]) ||
           []),
@@ -145,13 +129,21 @@ const FormBuilderResponsePage: React.FC = () => {
           title: "Trạng thái",
           dataIndex: "status",
           key: "status",
-          width: 150,
-          render: (value: string) => (
-            <Tag color="green">{value || "SUBMITTED"}</Tag>
+
+          render: (value) => (
+            <Tag color={colorStatusSubmit(value)}>{value}</Tag>
           ),
+          filterIcon: (filtered: boolean) => (
+            <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
+          ),
+          filters: STATUS_RESPONSE_FORM.map((status) => ({
+            text: status.label,
+            value: status.value,
+          })),
+          filterMultiple: false,
         },
         {
-          title: "Ngày nộp",
+          title: "Thời gian nộp",
           dataIndex: "created_at",
           key: "created_at",
           sortIcon: ({ sortOrder }) => (
@@ -163,7 +155,7 @@ const FormBuilderResponsePage: React.FC = () => {
             </div>
           ),
           sorter: true,
-          width: 150,
+
           render: (value: string) => formatDateTime(value),
         },
         ...(data.data.form_sections
@@ -172,38 +164,11 @@ const FormBuilderResponsePage: React.FC = () => {
           ?.filter((block) => !FormNotInputBlockTypes.includes(block.blockType))
           ?.map((block: FormBlockInstance) => {
             const column: ColumnType<unknown> = {
-              width: 200,
               title: block?.attributes?.label as string,
               dataIndex: block.id,
               key: block.id,
-              render: (value: unknown) => {
-                if (block.blockType === "InputNumber") {
-                  return value ?? "-";
-                } else if (
-                  ["SelectOption", "RadioSelect", "CheckBox"].includes(
-                    block.blockType,
-                  )
-                ) {
-                  return Array.isArray(block?.attributes?.options)
-                    ? (block.attributes.options.find(
-                        (opt: string) => opt === value,
-                      ) ?? "-")
-                    : "-";
-                } else if (block.blockType === "DatePicker") {
-                  return formatDate(value as string);
-                } else if (
-                  block.blockType === "TimePicker" ||
-                  block.blockType === "RangePicker"
-                ) {
-                  return value ? formatDateTime(value as string) : "-";
-                } else if (block.blockType === "Signature") {
-                  return value ? "Yes" : "No";
-                } else if (block.blockType === "Uploader") {
-                  return value ? "Yes" : "No";
-                } else {
-                  return value;
-                }
-              },
+              render: (value: any) =>
+                RenderResponseData(block.blockType, value),
             };
             if (block.blockType === "InputNumber") {
               column.sorter = true;
@@ -233,15 +198,25 @@ const FormBuilderResponsePage: React.FC = () => {
                 <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
               );
             }
-
             return column;
           }) || []),
         {
           title: "Hành động",
-          key: "operation",
-          fixed: "right",
           width: 150,
-          render: () => <span>action</span>,
+          key: "action",
+          fixed: "right",
+          align: "center",
+          render: (_, record) => {
+            return (
+              <Space size={"middle"}>
+                <ModalViewInforResponseForm
+                  formResponse={data?.data}
+                  record={record}
+                />
+                <ModalEditInforResponse />
+              </Space>
+            );
+          },
         },
       ]
     : [];
@@ -254,8 +229,7 @@ const FormBuilderResponsePage: React.FC = () => {
           <FormResponseManagement
             formResponse={data.data}
             columns={columns}
-            pagination={pagination}
-            setPagination={setPagination}
+            setSearchParams={setSearchParams}
           />
         </div>
       ) : (

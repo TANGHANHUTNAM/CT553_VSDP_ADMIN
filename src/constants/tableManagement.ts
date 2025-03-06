@@ -62,3 +62,34 @@ export const SCOPE_FORM = [
     label: "Khảo sát",
   },
 ];
+
+export const STATUS_RESPONSE_FORM = [
+  {
+    value: "SUBMITTED",
+    label: "Đã nộp",
+  },
+  {
+    value: "CHECKED",
+    label: "Đã kiểm tra",
+  },
+  {
+    value: "REJECTED",
+    label: "Đã từ chối",
+  },
+  {
+    value: "ASSIGNED",
+    label: "Đã giao",
+  },
+  {
+    value: "REVIEWING",
+    label: "Đang chấm",
+  },
+  {
+    value: "FAILED",
+    label: "Rớt",
+  },
+  {
+    value: "PASSED",
+    label: "Đậu",
+  },
+];

@@ -20,6 +20,16 @@ export const colorMethod = (
   }
 };
 
+export const formatTime = (time: string) => {
+  return time
+    ? new Date(time).toLocaleTimeString("vi-VN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+    : "-";
+};
+
 export const formatDateTime = (date: string) => {
   return date
     ? new Date(date).toLocaleString("vi-VN", {
@@ -30,7 +40,7 @@ export const formatDateTime = (date: string) => {
         minute: "2-digit",
         second: "2-digit",
       })
-    : "Chưa cập nhật";
+    : "-";
 };
 
 export const formatDate = (date: string) => {
@@ -40,7 +50,7 @@ export const formatDate = (date: string) => {
         month: "2-digit",
         day: "2-digit",
       })
-    : "Chưa cập nhật";
+    : "-";
 };
 
 export const colorFilterIcon = (filtered: boolean) => {
@@ -105,4 +115,32 @@ export const updateUniqueId = (blocks: FormBlockInstance[]) => {
     });
   });
   return blocks;
+};
+
+export const colorStatusSubmit = (
+  status:
+    | "SUBMITTED"
+    | "CHECKED"
+    | "REJECTED"
+    | "ASSIGNED"
+    | "REVIEWING"
+    | "FAILED"
+    | "PASSED",
+) => {
+  switch (status) {
+    case "SUBMITTED":
+      return "purple";
+    case "CHECKED":
+      return "orange";
+    case "REJECTED":
+      return "volcano";
+    case "ASSIGNED":
+      return "blue";
+    case "REVIEWING":
+      return "cyan";
+    case "FAILED":
+      return "red";
+    default:
+      return "green";
+  }
 };
