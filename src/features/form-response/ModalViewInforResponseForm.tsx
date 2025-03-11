@@ -1,46 +1,50 @@
+import { useQuery } from "@tanstack/react-query";
 import { Button, Collapse, Modal, Tag } from "antd";
 import { useState } from "react";
 import ViewComponent from "../../components/ViewComponent";
-import { IDataFormSectionResponse, IFormResponse } from "../../interfaces";
 import {
-  FormBlockInstance,
-  FormNotInputBlockTypes,
-} from "../../interfaces/form-block";
-import { RenderResponseData } from "./RenderResponseData";
+  IFieldSection,
+  IFormResponsesResponse,
+  ISectionsDataFormResponsesResponse,
+} from "../../interfaces";
+import { getResponseDetailByIdService } from "../../services";
 import { colorStatusSubmit, formatDateTime } from "../../utils/functionUtils";
-
-const { Panel } = Collapse;
+import RenderContentResponse from "./RenderContentResponse";
 
 interface IModalViewInforResponseFormProps {
-  record: any;
-  formResponse: IFormResponse | undefined;
+  record: IFormResponsesResponse;
 }
 
 const ModalViewInforResponseForm: React.FC<
   IModalViewInforResponseFormProps
-> = ({ record, formResponse }) => {
-  console.log("record", record);
-  console.log("formResponse", formResponse);
+> = ({ record }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const { data: responseDetail, isFetching } = useQuery({
+    queryKey: ["formResponse", record.id],
+    queryFn: async () => getResponseDetailByIdService(record?.id),
+    enabled: !!record?.id && open,
+    refetchOnWindowFocus: false,
+  });
 
-  const renderSectionContent = (section: IDataFormSectionResponse) => {
-    const blocks = section.json_blocks
-      .flatMap((block: FormBlockInstance) => block.childBlock || [])
-      ?.filter((block) => !FormNotInputBlockTypes.includes(block.blockType));
+  const renderSectionContent = (
+    section: ISectionsDataFormResponsesResponse,
+  ) => {
+    const blocks = section.fields.flatMap(
+      (field: IFieldSection) => field || [],
+    );
+
     return (
       <div className="grid grid-cols-2 gap-4">
-        {blocks.map((block: FormBlockInstance) => (
+        {blocks.map((block: IFieldSection) => (
           <div key={block.id} className="flex flex-col">
             <span className="font-semibold text-gray-700">
-              {(block.attributes?.label as React.ReactNode) || "Không có nhãn"}:
+              {block.label || "Không có nhãn"}:
             </span>
             <div className="mt-1">
-              {
-                RenderResponseData(
-                  block.blockType,
-                  record[block.id],
-                ) as React.ReactNode
-              }
+              <RenderContentResponse
+                blockType={block.blockType}
+                value={block.value}
+              />
             </div>
           </div>
         ))}
@@ -57,6 +61,7 @@ const ModalViewInforResponseForm: React.FC<
       <Modal
         width={800}
         open={open}
+        loading={isFetching}
         centered
         title={`Chi tiết phản hồi biểu mẫu ${record?.name || ""}`}
         onCancel={() => setOpen(false)}
@@ -71,47 +76,58 @@ const ModalViewInforResponseForm: React.FC<
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <span className="font-semibold text-gray-700">Họ tên: </span>
-                {record?.name || "-"}
+                {responseDetail?.data?.name || "-"}
               </div>
               <div>
                 <span className="font-semibold text-gray-700">Email: </span>
-                {record?.email || "-"}
+                {responseDetail?.data?.email || "-"}
               </div>
               <div>
                 <span className="font-semibold text-gray-700">
                   Số điện thoại:{" "}
                 </span>
-                {record?.phone_number || "-"}
+                {responseDetail?.data?.phone_number || "-"}
               </div>
-              {formResponse?.scope === "SCHOLARSHIP" && (
-                <>
-                  <div>
-                    <span className="font-semibold text-gray-700">
-                      Tên trường:{" "}
-                    </span>
-                    {record?.university || "-"}
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-700">
-                      Tổng điểm:{" "}
-                    </span>
-                    {record?.total_final_score ?? "-"}
-                  </div>{" "}
-                  <div>
-                    <span className="font-semibold text-gray-700">
-                      Điểm từng phần:{" "}
-                    </span>
-                    {record?.final_scores?.length > 0
-                      ? JSON.stringify(record.final_scores)
-                      : "-"}
-                  </div>
-                </>
-              )}
+
+              <>
+                <div>
+                  <span className="font-semibold text-gray-700">
+                    Tên trường:{" "}
+                  </span>
+                  {responseDetail?.data?.university || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-700">
+                    Tổng điểm:{" "}
+                  </span>
+                  {responseDetail?.data?.total_final_score ?? "-"}
+                </div>{" "}
+                <div>
+                  <span className="font-semibold text-gray-700">
+                    Điểm từng phần:{" "}
+                  </span>
+                  {(responseDetail?.data?.final_scores?.length ?? 0 > 0)
+                    ? JSON.stringify(record.final_scores)
+                    : "-"}
+                </div>
+              </>
+
               <div>
                 <span className="font-semibold text-gray-700">
                   Trạng thái:{" "}
                 </span>
-                <Tag color={colorStatusSubmit(record?.status)}>
+                <Tag
+                  color={colorStatusSubmit(
+                    responseDetail?.data?.status as
+                      | "SUBMITTED"
+                      | "CHECKED"
+                      | "REJECTED"
+                      | "ASSIGNED"
+                      | "REVIEWING"
+                      | "FAILED"
+                      | "PASSED",
+                  )}
+                >
                   {record?.status || "-"}
                 </Tag>
               </div>
@@ -119,22 +135,24 @@ const ModalViewInforResponseForm: React.FC<
                 <span className="font-semibold text-gray-700">
                   Thời gian nộp:{" "}
                 </span>
-                {formatDateTime(record?.created_at) || "-"}
+                {formatDateTime(responseDetail?.data?.created_at as string) ||
+                  "-"}
               </div>
             </div>
           </div>
-          <Collapse defaultActiveKey={[""]} expandIconPosition="end">
-            {formResponse?.form_sections.map(
-              (section: IDataFormSectionResponse, index: number) => (
-                <Panel
-                  header={section.name || `Phần ${index + 1}`}
-                  key={index.toString()}
-                >
-                  {renderSectionContent(section)}
-                </Panel>
-              ),
+          <Collapse
+            items={responseDetail?.data?.sections.map(
+              (section, index: number) => {
+                return {
+                  key: index,
+                  label: section.name || `Phần ${index + 1}`,
+                  children: renderSectionContent(section),
+                };
+              },
             )}
-          </Collapse>
+            defaultActiveKey={[""]}
+            expandIconPosition="end"
+          ></Collapse>
         </div>
       </Modal>
     </>

@@ -1,20 +1,15 @@
-import { useState } from "react";
-import { FormBlockType } from "../../interfaces/form-block";
-import { formatDate, formatTime } from "../../utils/functionUtils";
 import { Button, Image, List, Modal, Typography } from "antd";
-import parse from "html-react-parser";
+import { useState } from "react";
 import { BiDownload } from "react-icons/bi";
-
 const { Text } = Typography;
-
-const ModalUploader = ({
-  value,
-}: {
+interface IModalViewUploaderProps {
   value: {
     url: string;
     public_id: string;
   }[];
-}) => {
+}
+
+const ModalViewUploader: React.FC<IModalViewUploaderProps> = ({ value }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const getFileType = (url: string) => {
@@ -122,107 +117,4 @@ const ModalUploader = ({
   );
 };
 
-const ModalSignature = ({
-  value,
-}: {
-  value: {
-    url: string;
-    public_id: string;
-  };
-}) => {
-  return (
-    <>
-      <Image key={value?.public_id} height={40} src={value?.url || undefined} />
-    </>
-  );
-};
-
-const ModalEditText = ({ value }: { value: string | undefined | null }) => {
-  const [open, setOpen] = useState<boolean>(false);
-  return (
-    <>
-      <Button type="link" onClick={() => setOpen(true)}>
-        Xem chi tiết
-      </Button>
-      <Modal
-        centered
-        width={800}
-        open={open}
-        okText="Đóng"
-        onCancel={() => setOpen(false)}
-        cancelButtonProps={{ style: { display: "none" } }}
-        onClose={() => setOpen(false)}
-        onOk={() => setOpen(false)}
-        title="Nội dung"
-      >
-        <div className="w-full">
-          <div className="prose">{parse(value || "")}</div>
-        </div>
-      </Modal>
-    </>
-  );
-};
-
-const ModalViewText = ({ value }: { value: string }) => {
-  const [open, setOpen] = useState<boolean>(false);
-  return (
-    <>
-      <Button type="link" onClick={() => setOpen(true)}>
-        Xem chi tiết
-      </Button>
-      <Modal
-        centered
-        width={800}
-        open={open}
-        okText="Đóng"
-        onCancel={() => setOpen(false)}
-        cancelButtonProps={{ style: { display: "none" } }}
-        onClose={() => setOpen(false)}
-        onOk={() => setOpen(false)}
-        title="Nội dung"
-      >
-        <div className="w-full">
-          <div className="prose">{parse(value)}</div>
-        </div>
-      </Modal>
-    </>
-  );
-};
-
-export const RenderResponseData = (
-  blockType: FormBlockType,
-  value: unknown,
-) => {
-  switch (blockType) {
-    case "InputNumber":
-      return value ?? "-";
-    case "DatePicker":
-      return formatDate(value as string);
-    case "TimePicker":
-      return formatTime(value as string);
-    case "RangePicker":
-      return Array.isArray(value)
-        ? value.map((val) => formatDate(val as string)).join(" - ")
-        : formatDate(value as string);
-    case "Signature":
-      return value ? (
-        <ModalSignature value={value as { url: string; public_id: string }} />
-      ) : (
-        "-"
-      );
-    case "Uploader":
-      return value ? (
-        <ModalUploader value={value as { url: string; public_id: string }[]} />
-      ) : (
-        "-"
-      );
-    case "EditorText":
-      return value ? <ModalEditText value={value as string} /> : "-";
-    case "CheckBox":
-      return Array.isArray(value) ? value.join(", ") : "-";
-    case "TextArea":
-      return value ? <ModalViewText value={value as string} /> : "-";
-    default:
-      return value ?? "-";
-  }
-};
+export default ModalViewUploader;

@@ -8,7 +8,7 @@ import {
 import LinkCanvasFormComponent from "./LinkCanvasFormComponent";
 import LinkPropertiesComponent from "./LinkPropertiesComponent";
 
-const blockCategory: FormCategoryType = "Field";
+const blockCategory: FormCategoryType = "Static";
 const blockType: FormBlockType = "Link";
 
 export type LinkAttributesType = {

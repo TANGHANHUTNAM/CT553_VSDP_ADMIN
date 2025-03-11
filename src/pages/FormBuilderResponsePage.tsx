@@ -6,14 +6,17 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Space, TableColumnsType, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
+import React from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
 import NotFoundComponent from "../components/NotFoundComponent";
 import { PAGE_NAME } from "../constants/routerIndex";
 import { PER_PAGE, STATUS_RESPONSE_FORM } from "../constants/tableManagement";
 import FormResponseManagement from "../features/form-response/FormResponseManagement";
-import { RenderResponseData } from "../features/form-response/RenderResponseData";
+import ModalViewInforResponseForm from "../features/form-response/ModalViewInforResponseForm";
+import RenderContentResponse from "../features/form-response/RenderContentResponse";
 import { useDynamicTitle, useScrollTop } from "../hooks";
+import { IFormResponsesResponse } from "../interfaces";
 import {
   FormBlockInstance,
   FormNotInputBlockTypes,
@@ -26,9 +29,6 @@ import {
   colorStatusSubmit,
   formatDateTime,
 } from "../utils/functionUtils";
-import React from "react";
-import ModalViewInforResponseForm from "../features/form-response/ModalViewInforResponseForm";
-import ModalEditInforResponse from "../features/form-response/ModalEditInforResponse";
 
 const FormBuilderResponsePage: React.FC = () => {
   useDynamicTitle(PAGE_NAME.FORM_BUILDER_RESPONSE);
@@ -167,8 +167,22 @@ const FormBuilderResponsePage: React.FC = () => {
               title: block?.attributes?.label as string,
               dataIndex: block.id,
               key: block.id,
-              render: (value: any) =>
-                RenderResponseData(block.blockType, value),
+              render: (
+                value:
+                  | string
+                  | number
+                  | string[]
+                  | number[]
+                  | { url: string; public_id: string }
+                  | { url: string; public_id: string }[]
+                  | null
+                  | undefined,
+              ) => (
+                <RenderContentResponse
+                  blockType={block.blockType}
+                  value={value}
+                />
+              ),
             };
             if (block.blockType === "InputNumber") {
               column.sorter = true;
@@ -206,14 +220,10 @@ const FormBuilderResponsePage: React.FC = () => {
           key: "action",
           fixed: "right",
           align: "center",
-          render: (_, record) => {
+          render: (_, record: IFormResponsesResponse) => {
             return (
               <Space size={"middle"}>
-                <ModalViewInforResponseForm
-                  formResponse={data?.data}
-                  record={record}
-                />
-                {/* <ModalEditInforResponse /> */}
+                <ModalViewInforResponseForm record={record} />
               </Space>
             );
           },

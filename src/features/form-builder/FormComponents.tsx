@@ -15,6 +15,9 @@ const FormComponents: React.FC = () => {
   const fieldBlocks = filterdBlock.filter(
     (block) => block.blockCategory === "Field",
   );
+  const staticBlocks = filterdBlock.filter(
+    (block) => block.blockCategory === "Static",
+  );
   return (
     <div className="mt-3">
       <InputSearchComponent
@@ -43,6 +46,17 @@ const FormComponents: React.FC = () => {
             <h1 className="text-base font-medium">Field</h1>
             <div className="mt-2 grid grid-cols-2 gap-3.5">
               {fieldBlocks.map((block) => (
+                <BlockBtnElement key={block.blockType} formBlock={block} />
+              ))}
+            </div>
+          </div>
+        )}
+        {/* Static */}
+        {staticBlocks.length > 0 && (
+          <div className="mt-3">
+            <h1 className="text-base font-medium">Static</h1>
+            <div className="mt-2 grid grid-cols-2 gap-3.5">
+              {staticBlocks.map((block) => (
                 <BlockBtnElement key={block.blockType} formBlock={block} />
               ))}
             </div>

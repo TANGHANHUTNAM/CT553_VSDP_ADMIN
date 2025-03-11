@@ -124,7 +124,6 @@ const RowLayoutCanvasComponent = ({
         }}
       >
         {/* Content */}
-
         <div className="px-2 pb-2">
           {isSelected && !blockInstance.isLocked && (
             <div

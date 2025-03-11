@@ -22,9 +22,32 @@ export interface IFormResponsesResponse {
   final_scores: Record<string, unknown>[] | [];
   status: string;
   created_at: string;
+  form_id: string;
+  snapshot_version: string;
+  sections: ISectionsDataFormResponsesResponse[];
 }
 
 export interface IDataFormResponsesResponse {
   data: IFormResponsesResponse[];
   pagination: IPaginationResponse;
+}
+
+export interface ISectionsDataFormResponsesResponse {
+  name: string;
+  fields: IFieldSection[];
+}
+
+export interface IFieldSection {
+  id: string;
+  label: string;
+  blockType: string;
+  value:
+    | string
+    | number
+    | { url: string; public_id: string }
+    | { url: string; public_id: string }[]
+    | string[]
+    | number[]
+    | []
+    | null;
 }

@@ -353,7 +353,6 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
       pageSize: PER_PAGE.toString() || "10",
     });
     setTableKey(Date.now());
-    // refetch();
   };
   return (
     <div className="mx-auto flex min-h-[calc(100vh-90px)] w-full max-w-screen-xl flex-col space-y-3 rounded-md bg-[#f4f0f0] px-4 py-2">

@@ -101,7 +101,6 @@ const BuilderCanvas = () => {
       setActiveBlock(null);
     },
   });
-
   const [form] = Form.useForm();
   return (
     <div

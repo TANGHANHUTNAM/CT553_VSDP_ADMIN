@@ -30,25 +30,22 @@ const SignatureFormComponent = ({
   >(undefined);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Khôi phục giá trị từ form khi component mount hoặc block.id thay đổi
   useEffect(() => {
     const initialValue = form.getFieldValue(block.id);
     if (initialValue && initialValue.url) {
-      setValue(initialValue); // Đồng bộ giá trị từ form vào state
+      setValue(initialValue);
     }
   }, [form, block.id]);
 
-  // Cập nhật canvas khi value.url thay đổi
   useEffect(() => {
     if (value?.url && signatureRef.current) {
       signatureRef.current.clear();
       signatureRef.current.fromDataURL(value.url);
     } else if (!value?.url && signatureRef.current) {
-      signatureRef.current.clear(); // Xóa canvas nếu không có giá trị
+      signatureRef.current.clear();
     }
   }, [value?.url]);
 
-  // Tải chữ ký lên Cloudinary
   const uploadToCloudinary = async (dataUrl: string) => {
     setLoading(true);
     try {
@@ -74,7 +71,6 @@ const SignatureFormComponent = ({
     }
   };
 
-  // Xóa chữ ký khỏi Cloudinary
   const deleteFromCloudinary = async (publicId: string) => {
     try {
       const res: IResponse<string> = await deleteFileService(publicId);
@@ -91,7 +87,6 @@ const SignatureFormComponent = ({
     }
   };
 
-  // Xử lý lưu chữ ký
   const handleSave = async () => {
     if (signatureRef.current?.isEmpty()) {
       setValue(undefined);
@@ -115,7 +110,6 @@ const SignatureFormComponent = ({
     }
   };
 
-  // Xử lý xóa chữ ký
   const handleClear = async () => {
     if (value?.public_id) {
       try {
@@ -161,7 +155,9 @@ const SignatureFormComponent = ({
           ref={signatureRef}
           penColor="black"
           canvasProps={{
-            className: "w-2/3 border border-gray-300 cursor-default",
+            className: "border border-gray-300 cursor-default",
+            height: 200,
+            width: 400,
           }}
           clearOnResize={false}
         />

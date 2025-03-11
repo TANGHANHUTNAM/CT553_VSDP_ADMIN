@@ -8,7 +8,7 @@ import HeadingCanvasFormComponent from "./HeadingCanvasFormComponent";
 import HeadingPropertiesComponent from "./HeadingPropertiesComponent";
 import { FaHeading } from "react-icons/fa";
 
-const blockCategory: FormCategoryType = "Field";
+const blockCategory: FormCategoryType = "Static";
 const blockType: FormBlockType = "Heading";
 
 export type fontSizeType =

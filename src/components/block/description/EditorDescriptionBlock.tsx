@@ -8,7 +8,7 @@ import {
 import EditorDescriptionPropertiesComponent from "./EditorDescriptionPropertiesComponent";
 import EditorDescriptionCanvasFormComponent from "./EditorDescriptionCanvasFormComponent";
 
-const blockCategory: FormCategoryType = "Field";
+const blockCategory: FormCategoryType = "Static";
 const blockType: FormBlockType = "EditorDescription";
 
 export type EditorDescriptionAttributesType = {

@@ -36,6 +36,7 @@ const BuilderContextProvider: React.FC<IBuilderContextProviderProps> = ({
   const [sectionsForm, setSectionsForm] = useState<IDataFormSectionResponse[]>(
     [],
   );
+  console.log("blocks", blocksLayout);
 
   const [selectedBlockLayout, setSelectedBlockLayout] =
     useState<FormBlockInstance | null>(null);

@@ -17,7 +17,7 @@ import { TimePickerBlock } from "../../components/block/timepicker/TimePickerBlo
 import { UploaderBlock } from "../../components/block/uploader/UploaderBlock";
 import { EditorDescriptionBlock } from "../../components/block/description/EditorDescriptionBlock";
 
-export type FormCategoryType = "Layout" | "Field";
+export type FormCategoryType = "Layout" | "Field" | "Static";
 export type FormBlockType =
   | "RowLayout"
   | "RadioSelect"
@@ -80,21 +80,24 @@ export type FormBlocksType = {
 };
 
 export const FormBlocks: FormBlocksType = {
+  // Layout
   RowLayout: RowLayoutBlock,
-  Heading: HeadingBlock,
+  // Field
   InputText: InputTextBlock,
   TextArea: TextAreaBlock,
   InputNumber: InputNumberBlock,
   EditorText: EditorTextBlock,
-  SelectOption: SelectOptionBlock,
   RadioSelect: RadioSelectBlock,
-  Paragraph: ParagraphBlock,
-  DatePicker: DatePickerBlock,
+  SelectOption: SelectOptionBlock,
   CheckBox: CheckBoxBlock,
-  TimePicker: TimePickerBlock,
+  DatePicker: DatePickerBlock,
   RangePicker: RangePickerBlock,
+  TimePicker: TimePickerBlock,
   Signature: SignatureBlock,
   Uploader: UploaderBlock,
-  Link: LinkBlock,
+  // Static
+  Heading: HeadingBlock,
+  Paragraph: ParagraphBlock,
   EditorDescription: EditorDescriptionBlock,
+  Link: LinkBlock,
 };

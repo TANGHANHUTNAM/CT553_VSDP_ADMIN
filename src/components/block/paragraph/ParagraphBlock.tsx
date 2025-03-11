@@ -9,7 +9,7 @@ import { FaParagraph } from "react-icons/fa";
 import ParagraphCanvasFormComponent from "./ParagraphCanvasFormComponent";
 import ParagraphPropertiesComponent from "./ParagraphPropertiesComponent";
 
-const blockCategory: FormCategoryType = "Field";
+const blockCategory: FormCategoryType = "Static";
 const blockType: FormBlockType = "Paragraph";
 
 export type ParagraphAttributesType = {
