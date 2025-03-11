@@ -327,7 +327,7 @@ const UniversityManagement: React.FC = () => {
           pageSize,
           setPageSize,
           dataUniversities?.data?.pagination.totalRecords || 0,
-          "vai trò",
+          "trường học",
         )}
         onChange={handleOnChangeTable}
       />

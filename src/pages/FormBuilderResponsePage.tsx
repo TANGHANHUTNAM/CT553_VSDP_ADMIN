@@ -213,7 +213,7 @@ const FormBuilderResponsePage: React.FC = () => {
                   formResponse={data?.data}
                   record={record}
                 />
-                <ModalEditInforResponse />
+                {/* <ModalEditInforResponse /> */}
               </Space>
             );
           },

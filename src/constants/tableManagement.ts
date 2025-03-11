@@ -33,7 +33,7 @@ export const STATUS_PUBLIC = [
   },
   {
     value: "inactive",
-    label: "Đã khóa",
+    label: "Chưa công khai",
   },
 ];
 

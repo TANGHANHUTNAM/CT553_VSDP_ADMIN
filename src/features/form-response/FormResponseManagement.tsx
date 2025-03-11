@@ -219,8 +219,9 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
   ) => {
     const updatedFilters = Object.fromEntries(
       Object.entries(newFilters)
-        .filter(([key, _]) => key !== "university" && key !== "status")
-        .filter(([_, value]) => value !== null && value?.length > 0),
+        //eslint@typescript-eslint/no-unused-vars
+        .filter(([key]) => key !== "university" && key !== "status")
+        .filter(([, value]) => value !== null && value?.length > 0),
     );
 
     const newUniversityId =
@@ -240,7 +241,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
             field: singleSorter.field as string,
             order: singleSorter.order as "ascend" | "descend",
           }
-        : { field: "created_at", order: "ascend" };
+        : { field: "created_at", order: "descend" };
 
     const newParams: Record<string, string> = {
       page: (newPagination.current || 1).toString(),

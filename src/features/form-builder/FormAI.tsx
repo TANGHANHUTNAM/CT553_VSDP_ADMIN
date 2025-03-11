@@ -57,9 +57,8 @@ const FormAI = () => {
         blocksLayout,
       );
       const result = await AIChatSession.sendMessage(PROMPT);
-
       const responseText = result.response.text();
-
+      console.log("responseText", responseText);
       const parsedResponse = JSON?.parse(responseText);
       console.log("parsedResponse", parsedResponse);
       const actionType = parsedResponse?.actionType;
