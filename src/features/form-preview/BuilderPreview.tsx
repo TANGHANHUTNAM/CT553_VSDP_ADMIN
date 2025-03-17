@@ -52,6 +52,7 @@ const BuilderPreview = () => {
       const fieldsToValidate = getFieldsToValidate();
       await form.validateFields(fieldsToValidate);
       setCurrentStep(currentStep + 1);
+      window.scrollTo(0, 0);
     } catch (error) {
       toast.error("Vui lòng điền đầy đủ thông tin!");
       console.log("Validation failed:", error);

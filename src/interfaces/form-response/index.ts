@@ -41,6 +41,7 @@ export interface IFieldSection {
   id: string;
   label: string;
   blockType: string;
+  options?: string[];
   value:
     | string
     | number
@@ -50,4 +51,13 @@ export interface IFieldSection {
     | number[]
     | []
     | null;
+}
+
+export interface IDataResponseFormUpdateRequest {
+  name: string;
+  email: string;
+  phone_number: string;
+  university: number;
+  status: string;
+  dynamic_fields: Record<string, unknown>;
 }

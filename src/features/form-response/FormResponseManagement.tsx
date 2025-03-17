@@ -11,15 +11,17 @@ import { IoMdSearch } from "react-icons/io";
 import { RiListSettingsFill } from "react-icons/ri";
 import ButtonComponent from "../../components/ButtonComponent";
 import InputSearchComponent from "../../components/InputSearchComponent";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { BiExport, BiReset } from "react-icons/bi";
 import { GrPowerReset } from "react-icons/gr";
 import { GLOBAL_COLOR } from "../../constants/colorCustom";
 import { PER_PAGE } from "../../constants/tableManagement";
 import { IFormResponse } from "../../interfaces";
-import { getFormResponseService } from "../../services";
+import { exportExcelFormService, getFormResponseService } from "../../services";
 import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import ModaleShareLink from "../form-builder/ModaleShareLink";
 
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
@@ -354,6 +356,25 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
     });
     setTableKey(Date.now());
   };
+
+  const mutationExportFile = useMutation({
+    mutationFn: async () => exportExcelFormService(formResponse.id),
+    onSuccess: (data: Blob) => {
+      toast.success("Xuất file Excel thành công!");
+      const url = window.URL.createObjectURL(data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${formResponse.name}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    },
+    onError: (error) => {
+      console.error("Failed to export Excel:", error);
+      toast.error("Có lỗi xảy ra khi xuất file Excel!");
+    },
+  });
   return (
     <div className="mx-auto flex min-h-[calc(100vh-90px)] w-full max-w-screen-xl flex-col space-y-3 rounded-md bg-[#f4f0f0] px-4 py-2">
       <div className="flex w-full items-center justify-between rounded-md bg-primary px-4 py-2 text-2xl font-semibold text-white">
@@ -372,13 +393,20 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
           />
         </div>
         <div className="flex items-center space-x-2">
+          <ModaleShareLink
+            form_id={formResponse.id}
+            is_public={formResponse.is_public}
+          />
           <ButtonComponent
-            text="Xuất file"
+            text="Xuất file excel"
             icon={<BiExport className="text-lg" />}
             size="middle"
             type="primary"
-            onclick={() => {}}
-            textTooltip="Xuất file"
+            loading={mutationExportFile.isPending}
+            onclick={() => {
+              mutationExportFile.mutate();
+            }}
+            textTooltip="Xuất file excel"
           />
           <ButtonComponent
             text=""

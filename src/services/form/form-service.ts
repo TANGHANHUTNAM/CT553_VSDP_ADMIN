@@ -71,3 +71,16 @@ export const getFormBuilderPreviewService = async (
 ): Promise<IResponse<IFormResponse>> => {
   return axiosClient.get(`/forms/preview/${id}`);
 };
+
+export const exportExcelFormService = async (id: string): Promise<Blob> => {
+  return axiosClient.get(`/forms/${id}/export-excel`, {
+    responseType: "blob",
+  });
+};
+
+export const shareLinkFormService = async (
+  id: string,
+  data: { expiry_dates: number },
+): Promise<IResponse<string>> => {
+  return axiosClient.post(`/forms/${id}/share-link`, data);
+};

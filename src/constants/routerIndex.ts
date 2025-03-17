@@ -28,9 +28,9 @@ export const PAGE_NAME = {
   SETTING: "Trang cài đặt",
   NOT_FOUND: "Không tìm thấy trang",
   NOT_PERMISSION: "Không có quyền truy cập",
-  FORM_BUILDER: "Thiết kế biểu mẫu",
-  FORM_BUILDER_PREVIEW: "Xem trước biểu mẫu",
-  FORM_BUILDER_RESPONSE: "Phản hồi biểu mẫu",
-  FORM_BUILDER_STATISTICS: "Thống kê biểu mẫu",
+  FORM_BUILDER: "Thiết kế",
+  FORM_BUILDER_PREVIEW: "Xem trước",
+  FORM_BUILDER_RESPONSE: "Phản hồi",
+  FORM_BUILDER_STATISTICS: "Thống kê",
   UNIVERSITY: "Quản lý trường học",
 };

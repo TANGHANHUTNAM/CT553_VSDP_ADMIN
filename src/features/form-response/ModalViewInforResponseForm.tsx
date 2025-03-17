@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { Button, Collapse, Modal, Tag } from "antd";
+import { Button, Collapse, Empty, Modal, Tag } from "antd";
 import { useState } from "react";
 import ViewComponent from "../../components/ViewComponent";
 import {
   IFieldSection,
+  IFormResponse,
   IFormResponsesResponse,
   ISectionsDataFormResponsesResponse,
 } from "../../interfaces";
@@ -12,15 +13,16 @@ import { colorStatusSubmit, formatDateTime } from "../../utils/functionUtils";
 import RenderContentResponse from "./RenderContentResponse";
 
 interface IModalViewInforResponseFormProps {
+  formData: IFormResponse;
   record: IFormResponsesResponse;
 }
 
 const ModalViewInforResponseForm: React.FC<
   IModalViewInforResponseFormProps
-> = ({ record }) => {
+> = ({ record, formData }) => {
   const [open, setOpen] = useState<boolean>(false);
   const { data: responseDetail, isFetching } = useQuery({
-    queryKey: ["formResponse", record.id],
+    queryKey: ["formResponses", record.id],
     queryFn: async () => getResponseDetailByIdService(record?.id),
     enabled: !!record?.id && open,
     refetchOnWindowFocus: false,
@@ -34,21 +36,33 @@ const ModalViewInforResponseForm: React.FC<
     );
 
     return (
-      <div className="grid grid-cols-2 gap-4">
-        {blocks.map((block: IFieldSection) => (
-          <div key={block.id} className="flex flex-col">
-            <span className="font-semibold text-gray-700">
-              {block.label || "Không có nhãn"}:
-            </span>
-            <div className="mt-1">
-              <RenderContentResponse
-                blockType={block.blockType}
-                value={block.value}
-              />
-            </div>
+      <>
+        {blocks.length > 0 ? (
+          <>
+            {
+              <div className="grid grid-cols-2 gap-4">
+                {blocks.map((block: IFieldSection) => (
+                  <div key={block.id} className="flex flex-col">
+                    <span className="font-semibold text-gray-700">
+                      {block.label || "Không có nhãn"}:
+                    </span>
+                    <div className="mt-1">
+                      <RenderContentResponse
+                        blockType={block.blockType}
+                        value={block.value}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            }
+          </>
+        ) : (
+          <div className="mx-auto w-full">
+            <Empty />
           </div>
-        ))}
-      </div>
+        )}
+      </>
     );
   };
 
@@ -88,29 +102,30 @@ const ModalViewInforResponseForm: React.FC<
                 </span>
                 {responseDetail?.data?.phone_number || "-"}
               </div>
-
-              <>
-                <div>
-                  <span className="font-semibold text-gray-700">
-                    Tên trường:{" "}
-                  </span>
-                  {responseDetail?.data?.university || "-"}
-                </div>
-                <div>
-                  <span className="font-semibold text-gray-700">
-                    Tổng điểm:{" "}
-                  </span>
-                  {responseDetail?.data?.total_final_score ?? "-"}
-                </div>{" "}
-                <div>
-                  <span className="font-semibold text-gray-700">
-                    Điểm từng phần:{" "}
-                  </span>
-                  {(responseDetail?.data?.final_scores?.length ?? 0 > 0)
-                    ? JSON.stringify(record.final_scores)
-                    : "-"}
-                </div>
-              </>
+              {formData?.scope === "SCHOLARSHIP" && (
+                <>
+                  <div>
+                    <span className="font-semibold text-gray-700">
+                      Tên trường:{" "}
+                    </span>
+                    {responseDetail?.data?.university || "-"}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-700">
+                      Tổng điểm:{" "}
+                    </span>
+                    {responseDetail?.data?.total_final_score ?? "-"}
+                  </div>{" "}
+                  <div>
+                    <span className="font-semibold text-gray-700">
+                      Điểm từng phần:{" "}
+                    </span>
+                    {(responseDetail?.data?.final_scores?.length ?? 0 > 0)
+                      ? JSON.stringify(record.final_scores)
+                      : "-"}
+                  </div>
+                </>
+              )}
 
               <div>
                 <span className="font-semibold text-gray-700">

@@ -16,7 +16,7 @@ import FormResponseManagement from "../features/form-response/FormResponseManage
 import ModalViewInforResponseForm from "../features/form-response/ModalViewInforResponseForm";
 import RenderContentResponse from "../features/form-response/RenderContentResponse";
 import { useDynamicTitle, useScrollTop } from "../hooks";
-import { IFormResponsesResponse } from "../interfaces";
+import { IFormResponse, IFormResponsesResponse } from "../interfaces";
 import {
   FormBlockInstance,
   FormNotInputBlockTypes,
@@ -29,6 +29,7 @@ import {
   colorStatusSubmit,
   formatDateTime,
 } from "../utils/functionUtils";
+import ModalEditInforResponseForm from "../features/form-response/ModalEditInforResponseForm";
 
 const FormBuilderResponsePage: React.FC = () => {
   useDynamicTitle(PAGE_NAME.FORM_BUILDER_RESPONSE);
@@ -43,7 +44,7 @@ const FormBuilderResponsePage: React.FC = () => {
     refetchOnWindowFocus: false,
   });
 
-  const columns: TableColumnsType<unknown> = data?.data
+  const columns: TableColumnsType<any> = data?.data
     ? [
         {
           title: "STT",
@@ -223,7 +224,14 @@ const FormBuilderResponsePage: React.FC = () => {
           render: (_, record: IFormResponsesResponse) => {
             return (
               <Space size={"middle"}>
-                <ModalViewInforResponseForm record={record} />
+                <ModalViewInforResponseForm
+                  record={record}
+                  formData={data?.data as IFormResponse}
+                />
+                <ModalEditInforResponseForm
+                  record={record}
+                  universities={data?.data?.universities}
+                />
               </Space>
             );
           },

@@ -1,6 +1,7 @@
 import {
   IDataFormResponsesQueryRequest,
   IDataFormResponsesResponse,
+  IDataResponseFormUpdateRequest,
   IFormResponsesResponse,
   IResponse,
 } from "../../interfaces";
@@ -16,4 +17,11 @@ export const getResponseDetailByIdService = async (
   id: number,
 ): Promise<IResponse<IFormResponsesResponse>> => {
   return apiClient.get(`/form-responses/${id}`);
+};
+
+export const updateResponseService = async (
+  id: number,
+  data: IDataResponseFormUpdateRequest,
+): Promise<IResponse<string>> => {
+  return apiClient.patch(`/form-responses/${id}`, data);
 };

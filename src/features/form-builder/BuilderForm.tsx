@@ -20,6 +20,7 @@ import BuilderCanvas from "./BuilderCanvas";
 import BuilderSidebarLeft from "./BuilderSidebarLeft";
 import BuilderSidebarRight from "./BuilderSidebarRight";
 import FormPreview from "./FormPreview";
+import ModaleShareLink from "./ModaleShareLink";
 
 const BuilderForm: React.FC = () => {
   const queryClient = useQueryClient();
@@ -140,6 +141,10 @@ const BuilderForm: React.FC = () => {
               onclick={() => {
                 setBlocksLayout([]);
               }}
+            />
+            <ModaleShareLink
+              form_id={formData?.id as string}
+              is_public={formData?.is_public as boolean}
             />
           </div>
           {isPreviewForm ? (
