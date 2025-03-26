@@ -31,7 +31,7 @@ const FormStatisticManagement: React.FC<IFormStatisticManagementProps> = ({
   const [totalResponseToday, setTotalResponseToday] = useState<number>(0);
   const [university, setUniversity] = useState<IUniversityStats[]>([]);
   const { form_id } = useParams<{ form_id: string }>();
-  const { data: dataStats, isFetching } = useQuery({
+  const { data: dataStats, isLoading } = useQuery({
     queryKey: ["form-stats", form_id, groupBy, start, end],
     queryFn: () =>
       getFormStatisticService({
@@ -67,7 +67,7 @@ const FormStatisticManagement: React.FC<IFormStatisticManagementProps> = ({
         setStart={setStart}
         response_trend={dataStats?.data?.response_trend || []}
         setGroupBy={setGroupBy}
-        loading={isFetching}
+        loading={isLoading}
       />
       {university.length > 0 && (
         <UniversityStatsResponse university={university} />

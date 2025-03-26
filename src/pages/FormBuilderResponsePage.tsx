@@ -37,7 +37,7 @@ const FormBuilderResponsePage: React.FC = () => {
   const { form_id } = useParams<{ form_id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { data, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getFormById", form_id],
     queryFn: async () => getFormById(form_id || ""),
     enabled: !!form_id,
@@ -239,7 +239,7 @@ const FormBuilderResponsePage: React.FC = () => {
       ]
     : [];
 
-  if (isFetching) return <LoadingComponent />;
+  if (isLoading) return <LoadingComponent />;
   return (
     <>
       {data?.data && columns && columns.length > 0 ? (

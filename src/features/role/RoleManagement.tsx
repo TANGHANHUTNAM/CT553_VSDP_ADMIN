@@ -111,7 +111,7 @@ const RoleManagement: React.FC = () => {
     setSearchParams,
   ]);
 
-  const { data, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "roles",
       current,
@@ -414,7 +414,7 @@ const RoleManagement: React.FC = () => {
         title={headerTableRender}
         rowKey={(record) => record.id as number}
         loading={{
-          spinning: isFetching,
+          spinning: isLoading,
           tip: "Đang tải dữ liệu...",
         }}
         pagination={paginationOptions(

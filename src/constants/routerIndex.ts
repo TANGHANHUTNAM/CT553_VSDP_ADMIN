@@ -13,6 +13,10 @@ export const ROUTER_URL = {
   FORM_BUILDER_PREVIEW_PAGE: `viewForm`,
   FORM_BUILDER_RESPONSE_PAGE: `response`,
   FORM_BUILDER_STATISTICS_PAGE: `statistics`,
+  FORM_BUILDER_MAIL_HISTORY_PAGE: `mail-history`,
+  FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP_PAGE: `scoring-section-scholarship`,
+  FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP_PAGE: `assignment-scholarship`,
+  FORM_BUILDER_SCORING_RESPONSE_PAGE: `scoring-response`,
   NOT_FOUND_PAGE: "*",
   UNIVERSITY_PAGE: "/university",
 };
@@ -32,5 +36,9 @@ export const PAGE_NAME = {
   FORM_BUILDER_PREVIEW: "Xem trước",
   FORM_BUILDER_RESPONSE: "Phản hồi",
   FORM_BUILDER_STATISTICS: "Thống kê",
+  FORM_BUILDER_MAIL_HISTORY: "Lịch sử gửi mail",
+  FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP: "Phần điểm biểu mẫu",
+  FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP: "Phân công hồ sơ",
+  FORM_BUILDER_SCORING_RESPONSE: "Chấm điểm hồ sơ",
   UNIVERSITY: "Quản lý trường học",
 };

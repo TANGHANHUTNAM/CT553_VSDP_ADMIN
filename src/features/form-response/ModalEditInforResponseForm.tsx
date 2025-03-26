@@ -60,7 +60,7 @@ const ModalEditInforResponseForm: React.FC<
     [key: string]: ISignatureData;
   }>({});
   const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
-  const { data: responseDetail, isFetching } = useQuery({
+  const { data: responseDetail, isLoading } = useQuery({
     queryKey: ["formResponses", record.id],
     queryFn: async () => getResponseDetailByIdService(record?.id),
     enabled: !!record?.id && open,
@@ -312,7 +312,7 @@ const ModalEditInforResponseForm: React.FC<
         width={800}
         open={open}
         centered
-        loading={isFetching}
+        loading={isLoading}
         title={`Chỉnh sửa thông tin: ${record?.name || ""}`}
         onCancel={() => setOpen(false)}
         okButtonProps={{ loading: mutationUpdateResponseForm.isPending }}

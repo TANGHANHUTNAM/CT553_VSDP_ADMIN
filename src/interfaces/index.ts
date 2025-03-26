@@ -8,3 +8,5 @@ export * from "./university";
 export * from "./form-response";
 export * from "./form-sections";
 export * from "./form-stats";
+export * from "./form-scoring-sections";
+export * from "./form-scoring-criteria";

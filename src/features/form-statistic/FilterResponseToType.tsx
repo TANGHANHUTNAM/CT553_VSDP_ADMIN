@@ -43,7 +43,7 @@ const FilterResponseToType: React.FC<IFilterResponseToTypeProps> = ({
     },
   });
 
-  const { data: dataStats, isFetching } = useQuery({
+  const { data: dataStats, isLoading } = useQuery({
     queryKey: ["getStatsByFieldService", form_id, fieldId],
     queryFn: () => getStatsByFieldService(form_id, fieldId as string),
     enabled: !!form_id && !!fieldId,
@@ -84,7 +84,7 @@ const FilterResponseToType: React.FC<IFilterResponseToTypeProps> = ({
         </div>
       </div>
       <div className="flex h-[400px] items-center justify-center">
-        {isFetching ? (
+        {isLoading ? (
           <div className="flex h-full items-center justify-center">
             <Spin size="large" />
           </div>

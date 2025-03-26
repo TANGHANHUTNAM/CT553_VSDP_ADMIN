@@ -4,15 +4,15 @@ import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
-import { FaUser, FaUsers } from "react-icons/fa";
+import { FaUser, FaUsers, FaWpforms } from "react-icons/fa";
 import { GrShieldSecurity } from "react-icons/gr";
 import { IoMdSettings } from "react-icons/io";
 import { IoKey } from "react-icons/io5";
 import { MdDashboard } from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { TbLogout2 } from "react-icons/tb";
-import { FaWpforms } from "react-icons/fa";
 
+import { FaSchoolFlag } from "react-icons/fa6";
 import {
   Link,
   NavLink,
@@ -34,7 +34,6 @@ import { logout } from "../redux/authReducer";
 import { clearUser } from "../redux/userReducer";
 import { routerCustom } from "../router";
 import { logoutService } from "../services";
-import { FaSchoolFlag } from "react-icons/fa6";
 
 const LayoutAdmin: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -142,48 +141,24 @@ const LayoutAdmin: React.FC = () => {
         ...(hasFormChildren || ACL_ENABLE === "true"
           ? [
               {
-                label: "Quản lý biểu mẫu",
-                key: "form",
+                label: (
+                  <NavLink to={ROUTER_URL.FORM_PAGE}>Quản lý biểu mẫu</NavLink>
+                ),
+                key: ROUTER_URL.FORM_PAGE,
                 icon: <FaWpforms />,
-                children: [
-                  ...(viewForm || ACL_ENABLE === "true"
-                    ? [
-                        {
-                          label: (
-                            <NavLink to={ROUTER_URL.FORM_PAGE}>
-                              Biểu mẫu
-                            </NavLink>
-                          ),
-                          key: ROUTER_URL.FORM_PAGE,
-                          icon: <FaWpforms />,
-                        },
-                      ]
-                    : []),
-                ],
               },
             ]
           : []),
         ...(hasUniversityChildren || ACL_ENABLE === "true"
           ? [
               {
-                label: "Quản lý trường học",
-                key: "university",
+                label: (
+                  <NavLink to={ROUTER_URL.UNIVERSITY_PAGE}>
+                    Quản lý trường học
+                  </NavLink>
+                ),
+                key: ROUTER_URL.UNIVERSITY_PAGE,
                 icon: <FaSchoolFlag />,
-                children: [
-                  ...(viewUniversity || ACL_ENABLE === "true"
-                    ? [
-                        {
-                          label: (
-                            <NavLink to={ROUTER_URL.UNIVERSITY_PAGE}>
-                              Trường học
-                            </NavLink>
-                          ),
-                          key: ROUTER_URL.UNIVERSITY_PAGE,
-                          icon: <FaSchoolFlag />,
-                        },
-                      ]
-                    : []),
-                ],
               },
             ]
           : []),

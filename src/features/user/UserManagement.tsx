@@ -121,7 +121,7 @@ const UserManagement: React.FC = () => {
     setSearchParams,
   ]);
 
-  const { data, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "users",
       current,
@@ -485,7 +485,7 @@ const UserManagement: React.FC = () => {
         title={headerTableRender}
         rowKey={(record) => record.id}
         loading={{
-          spinning: isFetching,
+          spinning: isLoading,
           tip: "Đang tải dữ liệu...",
         }}
         pagination={paginationOptions(

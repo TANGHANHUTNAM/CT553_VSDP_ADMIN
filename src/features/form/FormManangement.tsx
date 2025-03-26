@@ -114,7 +114,7 @@ const FormManangement: React.FC = () => {
     setSearchParams,
   ]);
 
-  const { data: dataForms, isFetching } = useQuery({
+  const { data: dataForms, isLoading } = useQuery({
     queryKey: ["forms", current, pageSize, search, filterStatus, filterScope],
     queryFn: () => getAllFormsWithPagination(`?${searchParams.toString()}`),
   });
@@ -473,7 +473,7 @@ const FormManangement: React.FC = () => {
         title={headerTableRender}
         rowKey={(record) => record.id as string}
         loading={{
-          spinning: isFetching,
+          spinning: isLoading,
           tip: "Đang tải dữ liệu...",
         }}
         pagination={paginationOptions(

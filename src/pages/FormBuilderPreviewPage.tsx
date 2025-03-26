@@ -14,7 +14,7 @@ const FormBuilderPreviewPage: React.FC = () => {
   useScrollTop();
   const params = useParams<{ form_id: string }>();
   const form_id = params.form_id;
-  const { data, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getFormPreview", form_id],
     queryFn: async () => getFormBuilderPreviewService(form_id || ""),
     enabled: !!form_id,
@@ -24,7 +24,7 @@ const FormBuilderPreviewPage: React.FC = () => {
 
   return (
     <div>
-      {isFetching ? (
+      {isLoading ? (
         <LoadingComponent />
       ) : (
         <div>

@@ -11,12 +11,12 @@ const FormBuilderStatisticsPage: React.FC = () => {
   useDynamicTitle(PAGE_NAME.FORM_BUILDER_STATISTICS);
   useScrollTop();
   const { form_id } = useParams<{ form_id: string }>();
-  const { data, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["form_stats_by_id", form_id],
     queryFn: () => getFormById(form_id as string),
     enabled: !!form_id,
   });
-  if (isFetching) return <LoadingComponent />;
+  if (isLoading) return <LoadingComponent />;
   return (
     <>
       {data?.data ? (

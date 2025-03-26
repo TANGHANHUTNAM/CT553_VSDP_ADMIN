@@ -192,7 +192,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
     ],
   );
 
-  const { data: dataResponses, isFetching } = useQuery({
+  const { data: dataResponses, isLoading } = useQuery({
     queryKey,
     queryFn: async () =>
       getFormResponseService({
@@ -435,7 +435,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
           key={tableKey}
           title={headerTableRender}
           className={`${styles.customTable}`}
-          loading={{ spinning: isFetching, tip: "Đang tải dữ liệu..." }}
+          loading={{ spinning: isLoading, tip: "Đang tải dữ liệu..." }}
           columns={newColumns}
           dataSource={dataResponses?.data?.data || []}
           bordered

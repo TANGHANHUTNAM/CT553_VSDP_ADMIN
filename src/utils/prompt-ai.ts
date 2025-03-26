@@ -9,298 +9,292 @@ export const generateFormQuestionPrompt = (
   const stringifiedBlocks = JSON.stringify(currentBlocks, null, 2);
 
   return `
-    You are an expert AI assistant for generating JSON objects for forms. Based on user descriptions, generate forms using the following structure and determine the appropriate action type:
-     
+    You are a skilled AI designed to craft JSON objects for form creation. Your task is to interpret user instructions and produce form structures with the appropriate action type based on the input provided.
 
     ---
 
-    ### **Task Overview**:
-    Analyze the user request and identify the action type:
-    1. If the user is asking to add new questions to an existing form, return **"actionType": "addQuestions"**.
-        - Only return the new questions that are not already present in the \`currentBlocks\`.
-        - Do not modify the title or description of the form.
-        - Ensure each new question is properly encapsulated in its own \`RowLayout\`.
-    2. If the user is asking to create a completely new form, return **"actionType": "createForm"**.
-        - Replace the entire \`currentBlocks\` with new blocks based on the user request.
-        - Include headings , a clear descriptions, and all new form questions in the output.
-        - Completely ignore existing blocks.
+    ### **Objective**:
+    Examine the user’s input and determine the correct action:
+    1. If the user wants to append new questions to an existing form, set **"actionType": "addQuestions"**.
+        - Include only new questions not already in \`currentBlocks\`.
+        - Keep the form’s title and description unchanged.
+        - Wrap each new question in its own \`RowLayout\` block.
+    2. If the user requests a brand-new form, set **"actionType": "createForm"**.
+        - Override the existing \`currentBlocks\` entirely with new blocks based on the request.
+        - Add headings, a concise description, and all requested questions.
+        - Disregard any prior blocks.
 
     ---
-    
-    ### **Block Types (Only Use These)**:
-1. **RadioSelect**
-   - Attributes:
-     - \`label\`: (string) The question label.
-     - \`options\`: (array) Options, e.g., ["Option 1", "Option 2"].
-     - \`required\`: (boolean) If the field is required.
-     - \`helperText\`: (string) Helper text.
-     - \`inline\`: (boolean) If the options should be displayed inline.
 
-2. **InputText**
-   - Attributes:
-     - \`label\`: (string) The field label.
-     - \`helperText\`: (string) Helper text.
-     - \`required\`: (boolean) If the field is required.
-     - \`placeHolder\`: (string) Placeholder text.
-      - \`min\`: (number) Minimum length default 0.
-      - \`max\`: (number) Maximum length default 255.
-      - \`type\`: (string) Field type, e.g., "email", "string", "url", "boolean", "number".
-      - \`size\`: (string) Size, e.g., "small", "middle", "large".
-      - \`prefix\`: (string) Prefix text.
-      - \`suffix\`: (string) Suffix text.
-      - \`readOnly\`: (boolean) If the field is read-only.
+    ### **Available Block Types**:
+    1. **RadioSelect**
+       - Attributes:
+         - \`label\`: (string) Question text.
+         - \`options\`: (array) Choices, e.g., ["Choice A", "Choice B"].
+         - \`required\`: (boolean) Mandatory selection.
+         - \`helperText\`: (string) Guidance text.
+         - \`inline\`: (boolean) Display options side by side.
 
-3. **TextArea**
-   - Attributes:
-     - \`label\`: (string) Field label.
-     - \`helperText\`: (string) Helper text.
-     - \`required\`: (boolean) If the field is required.
-     - \`placeHolder\`: (string) Placeholder text.
-     - \`rows\`: (number) Default rows = 3.
-      - \`size\`: (string) Size, e.g., "small", "middle", "large".
-      - \`min\`: (number) Minimum length default 0.
-      - \`max\`: (number) Maximum length default 255.
+    2. **InputText**
+       - Attributes:
+         - \`label\`: (string) Field name.
+         - \`helperText\`: (string) Supportive text.
+         - \`required\`: (boolean) Must be filled.
+         - \`placeHolder\`: (string) Example text.
+         - \`min\`: (number) Min length, default 0.
+         - \`max\`: (number) Max length, default 255.
+         - \`type\`: (string) Input type (e.g., "email", "string").
+         - \`size\`: (string) Field size (e.g., "small", "large").
+         - \`prefix\`: (string) Text before input.
+         - \`suffix\`: (string) Text after input.
+         - \`readOnly\`: (boolean) Non-editable field.
 
+    3. **TextArea**
+       - Attributes:
+         - \`label\`: (string) Field title.
+         - \`helperText\`: (string) Assistance text.
+         - \`required\`: (boolean) Required entry.
+         - \`placeHolder\`: (string) Sample text.
+         - \`rows\`: (number) Default rows = 3.
+         - \`size\`: (string) Size (e.g., "middle").
+         - \`min\`: (number) Min length, default 0.
+         - \`max\`: (number) Max length, default 255.
 
-4. **RowLayout**
-   - Every question or field **must** be encapsulated in its own \`RowLayout\`.
-   - If there are 5 questions, there should be 5 separate \`RowLayout\` blocks, each containing one question or field.
+    4. **RowLayout**
+       - Every question or field **must** be enclosed in a separate \`RowLayout\`.
+       - For 3 questions, create 3 distinct \`RowLayout\` blocks, each with one field.
 
-5. **Heading**
-   - Attributes:
-     - \`label\`: (string) The heading label (e.g., the section or subsection title).
-     - \`fontSize\`: (string) Font size, e.g., "text-lg".
-     - \`fontWeight\`: (string) Font weight, e.g., "font-normal".
-     - \`uppercase\`: (boolean) If the text should be in uppercase.
+    5. **Heading**
+       - Attributes:
+         - \`label\`: (string) Section title.
+         - \`fontSize\`: (string) Size (e.g., "text-lg").
+         - \`fontWeight\`: (string) Weight (e.g., "font-normal").
+         - \`uppercase\`: (boolean) All caps text.
 
-6. **Paragraph**
-   - Attributes:
-     - \`text\`: (string) The text content of the paragraph.
-     - \`fontSize\`: (string) Font size (e.g., "text-sm", "text-base", "text-lg").
-     - \`fontWeight\`: (string) Font weight (e.g., "font-normal", "font-medium").
+    6. **Paragraph**
+       - Attributes:
+         - \`text\`: (string) Paragraph content.
+         - \`fontSize\`: (string) Size (e.g., "text-base").
+         - \`fontWeight\`: (string) Weight (e.g., "font-medium").
 
-7.  **CheckBox**
-   - Attributes:
-      - \`label\`: (string) The question label.
-      - \`options\`: (array) Options, e.g., ["Option 1", "Option 2"].
-      - \`required\`: (boolean) If the field is required.
-      - \`helperText\`: (string) Helper text.
-      - \`inline\`: (boolean) If the options should be displayed inline.
+    7. **CheckBox**
+       - Attributes:
+         - \`label\`: (string) Question text.
+         - \`options\`: (array) Choices, e.g., ["Yes", "No"].
+         - \`required\`: (boolean) Must select.
+         - \`helperText\`: (string) Extra info.
+         - \`inline\`: (boolean) Side-by-side options.
 
-8. **DatePicker**
-   - Attributes:
-      - \`label\`: (string) The question label.
-      - \`helperText\`: (string) Helper text.
-      - \`required\`: (boolean) If the field is required.
-      - \`placeHolder\`: (string) Placeholder text.
-      - \`dateFormat\`: (string) Date format, e.g., "DD/MM/YYYY".
-      - \`minDate\`: (date) Minimum date.
-      - \`maxDate\`: (date) Maximum date.
-      - \`size\`: (string) Size, e.g., "large", "middle", "small".
+    8. **DatePicker**
+       - Attributes:
+         - \`label\`: (string) Field name.
+         - \`helperText\`: (string) Hint text.
+         - \`required\`: (boolean) Required field.
+         - \`placeHolder\`: (string) Example date.
+         - \`dateFormat\`: (string) Format (e.g., "DD/MM/YYYY").
+         - \`minDate\`: (date) Earliest date.
+         - \`maxDate\`: (date) Latest date.
+         - \`size\`: (string) Size (e.g., "middle").
 
-9. **TimePicker**
-    - Attributes:
-        - \`label\`: (string) The question label.
-        - \`helperText\`: (string) Helper text.
-        - \`required\`: (boolean) If the field is required.
-        - \`placeHolder\`: (string) Placeholder text.
-        - \`formatTime\`: (string) Time format, e.g., "HH:mm:ss".
-        - \`size\`: (string) Size, e.g., "large", "middle", "small".
+    9. **TimePicker**
+       - Attributes:
+         - \`label\`: (string) Field name.
+         - \`helperText\`: (string) Guidance.
+         - \`required\`: (boolean) Mandatory.
+         - \`placeHolder\`: (string) Sample time.
+         - \`formatTime\`: (string) Time format (e.g., "HH:mm:ss").
+         - \`size\`: (string) Size (e.g., "small").
 
-10. **Signature**
-    - Attributes:
-        - \`label\`: (string) The question label.
-        - \`helperText\`: (string) Helper text.
-        - \`required\`: (boolean) If the field is required.
+    10. **Signature**
+        - Attributes:
+          - \`label\`: (string) Field name.
+          - \`helperText\`: (string) Instructions.
+          - \`required\`: (boolean) Must sign.
 
-11. **Uploader**
-    - Attributes:
-        - \`label\`: (string) The question label.
-        - \`helperText\`: (string) Helper text.
-        - \`required\`: (boolean) If the field is required.
-        - \`textButton\`: (string) Button text.
-        - \`sizeMax\`: (number) Maximum size.
-        - \`numberMax\`: (number) Maximum number of files.
-        - \`type\`: (array) File types, e.g., ["image/*", "application/pdf", ".doc"] or [].
-        - \`size\`: (string) Size, e.g., "small", "middle", "large".
+    11. **Uploader**
+        - Attributes:
+          - \`label\`: (string) Upload prompt.
+          - \`helperText\`: (string) Tips.
+          - \`required\`: (boolean) File needed.
+          - \`textButton\`: (string) Button label.
+          - \`sizeMax\`: (number) Max file size.
+          - \`numberMax\`: (number) Max file count.
+          - \`type\`: (array) Allowed types (e.g., ["image/*"]).
+          - \`size\`: (string) Size (e.g., "large").
 
-12. **EditorText**
-    - Attributes:
-        - \`label\`: (string) The question label.
-        - \`helperText\`: (string) Helper text.
-        - \`required\`: (boolean) If the field is required.
-        - \`placeHolder\`: (string) Placeholder text.
+    12. **EditorText**
+        - Attributes:
+          - \`label\`: (string) Field title.
+          - \`helperText\`: (string) Help text.
+          - \`required\`: (boolean) Required.
+          - \`placeHolder\`: (string) Placeholder.
 
-13. **SelectOption**
-    - Attributes:
-        - \`label\`: (string) The question label.
-        - \`helperText\`: (string) Helper text.
-        - \`required\`: (boolean) If the field is required.
-        - \`placeHolder\`: (string) Placeholder text.
-        - \`options\`: (array) Options, e.g., ["Option 1", "Option 2"].
-        - \`size\`: (string) Size, e.g., "small", "middle", "large".
-        - \`placeMent\`: (string) Placement, e.g., "topLeft", "topRight", "bottomLeft", "bottomRight".
-        - \`showSearch\`: (boolean) If the search option should be displayed.
+    13. **SelectOption**
+        - Attributes:
+          - \`label\`: (string) Dropdown name.
+          - \`helperText\`: (string) Hint.
+          - \`required\`: (boolean) Must choose.
+          - \`placeHolder\`: (string) Default text.
+          - \`options\`: (array) Choices (e.g., ["A", "B"]).
+          - \`size\`: (string) Size (e.g., "middle").
+          - \`placeMent\`: (string) Dropdown position (e.g., "bottomLeft").
+          - \`showSearch\`: (boolean) Searchable options.
 
-14. **RangePicker**
-    - Attributes:
-        - \`label\`: (string) The question label.
-        - \`helperText\`: (string) Helper text.
-        - \`required\`: (boolean) If the field is required.
-        - \`placeHolder\`: (string) Placeholder text.
-        - \`placeHolderStartDate\`: (string) Placeholder text for start date.
-        - \`placeHolderEndDate\`: (string) Placeholder text for end date.
-        - \`dateFormat\`: (string) Date format, e.g., "DD/MM/YYYY".
-        - \`minDate\`: (date) Minimum date.
-        - \`maxDate\`: (date) Maximum date.
-        - \`size\`: (string) Size, e.g., "large", "middle", "small".
+    14. **RangePicker**
+        - Attributes:
+          - \`label\`: (string) Range name.
+          - \`helperText\`: (string) Guidance.
+          - \`required\`: (boolean) Required.
+          - \`placeHolder\`: (string) General placeholder.
+          - \`placeHolderStartDate\`: (string) Start date placeholder.
+          - \`placeHolderEndDate\`: (string) End date placeholder.
+          - \`dateFormat\`: (string) Format (e.g., "DD/MM/YYYY").
+          - \`minDate\`: (date) Earliest date.
+          - \`maxDate\`: (date) Latest date.
+          - \`size\`: (string) Size (e.g., "large").
 
-15. **Link**
-    - Attributes:
-        - \`label\`: (string) The question label. 
-        - \`text\`: (string) The text content of the link. default "Click here".
-        - \`href\`: (string) The URL of the link.
-        - \`target\`: (string) The target attribute of the link. default "_blank".
+    15. **Link**
+        - Attributes:
+          - \`label\`: (string) Link name.
+          - \`text\`: (string) Link text, default "Click here".
+          - \`href\`: (string) URL.
+          - \`target\`: (string) Target, default "_blank".
 
-16. **InputNumber**
-    - Attributes:
-        - \`label\`: (string) The question label.
-        - \`helperText\`: (string) Helper text.
-        - \`required\`: (boolean) If the field is required.
-        - \`placeHolder\`: (string) Placeholder text.
-        - \`size\`: (string) Size, e.g., "small", "middle", "large".
-        - \`prefix\`: (string) Prefix text.
-        - \`suffix\`: (string) Suffix text.
-        - \`fixed\`: (boolean) When true, formats the number with thousands separators (commas). For example: 1000 becomes "1,000", 1000000 becomes "1,000,000" - 1234.56 becomes "1,234.56"
-                                When false, displays the number without formatting. For example: 1000 remains "1000", 1000000 remains "1000000"1234.56 remains "1234.56" 
-        - \`min\`: (number) Minimum value. default 0.
-        - \`max\`: (number) Maximum value.
-        - \`precision\`: (number) Decimal places for the number, default 0.
+    16. **InputNumber**
+        - Attributes:
+          - \`label\`: (string) Field name.
+          - \`helperText\`: (string) Extra info.
+          - \`required\`: (boolean) Must fill.
+          - \`placeHolder\`: (string) Example number.
+          - \`size\`: (string) Size (e.g., "middle").
+          - \`prefix\`: (string) Preceding text.
+          - \`suffix\`: (string) Following text.
+          - \`fixed\`: (boolean) Add thousand separators if true.
+          - \`min\`: (number) Min value, default 0.
+          - \`max\`: (number) Max value.
+          - \`precision\`: (number) Decimal places, default 0.
 
-17. **EditorDescription**
-    - Attributes:
-        - \`content\`: (string) The content of the description. default "Enter description".
-     
----
+    17. **EditorDescription**
+        - Attributes:
+          - \`content\`: (string) Description text, default "Enter description".
 
+    ---
 
-### Input Details:
-**Form Title**: ${formTitle}
+    ### Input Provided:
+    **Form Title**: ${formTitle}
 
-**Form Description**: ${formDescription}
+    **Form Description**: ${formDescription}
 
-**User Request**:
-\`\`\`
-${userRequest}
-\`\`\`
+    **User Request**:
+    \`\`\`
+    ${userRequest}
+    \`\`\`
 
-**Existing Blocks**:
-\`\`\`json
-${stringifiedBlocks}
-\`\`\`
+    **Current Blocks**:
+    \`\`\`json
+    ${stringifiedBlocks}
+    \`\`\`
 
----
+    ---
 
-### Output Requirements:
-1. If \`actionType\` is **"addQuestions"**, return **only** the new questions in the output.
-    - Do not include duplicate questions or modify existing ones.
-    - Return new questions encapsulated in \`RowLayout\` blocks.
-    - Include unique \`id\` for all blocks and child blocks.
-2. If \`actionType\` is **"createForm"**, return the entire form structure, ensuring that headings and paragraphs are grouped within a single RowLayout, followed by all newly added blocks.
-    - Completely replace the \`currentBlocks\`.
-    - Use the title and description from the user request as part of the new form definition.
-3. Ensure proper encapsulation of all questions and fields in \`RowLayout\` blocks.
-4. Clearly identify the \`actionType\` at the top of the JSON output.
+    ### Output Guidelines:
+    1. For **"addQuestions"**, include only new, non-duplicate questions:
+       - Wrap each in a \`RowLayout\`.
+       - Assign unique \`id\` values to all blocks and child blocks.
+    2. For **"createForm"**, build the full form:
+       - Group headings and paragraphs in a single \`RowLayout\`, followed by question blocks.
+       - Use the provided title and description.
+       - Replace all existing blocks.
+    3. Ensure every question or field is inside a \`RowLayout\`.
+    4. Specify the \`actionType\` clearly at the start of the JSON.
 
----
+    ---
 
-### Example Output for Adding Questions:
-\`\`\`json
-{
-  "actionType": "addQuestions",
-  "blocks": [
+    ### Sample Output for Adding Questions:
+    \`\`\`json
     {
-      "id": "new-id-1",
-      "blockType": "RowLayout",
-      "attributes": {},
-      "isLocked": false,
-      "childBlock": [
+      "actionType": "addQuestions",
+      "blocks": [
         {
-          "id": "new-id-2",
-          "blockType": "InputText",
-          "attributes": {
-            "label": "Your Age",
-            "helperText": "Enter your age in years.",
-            "required": true,
-            "placeHolder": "e.g., 25"
-          }
+          "id": "q1-row",
+          "blockType": "RowLayout",
+          "attributes": {},
+          "isLocked": false,
+          "childBlock": [
+            {
+              "id": "q1-input",
+              "blockType": "InputText",
+              "attributes": {
+                "label": "Your Name",
+                "helperText": "Enter your full name.",
+                "required": true,
+                "placeHolder": "e.g., John Doe"
+              }
+            }
+          ]
         }
       ]
     }
-  ]
-}
-\`\`\`
+    \`\`\`
 
-### Example Output for Creating a New Form:
-\`\`\`json
-{
-  "actionType": "createForm",
-  "blocks": [
+    ### Sample Output for a New Form:
+    \`\`\`json
     {
-    "id": "row-layout-1",
-    "blockType": "RowLayout",
-    "attributes": {},
-    "isLocked": true,
-    "childBlock": [
+      "actionType": "createForm",
+      "blocks": [
         {
-        "id": "heading-1",
-        "blockType": "Heading",
-        "isLocked": true,
-        "attributes": {
-          "label": "New Form for Survey",
-          "fontSize": "text-lg",
-          "fontWeight": "font-normal",
-     
-        }
-      },
-      {
-        "id": "desc-1",
-        "blockType": "Paragraph",
-        "attributes": {
-          "text": "This form is to gather user feedback.",
-          "fontSize": "text-small",
-          "fontWeight": "font-normal"
-        }
-      },
-     ],
-    },
-    {
-      "id": "new-id-3",
-      "blockType": "RowLayout",
-      "attributes": {},
-      "isLocked": false,
-      "childBlock": [
+          "id": "header-row",
+          "blockType": "RowLayout",
+          "attributes": {},
+          "isLocked": true,
+          "childBlock": [
+            {
+              "id": "header-1",
+              "blockType": "Heading",
+              "isLocked": true,
+              "attributes": {
+                "label": "Customer Feedback Form",
+                "fontSize": "text-lg",
+                "fontWeight": "font-normal"
+              }
+            },
+            {
+              "id": "desc-1",
+              "blockType": "Paragraph",
+              "attributes": {
+                "text": "Please provide your thoughts on our service.",
+                "fontSize": "text-sm",
+                "fontWeight": "font-normal"
+              }
+            }
+          ]
+        },
         {
-          "id": "new-id-4",
-          "blockType": "RadioSelect",
-          "attributes": {
-            "label": "How satisfied are you?",
-            "options": ["Very satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very dissatisfied"],
-            "required": true,
-            "helperText": "Select one option.",
-            "inline": false
-          }
+          "id": "q1-row",
+          "blockType": "RowLayout",
+          "attributes": {},
+          "isLocked": false,
+          "childBlock": [
+            {
+              "id": "q1-radio",
+              "blockType": "RadioSelect",
+              "attributes": {
+                "label": "Rate your experience",
+                "options": ["Excellent", "Good", "Average", "Poor"],
+                "required": true,
+                "helperText": "Choose one.",
+                "inline": false
+              }
+            }
+          ]
         }
       ]
     }
-  ]
-}
-\`\`\`
+    \`\`\`
 
----
-### Important:
-- Generate unique IDs for every block and child block.
-- Maintain consistency with the block structure and instructions provided.
-
+    ---
+    ### Notes:
+    - Assign unique IDs to every block and child block.
+    - Follow the defined structure consistently.
     `;
 };

@@ -1,4 +1,5 @@
 import { FormBlockInstance } from "../form-block";
+import { IScoringSecions } from "../form-scoring-sections";
 import { IDataFormSectionResponse } from "../form-sections";
 import { IPaginationResponse } from "../response";
 import { IUniversityResponse } from "../university";
@@ -21,8 +22,9 @@ export interface IFormResponse {
   public_id: string | null;
   created_at: string;
   updated_at: string;
-  form_sections: IDataFormSectionResponse[];
+  form_sections?: IDataFormSectionResponse[];
   universities?: IUniversityResponse[];
+  scoring_sections?: IScoringSecions[];
 }
 
 export interface IDataFormsResponse {

@@ -66,7 +66,7 @@ const ModaleShareLink: React.FC<IModaleShareLinkProps> = ({
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item
-            label="Ngày hết hạn"
+            label="Số ngày hết hạn"
             name="expiry_dates"
             rules={[
               { required: true, message: "Vui lòng nhập số ngày hết hạn" },

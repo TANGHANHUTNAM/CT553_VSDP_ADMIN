@@ -19,7 +19,7 @@ const NotFoundPage: React.FC = () => {
     <div className="flex min-h-screen items-center justify-center dark:bg-dark-900">
       <Result
         status="404"
-        title="404 Not Found"
+        title="404 Lỗi! Không tìm thấy nội dung yêu cầu."
         subTitle="Xin lỗi, trang bạn đang tìm kiếm không tồn tại."
         extra={
           <Link to="/" type="primary">

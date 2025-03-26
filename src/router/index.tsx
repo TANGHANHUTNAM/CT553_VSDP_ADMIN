@@ -4,7 +4,13 @@ import { PAGE_NAME, ROUTER_URL } from "../constants/routerIndex";
 import LayoutAdmin from "../layout/LayoutAdmin";
 import LayoutFormBuilder from "../layout/LayoutFormBuilder";
 import DashboardPage from "../pages/DashboardPage";
+import FormBuilderAssignmentPage from "../pages/FormBuilderAssignmentPage";
 import FormBuilderPage from "../pages/FormBuilderPage";
+import FormBuilderPreviewPage from "../pages/FormBuilderPreviewPage";
+import FormBuilderResponsePage from "../pages/FormBuilderResponsePage";
+import FormBuilderScoringScholarship from "../pages/FormBuilderScoringScholarship";
+import FormBuilderScoringSectionPage from "../pages/FormBuilderScoringSectionPage";
+import FormBuilderStatisticsPage from "../pages/FormBuilderStatisticsPage";
 import FormPage from "../pages/FormPage";
 import LoginPage from "../pages/LoginPage";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -12,13 +18,10 @@ import PermissionPage from "../pages/PermissionPage";
 import ProfilePage from "../pages/ProfilePage";
 import RolePage from "../pages/RolePage";
 import SettingPage from "../pages/SettingPage";
+import UniversityPage from "../pages/UniversityPage";
 import UserPage from "../pages/UserPage";
 import Access from "./Access";
 import ProtectRoute from "./ProtectRoute";
-import FormBuilderPreviewPage from "../pages/FormBuilderPreviewPage";
-import FormBuilderResponsePage from "../pages/FormBuilderResponsePage";
-import FormBuilderStatisticsPage from "../pages/FormBuilderStatisticsPage";
-import UniversityPage from "../pages/UniversityPage";
 
 export type CustomRouteObject = RouteObject & {
   breadcrumb?: string;
@@ -131,6 +134,21 @@ export const routerCustom: CustomRouteObject[] = [
         path: ROUTER_URL.FORM_BUILDER_STATISTICS_PAGE,
         element: <FormBuilderStatisticsPage />,
         breadcrumb: PAGE_NAME.FORM_BUILDER_STATISTICS,
+      },
+      {
+        path: ROUTER_URL.FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP_PAGE,
+        element: <FormBuilderScoringSectionPage />,
+        breadcrumb: PAGE_NAME.FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP,
+      },
+      {
+        path: ROUTER_URL.FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP_PAGE,
+        element: <FormBuilderAssignmentPage />,
+        breadcrumb: PAGE_NAME.FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP,
+      },
+      {
+        path: ROUTER_URL.FORM_BUILDER_SCORING_RESPONSE_PAGE,
+        element: <FormBuilderScoringScholarship />,
+        breadcrumb: PAGE_NAME.FORM_BUILDER_SCORING_RESPONSE,
       },
     ],
   },

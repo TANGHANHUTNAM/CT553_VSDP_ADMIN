@@ -88,7 +88,7 @@ const UniversityManagement: React.FC = () => {
     setSearchParams,
   ]);
 
-  const { data: dataUniversities, isFetching } = useQuery({
+  const { data: dataUniversities, isLoading } = useQuery({
     queryKey: [
       "universities",
       current,
@@ -318,7 +318,7 @@ const UniversityManagement: React.FC = () => {
         title={headerTableRender}
         rowKey={(record) => record.id as number}
         loading={{
-          spinning: isFetching,
+          spinning: isLoading,
           tip: "Đang tải dữ liệu...",
         }}
         pagination={paginationOptions(

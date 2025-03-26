@@ -21,7 +21,7 @@ const ModalViewInforResponseForm: React.FC<
   IModalViewInforResponseFormProps
 > = ({ record, formData }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const { data: responseDetail, isFetching } = useQuery({
+  const { data: responseDetail, isLoading } = useQuery({
     queryKey: ["formResponses", record.id],
     queryFn: async () => getResponseDetailByIdService(record?.id),
     enabled: !!record?.id && open,
@@ -75,7 +75,7 @@ const ModalViewInforResponseForm: React.FC<
       <Modal
         width={800}
         open={open}
-        loading={isFetching}
+        loading={isLoading}
         centered
         title={`Chi tiết phản hồi biểu mẫu ${record?.name || ""}`}
         onCancel={() => setOpen(false)}

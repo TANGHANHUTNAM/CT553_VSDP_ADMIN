@@ -11,9 +11,8 @@ const FormProperties = () => {
     selectedBlockLayout &&
     FormBlocks[selectedBlockLayout.blockType]?.propertiesComponent;
   return !selectedBlockLayout ? (
-    <div className="flex h-[calc(100vh-150px)] items-center justify-center gap-2">
-      <LuMousePointerClick className="text-2xl text-gray-400" />
-      Chọn một khối để xem và chỉnh sửa
+    <div className="flex h-[calc(100vh-150px)] items-center justify-center gap-2 text-primary">
+      Chọn khối xem thuộc tính
     </div>
   ) : (
     <div className="mt-2 h-[calc(100vh-160px)] w-full overflow-y-auto p-1 text-gray-600 scrollbar-thin">
