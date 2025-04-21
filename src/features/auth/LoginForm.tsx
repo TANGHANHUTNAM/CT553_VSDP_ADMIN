@@ -1,4 +1,5 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { Form, Input } from "antd";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -21,6 +22,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ setOpen }) => {
   const accessToken = window.localStorage.getItem("access_token");
   const { isAuth } = useAppSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   useEffect(() => {
     if (accessToken && isAuth) {
       navigate(ROUTER_URL.DASHBOARD_PAGE);
@@ -35,6 +37,9 @@ const LoginForm: React.FC<ILoginFormProps> = ({ setOpen }) => {
       if (res && res.data) {
         window.localStorage.setItem("access_token", res.data.access_token);
         dispatch(loginSuccess());
+        queryClient.invalidateQueries({
+          queryKey: ["assignments_pending"],
+        });
         navigate("/");
         toast.success("Đăng nhập thành công!");
       }

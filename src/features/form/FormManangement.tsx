@@ -37,6 +37,7 @@ import { IFormResponse } from "../../interfaces";
 import Access from "../../router/Access";
 import {
   copyFormService,
+  deleteFormService,
   getAllFormsWithPagination,
   updateStatusFormService,
 } from "../../services";
@@ -50,6 +51,7 @@ import ModalUpdateForm from "./ModalUpdateForm";
 import { ROUTER_URL } from "../../constants/routerIndex";
 import toast from "react-hot-toast";
 import { TbCopyPlusFilled } from "react-icons/tb";
+import DeleteComponent from "../../components/DeleteComponent";
 
 const FormManangement: React.FC = () => {
   const queryClient = useQueryClient();
@@ -127,6 +129,19 @@ const FormManangement: React.FC = () => {
       id: string;
       is_default: boolean;
     }) => updateStatusFormService(id, is_default),
+    onSuccess: (data) => {
+      if (data && data.data) {
+        toast.success(data.message as string);
+        queryClient.invalidateQueries({ queryKey: ["forms"] });
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
+    },
+  });
+
+  const mutationDeleteForm = useMutation({
+    mutationFn: async (id: string) => deleteFormService(id),
     onSuccess: (data) => {
       if (data && data.data) {
         toast.success(data.message as string);
@@ -267,7 +282,7 @@ const FormManangement: React.FC = () => {
             hideChildren={false}
           >
             <ViewComponent
-              titleTooltip={`Thiết kế biểu mẫu ${record.name}`}
+              titleTooltip={`Thiết kế ${record.name}`}
               onClick={() => {
                 navigate(ROUTER_URL.FORM_BUILDER_PAGE(record.id));
               }}
@@ -279,7 +294,7 @@ const FormManangement: React.FC = () => {
             hideChildren={false}
           >
             <ViewComponent
-              titleTooltip={`Sao chép biểu mẫu ${record.name}`}
+              titleTooltip={`Sao chép ${record.name}`}
               onClick={() => {
                 mutationCopyForm.mutate(record.id);
               }}
@@ -295,6 +310,12 @@ const FormManangement: React.FC = () => {
               }}
             />
           </Access>
+          <DeleteComponent
+            titlePopconfirm={`Chắc chắn xóa ${record.name}?`}
+            onConfirm={() => {
+              mutationDeleteForm.mutate(record.id);
+            }}
+          />
           {record.scope === SCOPE_FORM[0].value ? (
             <ActiveComponent
               loading={mutationUpdateFormStatus.isPending}

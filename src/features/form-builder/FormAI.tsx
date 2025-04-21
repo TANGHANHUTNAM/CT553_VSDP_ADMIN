@@ -58,9 +58,7 @@ const FormAI = () => {
       );
       const result = await AIChatSession.sendMessage(PROMPT);
       const responseText = result.response.text();
-      console.log("responseText", responseText);
       const parsedResponse = JSON?.parse(responseText);
-      console.log("parsedResponse", parsedResponse);
       const actionType = parsedResponse?.actionType;
       const generatedBlocks = parsedResponse?.blocks;
 
@@ -76,7 +74,7 @@ const FormAI = () => {
         }
       });
       setUserRequest("");
-      toast.success("AI đã trả lời yêu cầu của bạn thành công!");
+      toast.success("AI đã tạo biểu mẫu thành công!");
     } catch (error) {
       toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
       console.log(error);

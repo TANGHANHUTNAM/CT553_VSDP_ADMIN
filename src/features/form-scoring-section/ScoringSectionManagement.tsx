@@ -50,11 +50,24 @@ const ScoringSectionManagement: React.FC<ScoringSectionManagementProps> = ({
     },
   });
 
-  const handleDeleteCriteria = async (criteriaId: number) => {
-    // Call deleteScoringCriteriaService
-    await deleteScoringCriteriaService(criteriaId);
-    // Refresh data here
-  };
+  const mutationDeleteScoringCriteria = useMutation({
+    mutationFn: async (criteriaId: number) =>
+      deleteScoringCriteriaService(criteriaId),
+    onSuccess: (data) => {
+      if (data && data.data) {
+        toast.success(data.message as string);
+        queryClient.invalidateQueries({
+          queryKey: ["scoring-sections", formData.id],
+        });
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
+  });
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-90px)] w-full max-w-screen-xl flex-col space-y-3 rounded-md">
@@ -81,7 +94,8 @@ const ScoringSectionManagement: React.FC<ScoringSectionManagementProps> = ({
                 title={
                   <Space className="w-full justify-between">
                     <Text strong className="text-lg">
-                      {section.name} (Điểm tối đa: {section.max_score})
+                      Phần điểm: {section.name} (Điểm tối đa:{" "}
+                      {section.max_score})
                     </Text>
                     <Space size={"large"}>
                       <ModalUpdaeScoringSection scoringSection={section} />
@@ -109,14 +123,16 @@ const ScoringSectionManagement: React.FC<ScoringSectionManagementProps> = ({
                         />,
                         <DeleteComponent
                           titlePopconfirm={`Xóa tiêu chí ${criteria.name}`}
-                          onConfirm={() => handleDeleteCriteria(criteria.id)}
+                          onConfirm={() =>
+                            mutationDeleteScoringCriteria.mutate(criteria.id)
+                          }
                         />,
                       ]}
                     >
                       <List.Item.Meta
                         title={
                           <div className="text-base font-semibold">
-                            {criteria.name}
+                            Tiêu chí: {criteria.name}
                             <span className="ml-2 text-sm font-normal italic">
                               {`(Khoảng điểm: ${criteria.min_score} -
                               ${criteria.max_score} điểm)`}

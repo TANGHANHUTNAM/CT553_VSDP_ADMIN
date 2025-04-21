@@ -68,7 +68,7 @@ const ResponseTrendStats: React.FC<IResponseTrendStatsProps> = ({
     <div className="rounded-md bg-white p-4 shadow">
       <div className="mb-4 flex items-center justify-between">
         <div className="mb-4 text-lg font-medium">
-          Thống kê lượt phản hồi theo thời gian
+          Thống kê lượt hồ sơ theo thời gian
         </div>
         <div className="flex items-center gap-4">
           <RangePicker
@@ -128,7 +128,7 @@ const ResponseTrendStats: React.FC<IResponseTrendStatsProps> = ({
             />
             <YAxis
               label={{
-                value: "Số lượng phản hồi",
+                value: "Số lượng hồ sơ",
                 angle: -90,
                 position: "insideLeft",
                 offset: 10,
@@ -140,7 +140,7 @@ const ResponseTrendStats: React.FC<IResponseTrendStatsProps> = ({
             <Line
               type="monotone"
               dataKey="count"
-              name="Số lượng phản hồi"
+              name="Số lượng hồ sơ"
               stroke={GLOBAL_COLOR}
               activeDot={{ r: 8 }}
             />

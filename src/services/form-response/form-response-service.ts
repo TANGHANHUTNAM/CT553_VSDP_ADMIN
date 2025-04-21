@@ -19,6 +19,18 @@ export const getResponseDetailByIdService = async (
   return apiClient.get(`/form-responses/${id}`);
 };
 
+export const getResponseDetailToUpdateService = async (
+  id: number,
+): Promise<IResponse<IFormResponsesResponse>> => {
+  return apiClient.get(`/form-responses/${id}/update`);
+};
+
+export const deleteResponseService = async (
+  id: number,
+): Promise<IResponse<IFormResponsesResponse>> => {
+  return apiClient.delete(`/form-responses/${id}`);
+};
+
 export const updateResponseService = async (
   id: number,
   data: IDataResponseFormUpdateRequest,

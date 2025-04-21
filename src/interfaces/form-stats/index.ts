@@ -6,6 +6,14 @@ export interface IDataFormStatsResponse {
   response_trend: IResponseTrendDay[] | IResponseTrendMonth[];
   new_responses_today: number;
   university_distribution?: IUniversityStats[];
+  status_distribution: {
+    SUBMITTED: number;
+    CHECKED: number;
+    REJECTED: number;
+    PASSED: number;
+    INTERVIEWING: number;
+    FAILED: number;
+  };
 }
 
 export interface IDataFieldBlockStatsResponse {

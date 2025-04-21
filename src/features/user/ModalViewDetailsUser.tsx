@@ -37,7 +37,7 @@ const ModalViewDetailsUser: React.FC<IModalViewDetailsUserProps> = ({
           <Descriptions.Item label="Avatar">
             <AvatarComponent
               src={userData?.avatar_url || undefined}
-              size={64}
+              size={40}
             />
           </Descriptions.Item>
           <Descriptions.Item label="ID">

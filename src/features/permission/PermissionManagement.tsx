@@ -1,3 +1,8 @@
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Checkbox,
@@ -10,19 +15,21 @@ import {
   Tag,
 } from "antd";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaCirclePlus } from "react-icons/fa6";
 import { GrPowerReset } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
 import { RiListSettingsFill } from "react-icons/ri";
 import { useSearchParams } from "react-router-dom";
 import ButtonComponent from "../../components/ButtonComponent";
+import DeleteComponent from "../../components/DeleteComponent";
 import EditComponent from "../../components/EditComponent";
 import InputSearchComponent from "../../components/InputSearchComponent";
 import TableSizeSettingComponent from "../../components/TableSizeSettingComponent";
 import {
+  ALL_MODULES_ARRAY,
   ALL_PERMISSIONS,
   dataMethod,
-  dataModule,
 } from "../../constants/permissions";
 import { PER_PAGE, SIZE_TABLE } from "../../constants/tableManagement";
 import { IPermissionResponse } from "../../interfaces";
@@ -41,13 +48,6 @@ import {
 } from "../../utils/functionUtils";
 import ModalCreateNewPermission from "./ModalCreateNewPermission";
 import ModalUpdatePermission from "./ModalUpdatePermission";
-import DeleteComponent from "../../components/DeleteComponent";
-import toast from "react-hot-toast";
-import {
-  CaretDownFilled,
-  CaretUpFilled,
-  FilterFilled,
-} from "@ant-design/icons";
 
 const PermissionManagement: React.FC = () => {
   const queryClient = useQueryClient();
@@ -243,7 +243,10 @@ const PermissionManagement: React.FC = () => {
       key: "module",
       dataIndex: "module",
       width: 120,
-      filters: dataModule,
+      filters: ALL_MODULES_ARRAY.map((item) => ({
+        text: item,
+        value: item,
+      })),
       filterMultiple: false,
       filteredValue: filterModule ? [filterModule] : null,
       filterIcon: (filtered) => (

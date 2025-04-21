@@ -8,6 +8,7 @@ import TotalStatictis from "./TotalStatictis";
 import FilterResponseToType from "./FilterResponseToType";
 import UniversityStatsResponse from "./UniversityStatsResponse";
 import { IUniversityStats } from "../../interfaces";
+import PassFailedStatictis from "./PassFailedStatictis";
 
 interface IFormStatisticManagementProps {
   created_at: string;
@@ -29,6 +30,10 @@ const FormStatisticManagement: React.FC<IFormStatisticManagementProps> = ({
   );
   const [totalResponses, setTotalResponses] = useState<number>(0);
   const [totalResponseToday, setTotalResponseToday] = useState<number>(0);
+  const [totalFailed, setTotalFailed] = useState<number>(0);
+  const [totalPassed, setTotalPassed] = useState<number>(0);
+  const [totalRejected, setTotalRejected] = useState<number>(0);
+  const [totalChecked, setTotalChecked] = useState<number>(0);
   const [university, setUniversity] = useState<IUniversityStats[]>([]);
   const { form_id } = useParams<{ form_id: string }>();
   const { data: dataStats, isLoading } = useQuery({
@@ -47,6 +52,10 @@ const FormStatisticManagement: React.FC<IFormStatisticManagementProps> = ({
     if (dataStats?.data) {
       setTotalResponses(dataStats.data.total_responses as number);
       setTotalResponseToday(dataStats.data.new_responses_today as number);
+      setTotalFailed(dataStats.data.status_distribution.FAILED as number);
+      setTotalPassed(dataStats.data.status_distribution.PASSED as number);
+      setTotalRejected(dataStats.data.status_distribution.REJECTED as number);
+      setTotalChecked(dataStats.data.status_distribution.CHECKED as number);
       setUniversity(dataStats.data.university_distribution || []);
     }
   }, [dataStats]);
@@ -58,6 +67,12 @@ const FormStatisticManagement: React.FC<IFormStatisticManagementProps> = ({
       <TotalStatictis
         total_responses={totalResponses}
         new_responses_today={totalResponseToday}
+        totalRejected={totalRejected}
+        totalChecked={totalChecked}
+      />
+      <PassFailedStatictis
+        totalPassed={totalPassed}
+        totalFailed={totalFailed}
       />
       <ResponseTrendStats
         start={start}

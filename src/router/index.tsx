@@ -22,6 +22,10 @@ import UniversityPage from "../pages/UniversityPage";
 import UserPage from "../pages/UserPage";
 import Access from "./Access";
 import ProtectRoute from "./ProtectRoute";
+import FormBuilderFilterResponsePage from "../pages/FormBuilderFilterResponsePage";
+import ReviewApplicant from "../pages/ReviewApplicant";
+import ReviewApplicantsDetailPage from "../pages/ReviewApplicantsDetailPage";
+import HistoryReviewPage from "../pages/HistoryReviewPage";
 
 export type CustomRouteObject = RouteObject & {
   breadcrumb?: string;
@@ -40,7 +44,14 @@ export const routerCustom: CustomRouteObject[] = [
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        element: (
+          <Access
+            permission={ALL_PERMISSIONS.DASHBOARD.VIEW}
+            hideChildren={false}
+          >
+            <DashboardPage />
+          </Access>
+        ),
         breadcrumb: PAGE_NAME.DASHBOARD,
       },
       {
@@ -94,8 +105,53 @@ export const routerCustom: CustomRouteObject[] = [
       },
       {
         path: ROUTER_URL.UNIVERSITY_PAGE,
-        element: <UniversityPage />,
+        element: (
+          <Access
+            permission={ALL_PERMISSIONS.UNIVERSITY.VIEW}
+            hideChildren={false}
+          >
+            <UniversityPage />
+          </Access>
+        ),
         breadcrumb: PAGE_NAME.UNIVERSITY,
+      },
+      {
+        path: ROUTER_URL.REVIEW_APPLICATION_PAGE,
+        element: (
+          <Access
+            permission={ALL_PERMISSIONS.REVIEW_APPLICANT.VIEW}
+            hideChildren={false}
+          >
+            <ReviewApplicant />
+          </Access>
+        ),
+        breadcrumb: PAGE_NAME.REVIEW_APPLICATION,
+      },
+      {
+        path: ROUTER_URL.DETAIL_REVIEW_APPLICATION_PAGE(":assignment_id"),
+        element: (
+          <Access
+            permission={ALL_PERMISSIONS.REVIEW_APPLICANT.VIEW_DETAIL}
+            hideChildren={false}
+          >
+            <ReviewApplicantsDetailPage />
+          </Access>
+        ),
+        breadcrumb: PAGE_NAME.DETAIL_REVIEW_APPLICATION,
+      },
+      {
+        path: ROUTER_URL.HISTORY_RVIEW_APPLICATION_PAGE,
+        element: (
+          <Access
+            permission={
+              ALL_PERMISSIONS.REVIEW_APPLICANT.REIVEW_APPLICANT_HISTORY
+            }
+            hideChildren={false}
+          >
+            <HistoryReviewPage />
+          </Access>
+        ),
+        breadcrumb: PAGE_NAME.REVIEW_HISTORY,
       },
     ],
   },
@@ -149,6 +205,11 @@ export const routerCustom: CustomRouteObject[] = [
         path: ROUTER_URL.FORM_BUILDER_SCORING_RESPONSE_PAGE,
         element: <FormBuilderScoringScholarship />,
         breadcrumb: PAGE_NAME.FORM_BUILDER_SCORING_RESPONSE,
+      },
+      {
+        path: ROUTER_URL.FORM_BUILDER_FILTER_RESPONSE_PAGE,
+        element: <FormBuilderFilterResponsePage />,
+        breadcrumb: PAGE_NAME.FORM_BUILDER_FILTER_RESPONSE,
       },
     ],
   },

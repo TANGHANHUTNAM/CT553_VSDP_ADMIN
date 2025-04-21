@@ -28,7 +28,7 @@ import {
 } from "../../interfaces";
 import {
   deleteFileService,
-  getResponseDetailByIdService,
+  getResponseDetailToUpdateService,
   updateResponseService,
   uploadFileService,
 } from "../../services";
@@ -61,8 +61,8 @@ const ModalEditInforResponseForm: React.FC<
   }>({});
   const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
   const { data: responseDetail, isLoading } = useQuery({
-    queryKey: ["formResponses", record.id],
-    queryFn: async () => getResponseDetailByIdService(record?.id),
+    queryKey: ["formResponsesUpdate", record.id],
+    queryFn: async () => getResponseDetailToUpdateService(record?.id),
     enabled: !!record?.id && open,
     refetchOnWindowFocus: false,
   });
@@ -73,11 +73,12 @@ const ModalEditInforResponseForm: React.FC<
     onSuccess: (data) => {
       if (data && data.data) {
         queryClient.invalidateQueries({
-          queryKey: ["formResponses", record.id],
-        });
-        queryClient.invalidateQueries({
           queryKey: ["formResponses"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["formResponsesUpdate", record.id],
+        });
+
         toast.success(data.message as string);
         setOpen(false);
       }

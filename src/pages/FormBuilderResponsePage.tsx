@@ -3,25 +3,28 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Space, TableColumnsType, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
 import React from "react";
+import toast from "react-hot-toast";
 import { useParams, useSearchParams } from "react-router-dom";
+import DeleteComponent from "../components/DeleteComponent";
 import LoadingComponent from "../components/LoadingComponent";
 import NotFoundComponent from "../components/NotFoundComponent";
 import { PAGE_NAME } from "../constants/routerIndex";
 import { PER_PAGE, STATUS_RESPONSE_FORM } from "../constants/tableManagement";
 import FormResponseManagement from "../features/form-response/FormResponseManagement";
+import ModalEditInforResponseForm from "../features/form-response/ModalEditInforResponseForm";
 import ModalViewInforResponseForm from "../features/form-response/ModalViewInforResponseForm";
 import RenderContentResponse from "../features/form-response/RenderContentResponse";
 import { useDynamicTitle, useScrollTop } from "../hooks";
-import { IFormResponse, IFormResponsesResponse } from "../interfaces";
+import { IFormResponse } from "../interfaces";
 import {
   FormBlockInstance,
   FormNotInputBlockTypes,
 } from "../interfaces/form-block";
-import { getFormById } from "../services";
+import { deleteResponseService, getFormById } from "../services";
 import {
   colorFilterIcon,
   colorSortDownIcon,
@@ -29,19 +32,37 @@ import {
   colorStatusSubmit,
   formatDateTime,
 } from "../utils/functionUtils";
-import ModalEditInforResponseForm from "../features/form-response/ModalEditInforResponseForm";
 
 const FormBuilderResponsePage: React.FC = () => {
   useDynamicTitle(PAGE_NAME.FORM_BUILDER_RESPONSE);
   useScrollTop();
   const { form_id } = useParams<{ form_id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({
     queryKey: ["getFormById", form_id],
     queryFn: async () => getFormById(form_id || ""),
     enabled: !!form_id,
-    refetchOnWindowFocus: false,
+  });
+
+  const mutationDeleteResponse = useMutation({
+    mutationFn: async (id: number) => {
+      return await deleteResponseService(id);
+    },
+    onSuccess: (data) => {
+      if (data && data.data) {
+        toast.success(data.message as string);
+        queryClient.invalidateQueries({
+          queryKey: ["formResponses"],
+        });
+      }
+      if (data && data.error) {
+        toast.error(data.message as string);
+      }
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
   });
 
   const columns: TableColumnsType<any> = data?.data
@@ -96,14 +117,6 @@ const FormBuilderResponsePage: React.FC = () => {
                 : undefined,
             filterMultiple: false,
             render: (value: string) => value || "-",
-          },
-          {
-            title: "Điểm từng phần",
-            dataIndex: "final_scores",
-            key: "final_scores",
-
-            render: (value: Record<string, unknown>[]) =>
-              value.length > 0 ? JSON.stringify(value) : "-",
           },
           {
             title: "Tổng điểm",
@@ -221,16 +234,22 @@ const FormBuilderResponsePage: React.FC = () => {
           key: "action",
           fixed: "right",
           align: "center",
-          render: (_, record: IFormResponsesResponse) => {
+          render: (_, record) => {
             return (
               <Space size={"middle"}>
                 <ModalViewInforResponseForm
-                  record={record}
+                  record={record.id as string}
                   formData={data?.data as IFormResponse}
                 />
                 <ModalEditInforResponseForm
                   record={record}
                   universities={data?.data?.universities}
+                />
+                <DeleteComponent
+                  titlePopconfirm={`Chắc chắn xóa ${record.name} ?`}
+                  onConfirm={() => {
+                    mutationDeleteResponse.mutate(record.id);
+                  }}
                 />
               </Space>
             );

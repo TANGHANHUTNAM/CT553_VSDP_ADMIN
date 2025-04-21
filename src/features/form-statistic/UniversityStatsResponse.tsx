@@ -36,7 +36,7 @@ const UniversityStatsResponse: React.FC<IUniversityStatsResponseProps> = ({
   return (
     <div className="rounded-md bg-white p-4 shadow">
       <div className="mb-4 text-lg font-medium">
-        Thống kê lượt phản hồi theo trường đại học
+        Thống kê lượt hồ sơ theo trường đại học
       </div>
       <div className="h-[400px]">
         {data.length > 0 ? (
@@ -54,7 +54,7 @@ const UniversityStatsResponse: React.FC<IUniversityStatsResponseProps> = ({
               <YAxis />
               <Tooltip formatter={(value) => [`${value} lượt`, "Trường"]} />
               <Legend />
-              <Bar dataKey="count" name="Số lượt phản hồi" fill={GLOBAL_COLOR}>
+              <Bar dataKey="count" name="Số lượt hồ sơ" fill={GLOBAL_COLOR}>
                 {data.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={colors[index]} />
                 ))}

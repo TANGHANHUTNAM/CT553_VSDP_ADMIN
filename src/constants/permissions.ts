@@ -52,9 +52,19 @@ export const ALL_MODULES = {
   PERMISSION: "PERMISSION",
   FORM: "FORM",
   UNIVERSITY: "UNIVERSITY",
+  REVIEW_APPLICANT: "REVIEW_APPLICANT",
+  DASHBOARD: "DASHBOARD",
 };
+export const ALL_MODULES_ARRAY = Object.values(ALL_MODULES);
 
 export const ALL_PERMISSIONS = {
+  DASHBOARD: {
+    VIEW: {
+      module: ALL_MODULES.DASHBOARD,
+      api_path: VER + "/dashboard",
+      method: "GET",
+    },
+  },
   USER: {
     VIEW: {
       module: ALL_MODULES.USER,
@@ -208,6 +218,29 @@ export const ALL_PERMISSIONS = {
       module: ALL_MODULES.UNIVERSITY,
       api_path: VER + "/universities/:id",
       method: "PATCH",
+    },
+  },
+  REVIEW_APPLICANT: {
+    VIEW: {
+      module: ALL_MODULES.REVIEW_APPLICANT,
+      api_path:
+        VER + "/review-applicant/form-response/assigned/for-reviewers/:id",
+      method: "GET",
+    },
+    VIEW_DETAIL: {
+      module: ALL_MODULES.REVIEW_APPLICANT,
+      api_path: VER + "/review-applicant",
+      method: "GET",
+    },
+    REVIEW_SCORE_APPLICANT: {
+      module: ALL_MODULES.REVIEW_APPLICANT,
+      api_path: VER + "/review-applicant/scores",
+      method: "POST",
+    },
+    REIVEW_APPLICANT_HISTORY: {
+      module: ALL_MODULES.REVIEW_APPLICANT,
+      api_path: VER + "/review-applicant/completed",
+      method: "GET",
     },
   },
 };

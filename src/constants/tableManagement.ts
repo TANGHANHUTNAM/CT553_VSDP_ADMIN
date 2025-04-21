@@ -70,19 +70,11 @@ export const STATUS_RESPONSE_FORM = [
   },
   {
     value: "CHECKED",
-    label: "Đã kiểm tra",
+    label: "Chấp nhận",
   },
   {
     value: "REJECTED",
-    label: "Đã từ chối",
-  },
-  {
-    value: "ASSIGNED",
-    label: "Đã giao",
-  },
-  {
-    value: "REVIEWING",
-    label: "Đang chấm",
+    label: "Từ chối",
   },
   {
     value: "FAILED",

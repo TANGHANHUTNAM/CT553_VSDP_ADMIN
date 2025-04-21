@@ -5,7 +5,6 @@ import ViewComponent from "../../components/ViewComponent";
 import {
   IFieldSection,
   IFormResponse,
-  IFormResponsesResponse,
   ISectionsDataFormResponsesResponse,
 } from "../../interfaces";
 import { getResponseDetailByIdService } from "../../services";
@@ -13,8 +12,8 @@ import { colorStatusSubmit, formatDateTime } from "../../utils/functionUtils";
 import RenderContentResponse from "./RenderContentResponse";
 
 interface IModalViewInforResponseFormProps {
-  formData: IFormResponse;
-  record: IFormResponsesResponse;
+  formData?: IFormResponse;
+  record: string;
 }
 
 const ModalViewInforResponseForm: React.FC<
@@ -22,9 +21,9 @@ const ModalViewInforResponseForm: React.FC<
 > = ({ record, formData }) => {
   const [open, setOpen] = useState<boolean>(false);
   const { data: responseDetail, isLoading } = useQuery({
-    queryKey: ["formResponses", record.id],
-    queryFn: async () => getResponseDetailByIdService(record?.id),
-    enabled: !!record?.id && open,
+    queryKey: ["formResponses", record],
+    queryFn: async () => getResponseDetailByIdService(+record),
+    enabled: !!record && open,
     refetchOnWindowFocus: false,
   });
 
@@ -70,14 +69,14 @@ const ModalViewInforResponseForm: React.FC<
     <>
       <ViewComponent
         onClick={() => setOpen(true)}
-        titleTooltip={`xem chi tiết ${record?.name || ""}`}
+        titleTooltip={`xem chi tiết hồ sơ`}
       />
       <Modal
         width={800}
         open={open}
         loading={isLoading}
         centered
-        title={`Chi tiết phản hồi biểu mẫu ${record?.name || ""}`}
+        title={`Chi tiết hồ sơ biểu mẫu ${responseDetail?.data?.name || ""}`}
         onCancel={() => setOpen(false)}
         footer={[
           <Button key="close" onClick={() => setOpen(false)}>
@@ -85,7 +84,7 @@ const ModalViewInforResponseForm: React.FC<
           </Button>,
         ]}
       >
-        <div className="max-h-[60vh] overflow-y-auto">
+        <div className="max-h-[70vh] overflow-y-auto">
           <div className="mb-6 border-b pb-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -110,20 +109,6 @@ const ModalViewInforResponseForm: React.FC<
                     </span>
                     {responseDetail?.data?.university || "-"}
                   </div>
-                  <div>
-                    <span className="font-semibold text-gray-700">
-                      Tổng điểm:{" "}
-                    </span>
-                    {responseDetail?.data?.total_final_score ?? "-"}
-                  </div>{" "}
-                  <div>
-                    <span className="font-semibold text-gray-700">
-                      Điểm từng phần:{" "}
-                    </span>
-                    {(responseDetail?.data?.final_scores?.length ?? 0 > 0)
-                      ? JSON.stringify(record.final_scores)
-                      : "-"}
-                  </div>
                 </>
               )}
 
@@ -137,13 +122,11 @@ const ModalViewInforResponseForm: React.FC<
                       | "SUBMITTED"
                       | "CHECKED"
                       | "REJECTED"
-                      | "ASSIGNED"
-                      | "REVIEWING"
                       | "FAILED"
                       | "PASSED",
                   )}
                 >
-                  {record?.status || "-"}
+                  {responseDetail?.data?.status || "-"}
                 </Tag>
               </div>
               <div>

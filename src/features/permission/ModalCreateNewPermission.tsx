@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, Modal, Select } from "antd";
-import { dataMethod, dataModule } from "../../constants/permissions";
 import toast from "react-hot-toast";
+import { ALL_MODULES_ARRAY, dataMethod } from "../../constants/permissions";
 import { IDataPermissionRequest } from "../../interfaces";
 import { createPermissionService } from "../../services";
 
@@ -100,7 +100,12 @@ const ModalCreateNewPermission: React.FC<IModalCreateNewPermissionProps> = ({
           label="Module"
           rules={[{ required: true, message: "Module không được để trống!" }]}
         >
-          <Select placeholder="Chọn module" options={dataModule} />
+          <Select
+            placeholder="Chọn module"
+            options={ALL_MODULES_ARRAY.map((item) => {
+              return { label: item, value: item };
+            })}
+          />
         </Form.Item>
       </Modal>
     </>

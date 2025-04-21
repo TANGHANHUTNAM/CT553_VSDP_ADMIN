@@ -1,8 +1,7 @@
 import { DownOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Dropdown, Space } from "antd";
-import { useState } from "react";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import vsdp from "../../assets/logo.png";
 import { PAGE_NAME, ROUTER_URL } from "../../constants/routerIndex";
 import { useAppSelector } from "../../hooks";
@@ -17,18 +16,32 @@ const HeaderFormBuilder: React.FC<HeaderFormBuilderProps> = ({ formData }) => {
   const user = useAppSelector((state) => state.user.user);
   const param = useParams();
   const form_id = param["form_id"];
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const location = useLocation();
+
   const items: MenuProps["items"] = [
     {
       key: ROUTER_URL.FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP_PAGE,
       label: (
         <NavLink
+          to={ROUTER_URL.FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP_PAGE}
           className={({ isActive }) =>
             isActive ? "text-primary" : "text-gray-700 hover:text-primary"
           }
-          to={ROUTER_URL.FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP_PAGE}
         >
           {PAGE_NAME.FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP}
+        </NavLink>
+      ),
+    },
+    {
+      key: ROUTER_URL.FORM_BUILDER_FILTER_RESPONSE_PAGE,
+      label: (
+        <NavLink
+          to={ROUTER_URL.FORM_BUILDER_FILTER_RESPONSE_PAGE}
+          className={({ isActive }) =>
+            isActive ? "text-primary" : "text-gray-700 hover:text-primary"
+          }
+        >
+          {PAGE_NAME.FORM_BUILDER_FILTER_RESPONSE}
         </NavLink>
       ),
     },
@@ -36,10 +49,10 @@ const HeaderFormBuilder: React.FC<HeaderFormBuilderProps> = ({ formData }) => {
       key: ROUTER_URL.FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP_PAGE,
       label: (
         <NavLink
+          to={ROUTER_URL.FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP_PAGE}
           className={({ isActive }) =>
             isActive ? "text-primary" : "text-gray-700 hover:text-primary"
           }
-          to={ROUTER_URL.FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP_PAGE}
         >
           {PAGE_NAME.FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP}
         </NavLink>
@@ -49,10 +62,10 @@ const HeaderFormBuilder: React.FC<HeaderFormBuilderProps> = ({ formData }) => {
       key: ROUTER_URL.FORM_BUILDER_SCORING_RESPONSE_PAGE,
       label: (
         <NavLink
+          to={ROUTER_URL.FORM_BUILDER_SCORING_RESPONSE_PAGE}
           className={({ isActive }) =>
             isActive ? "text-primary" : "text-gray-700 hover:text-primary"
           }
-          to={ROUTER_URL.FORM_BUILDER_SCORING_RESPONSE_PAGE}
         >
           {PAGE_NAME.FORM_BUILDER_SCORING_RESPONSE}
         </NavLink>
@@ -60,9 +73,18 @@ const HeaderFormBuilder: React.FC<HeaderFormBuilderProps> = ({ formData }) => {
     },
   ];
 
-  const handleMenuClick: MenuProps["onClick"] = (e) => {
-    setSelectedKey(e.key);
+  const getSelectedKey = () => {
+    const currentPath = location.pathname;
+    const matchedItem = items.find((item) =>
+      currentPath.includes(item?.key?.toString().split("/").pop() || ""),
+    );
+    return matchedItem ? [matchedItem.key?.toString()] : [];
   };
+
+  const isDropdownActive = items.some((item) =>
+    location.pathname.includes(item?.key?.toString() || ""),
+  );
+
   return (
     <div className="bg-primary-500 sticky top-0 z-50 border-b-2 border-gray-300 bg-white">
       <div className="mx-auto flex max-w-screen-xl items-center justify-between py-2.5">
@@ -122,16 +144,17 @@ const HeaderFormBuilder: React.FC<HeaderFormBuilderProps> = ({ formData }) => {
             <Dropdown
               menu={{
                 items: items,
-                onClick: handleMenuClick,
                 selectable: true,
-                selectedKeys: selectedKey ? [selectedKey] : [],
+                selectedKeys: getSelectedKey().filter(
+                  (key): key is string => key !== undefined,
+                ),
               }}
               placement="bottomRight"
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Space
                   className={`cursor-pointer ${
-                    selectedKey
+                    isDropdownActive
                       ? "text-primary"
                       : "text-gray-700 hover:text-primary"
                   }`}

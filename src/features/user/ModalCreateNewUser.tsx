@@ -48,9 +48,10 @@ const ModalCreateNewUser: React.FC<IModalCreateNewUserProps> = ({
   });
 
   const onCreate = (data: IDataForm) => {
-    const [start_date, end_date] = data.time;
+    const { time, ...restData } = data;
+    const [start_date, end_date] = time;
     mutateCreateUser.mutate({
-      ...data,
+      ...restData,
       start_date,
       end_date,
     });

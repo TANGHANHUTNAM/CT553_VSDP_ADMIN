@@ -24,7 +24,7 @@ export interface IFormResponse {
   updated_at: string;
   form_sections?: IDataFormSectionResponse[];
   universities?: IUniversityResponse[];
-  scoring_sections?: IScoringSecions[];
+  scoring_sections?: IScoringSecions[] | [];
 }
 
 export interface IDataFormsResponse {
@@ -52,4 +52,9 @@ export interface IFormBuilderRequest {
   primary_color: string;
   block_color: string;
   background_color: string;
+}
+
+export interface IDataShareLinkResponse {
+  link: string;
+  expiry_date: string;
 }

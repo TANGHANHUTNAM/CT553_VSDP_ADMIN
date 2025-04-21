@@ -8,7 +8,7 @@ import { FaUser, FaUsers, FaWpforms } from "react-icons/fa";
 import { GrShieldSecurity } from "react-icons/gr";
 import { IoMdSettings } from "react-icons/io";
 import { IoKey } from "react-icons/io5";
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard, MdHistory, MdOutlineRateReview } from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { TbLogout2 } from "react-icons/tb";
 
@@ -34,6 +34,8 @@ import { logout } from "../redux/authReducer";
 import { clearUser } from "../redux/userReducer";
 import { routerCustom } from "../router";
 import { logoutService } from "../services";
+import Notifications from "../features/app/Notifications";
+import Access from "../router/Access";
 
 const LayoutAdmin: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -49,6 +51,14 @@ const LayoutAdmin: React.FC = () => {
   useEffect(() => {
     const ACL_ENABLE = import.meta.env.VITE_ACL_ENABLE;
     if ((permissions && permissions.length > 0) || ACL_ENABLE === "true") {
+      // Hệ thống dashboard
+      const viewDashboard = permissions?.find(
+        (item: IPermissionResponse) =>
+          item.api_path === ALL_PERMISSIONS.DASHBOARD.VIEW.api_path &&
+          item.method === ALL_PERMISSIONS.DASHBOARD.VIEW.method,
+      );
+      const hasDashboardChildren: boolean = Boolean(viewDashboard);
+
       // Hệ thống phân quyền
       const viewUser = permissions?.find(
         (item: IPermissionResponse) =>
@@ -84,12 +94,41 @@ const LayoutAdmin: React.FC = () => {
       );
       const hasUniversityChildren: boolean = Boolean(viewUniversity);
 
+      // Hệ thống chấm điểm hồ sơ
+      const viewReviewApplication = permissions?.find(
+        (item: IPermissionResponse) =>
+          item.api_path === ALL_PERMISSIONS.REVIEW_APPLICANT.VIEW.api_path &&
+          item.method === ALL_PERMISSIONS.REVIEW_APPLICANT.VIEW.method,
+      );
+      const hasReviewApplicationChildren: boolean = Boolean(
+        viewReviewApplication,
+      );
+
+      // Hệ thống lịch sử chấm điểm hồ sơ
+      const viewHistoryReviewApplication = permissions?.find(
+        (item: IPermissionResponse) =>
+          item.api_path ===
+            ALL_PERMISSIONS.REVIEW_APPLICANT.REIVEW_APPLICANT_HISTORY
+              .api_path &&
+          item.method ===
+            ALL_PERMISSIONS.REVIEW_APPLICANT.REIVEW_APPLICANT_HISTORY.method,
+      );
+      const hasHistoryReviewApplicationChildren: boolean = Boolean(
+        viewHistoryReviewApplication,
+      );
       const menu_full = [
-        {
-          label: <NavLink to={ROUTER_URL.DASHBOARD_PAGE}>Dashboard</NavLink>,
-          key: ROUTER_URL.DASHBOARD_PAGE,
-          icon: <MdDashboard />,
-        },
+        ...(hasDashboardChildren || ACL_ENABLE === "true"
+          ? [
+              {
+                label: (
+                  <NavLink to={ROUTER_URL.DASHBOARD_PAGE}>Dashboard</NavLink>
+                ),
+                key: ROUTER_URL.DASHBOARD_PAGE,
+                icon: <MdDashboard />,
+              },
+            ]
+          : []),
+
         ...(hasAuthChildren || ACL_ENABLE === "true"
           ? [
               {
@@ -162,6 +201,32 @@ const LayoutAdmin: React.FC = () => {
               },
             ]
           : []),
+        ...(hasReviewApplicationChildren || ACL_ENABLE === "true"
+          ? [
+              {
+                label: (
+                  <NavLink to={ROUTER_URL.REVIEW_APPLICATION_PAGE}>
+                    Chấm điểm hồ sơ
+                  </NavLink>
+                ),
+                key: ROUTER_URL.REVIEW_APPLICATION_PAGE,
+                icon: <MdOutlineRateReview />,
+              },
+            ]
+          : []),
+        ...(hasHistoryReviewApplicationChildren || ACL_ENABLE === "true"
+          ? [
+              {
+                label: (
+                  <NavLink to={ROUTER_URL.HISTORY_RVIEW_APPLICATION_PAGE}>
+                    Lịch sử chấm điểm
+                  </NavLink>
+                ),
+                key: ROUTER_URL.HISTORY_RVIEW_APPLICATION_PAGE,
+                icon: <MdHistory />,
+              },
+            ]
+          : []),
       ];
 
       setMenuItems(menu_full);
@@ -206,7 +271,7 @@ const LayoutAdmin: React.FC = () => {
                 {user?.email || "username@g.commmm"}
               </p>
               <p className="overflow-hidden truncate text-ellipsis text-xs uppercase">
-                {user?.role?.name || "rolesad sadádasdsadas"}
+                {user?.role?.name || "role"}
               </p>
             </span>
           </NavLink>
@@ -317,6 +382,13 @@ const LayoutAdmin: React.FC = () => {
             {/* Right */}
             <div className="relative mr-5 flex items-center justify-center gap-3">
               {/* Light Dark Mode */}
+              <Access
+                permission={ALL_PERMISSIONS.REVIEW_APPLICANT.VIEW}
+                hideChildren
+              >
+                <Notifications />
+              </Access>
+
               <LightDarkMode />
               {/* Menu  */}
               <Dropdown

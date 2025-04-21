@@ -1,6 +1,7 @@
 import {
   IDataFormRequest,
   IDataFormsResponse,
+  IDataShareLinkResponse,
   IFormBuilderRequest,
   IFormResponse,
   IResponse,
@@ -23,6 +24,12 @@ export const createFormService = async (
   data: IDataFormRequest,
 ): Promise<IResponse<IFormResponse>> => {
   return axiosClient.post(`/forms`, data);
+};
+
+export const deleteFormService = async (
+  id: string,
+): Promise<IResponse<IFormResponse>> => {
+  return axiosClient.delete(`/forms/${id}`);
 };
 
 export const updateFormService = async (
@@ -78,9 +85,15 @@ export const exportExcelFormService = async (id: string): Promise<Blob> => {
   });
 };
 
+export const getExpiryDateLinkFormService = async (
+  id: string,
+): Promise<IResponse<IDataShareLinkResponse>> => {
+  return axiosClient.get(`/forms/${id}/share-link/expiry-date`);
+};
+
 export const shareLinkFormService = async (
   id: string,
   data: { expiry_dates: number },
-): Promise<IResponse<string>> => {
+): Promise<IResponse<IDataShareLinkResponse>> => {
   return axiosClient.post(`/forms/${id}/share-link`, data);
 };

@@ -122,8 +122,7 @@ export const colorStatusSubmit = (
     | "SUBMITTED"
     | "CHECKED"
     | "REJECTED"
-    | "ASSIGNED"
-    | "REVIEWING"
+    | "INTERVIEWING"
     | "FAILED"
     | "PASSED",
 ) => {
@@ -133,13 +132,11 @@ export const colorStatusSubmit = (
     case "CHECKED":
       return "orange";
     case "REJECTED":
-      return "volcano";
-    case "ASSIGNED":
-      return "blue";
-    case "REVIEWING":
+      return "red";
+    case "INTERVIEWING":
       return "cyan";
     case "FAILED":
-      return "red";
+      return "blue";
     default:
       return "green";
   }

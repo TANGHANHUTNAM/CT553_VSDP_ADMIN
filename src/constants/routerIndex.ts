@@ -16,9 +16,15 @@ export const ROUTER_URL = {
   FORM_BUILDER_MAIL_HISTORY_PAGE: `mail-history`,
   FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP_PAGE: `scoring-section-scholarship`,
   FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP_PAGE: `assignment-scholarship`,
-  FORM_BUILDER_SCORING_RESPONSE_PAGE: `scoring-response`,
+  FORM_BUILDER_SCORING_RESPONSE_PAGE: `detail-scoring-response`,
+  FORM_BUILDER_FILTER_RESPONSE_PAGE: `filter-response`,
   NOT_FOUND_PAGE: "*",
   UNIVERSITY_PAGE: "/university",
+  REVIEW_APPLICATION_PAGE: "/review-application",
+  DETAIL_REVIEW_APPLICATION_PAGE: (assignment_id: string) => {
+    return `/review_form_response_assigned/${assignment_id}`;
+  },
+  HISTORY_RVIEW_APPLICATION_PAGE: "/review-history",
 };
 
 export const PAGE_NAME = {
@@ -34,11 +40,15 @@ export const PAGE_NAME = {
   NOT_PERMISSION: "Không có quyền truy cập",
   FORM_BUILDER: "Thiết kế",
   FORM_BUILDER_PREVIEW: "Xem trước",
-  FORM_BUILDER_RESPONSE: "Phản hồi",
+  FORM_BUILDER_RESPONSE: "Hồ sơ đã nhận",
   FORM_BUILDER_STATISTICS: "Thống kê",
   FORM_BUILDER_MAIL_HISTORY: "Lịch sử gửi mail",
   FORM_BUILDER_SCORING_SECTION_SCHOLARSHIP: "Phần điểm biểu mẫu",
   FORM_BUILDER_ASSIGEMENT_SCHOLARSHIP: "Phân công hồ sơ",
-  FORM_BUILDER_SCORING_RESPONSE: "Chấm điểm hồ sơ",
+  FORM_BUILDER_SCORING_RESPONSE: "Chi tiết điểm hồ sơ",
+  FORM_BUILDER_FILTER_RESPONSE: "Lọc hồ sơ",
   UNIVERSITY: "Quản lý trường học",
+  REVIEW_APPLICATION: "Hồ sơ được phân công",
+  DETAIL_REVIEW_APPLICATION: "Chấm điểm hồ sơ",
+  REVIEW_HISTORY: "Lịch sử chấm điểm",
 };

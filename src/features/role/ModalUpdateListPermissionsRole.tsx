@@ -11,15 +11,15 @@ import {
   Tag,
 } from "antd";
 import { useEffect, useState } from "react";
-import { dataMethod, dataModule } from "../../constants/permissions";
+import toast from "react-hot-toast";
+import { ALL_MODULES_ARRAY, dataMethod } from "../../constants/permissions";
 import { IPermissionResponse, IRoleResponse } from "../../interfaces";
+import { updateRolePermissionsService } from "../../services";
 import {
   getAllPermissionsByRoleIdService,
   getAllPermissionsService,
 } from "../../services/permission/permission-service";
 import { colorFilterIcon, colorMethod } from "../../utils/functionUtils";
-import { updateRolePermissionsService } from "../../services";
-import toast from "react-hot-toast";
 
 interface IModalUpdateListPermissionsRoleProps {
   setOpen: (open: boolean) => void;
@@ -47,7 +47,10 @@ const columns: TableColumnsType<IPermissionResponse> = [
     title: "Module",
     dataIndex: "module",
     key: "module",
-    filters: dataModule,
+    filters: ALL_MODULES_ARRAY.map((item) => ({
+      text: item,
+      value: item,
+    })),
     filterIcon: (filtered) => (
       <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
     ),
@@ -169,7 +172,7 @@ const ModalUpdateListPermissionsRole: React.FC<
               disabled={!hasSelected}
               loading={loading}
             >
-              Reset
+              Xóa quyền hạn đã chọn
             </Button>
             {hasSelected ? `Đã cấp ${selectedRowKeys.length} quyền hạn` : null}
           </Flex>

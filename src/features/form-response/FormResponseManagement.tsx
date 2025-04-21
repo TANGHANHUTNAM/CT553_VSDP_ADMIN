@@ -129,8 +129,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
     total: 0,
     showSizeChanger: true,
     pageSizeOptions: ["5", "10", "20", "30"],
-    showTotal: (total, range) =>
-      `${range[0]}-${range[1]} của ${total} phản hồi`,
+    showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} hồ sơ`,
   });
 
   const [searchText, setSearchText] = useState<string>(
@@ -318,7 +317,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
 
   const headerTableRender: TableProps<unknown>["title"] = () => (
     <div className="flex items-center justify-between">
-      <div className="w-1/2 text-lg font-semibold">Phản hồi người dùng</div>
+      <div className="w-1/2 text-lg font-semibold">Hồ sơ đã nhận</div>
       <div className="flex w-1/2 items-center justify-end space-x-2">
         <Dropdown menu={menuSetting} trigger={["click"]}>
           <span>
@@ -347,8 +346,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
       total: dataResponses?.data?.pagination.totalRecords || 0,
       showSizeChanger: true,
       pageSizeOptions: ["5", "10", "20", "30"],
-      showTotal: (total, range) =>
-        `${range[0]}-${range[1]} của ${total} phản hồi`,
+      showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} hồ sơ`,
     });
     setSearchParams({
       page: "1",
@@ -378,7 +376,7 @@ const FormResponseManagement: React.FC<IFormResponseManagementProps> = ({
   return (
     <div className="mx-auto flex min-h-[calc(100vh-90px)] w-full max-w-screen-xl flex-col space-y-3 rounded-md bg-[#f4f0f0] px-4 py-2">
       <div className="flex w-full items-center justify-between rounded-md bg-primary px-4 py-2 text-2xl font-semibold text-white">
-        <div>Phản hồi biểu mẫu: {formResponse?.name || "Form Response"}</div>
+        <div>Hồ sơ biểu mẫu: {formResponse?.name || "Form Response"}</div>
         <div className="text-base">Số cột: {columns.length | 0}</div>
       </div>
       <div className="flex w-full items-center justify-between">
