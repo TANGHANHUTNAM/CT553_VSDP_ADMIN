@@ -14,8 +14,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_URL } from "../../constants/routerIndex";
 import { getPendingAssignmentService } from "../../services";
-import Access from "../../router/Access";
-import { ALL_PERMISSIONS } from "../../constants/permissions";
 const API_URL = import.meta.env.VITE_API_URL;
 const Notifications: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);

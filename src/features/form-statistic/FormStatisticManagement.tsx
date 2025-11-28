@@ -13,13 +13,11 @@ import PassFailedStatictis from "./PassFailedStatictis";
 interface IFormStatisticManagementProps {
   created_at: string;
   name: string;
-  scope: string;
 }
 
 const FormStatisticManagement: React.FC<IFormStatisticManagementProps> = ({
   created_at,
   name,
-  scope,
 }) => {
   const [groupBy, setGroupBy] = useState<string>("day");
   const [start, setStart] = useState<string>(

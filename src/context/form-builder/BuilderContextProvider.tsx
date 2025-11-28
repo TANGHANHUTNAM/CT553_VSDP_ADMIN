@@ -62,7 +62,7 @@ const BuilderContextProvider: React.FC<IBuilderContextProviderProps> = ({
             res.data.background_color || GLOBAL_COLOR_BACKGROUND,
           );
           setImageUrl(res.data.image_url || "");
-          setSectionsForm(res.data.form_sections);
+          setSectionsForm(res.data.form_sections || []);
         }
         if (res && res.error) {
           toast.error(res.message as string);

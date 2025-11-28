@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { LuMousePointerClick } from "react-icons/lu";
 import { BuilderContext } from "../../context/form-builder/BuilderContext";
 import { FormBlocks } from "../../interfaces/form-block";
 import { LuFileLock2 } from "react-icons/lu";

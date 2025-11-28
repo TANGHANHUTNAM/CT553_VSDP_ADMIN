@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, Tabs, Table, Button, Descriptions, Tag, message } from "antd";
 const duLieuGia = {
   form: {
@@ -213,10 +213,13 @@ const QuanLyChamDiemChiTiet = () => {
   const [hoSo, setHoSo] = useState(duLieuGia.formResponses);
 
   // Mô phỏng lưu total_final_score
-  const chonDiem = (idHoSo, idNguoiCham, idPhanCham, diemSo) => {
-    const tongDiem = diemSo.reduce((tong, diem) => tong + diem.score_value, 0);
-    setHoSo((truoc) =>
-      truoc.map((hoSo) =>
+  const chonDiem = (idHoSo: number, idNguoiCham: number, diemSo: any) => {
+    const tongDiem = diemSo.reduce(
+      (tong: number, diem: any) => tong + diem.score_value,
+      0,
+    );
+    setHoSo((truoc: any) =>
+      truoc.map((hoSo: any) =>
         hoSo.id === idHoSo ? { ...hoSo, total_final_score: tongDiem } : hoSo,
       ),
     );
@@ -246,7 +249,7 @@ const QuanLyChamDiemChiTiet = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (trangThai) => (
+      render: (trangThai: string) => (
         <Tag color={trangThai === "SUBMITTED" ? "blue" : "green"}>
           {trangThai === "SUBMITTED" ? "Đã nộp" : trangThai}
         </Tag>
@@ -256,7 +259,7 @@ const QuanLyChamDiemChiTiet = () => {
       title: "Tổng điểm cuối",
       dataIndex: "total_final_score",
       key: "total_final_score",
-      render: (diem) => (diem !== null ? diem : "Chưa chốt"),
+      render: (diem: number | null) => (diem !== null ? diem : "Chưa chốt"),
     },
   ];
 
@@ -318,7 +321,7 @@ const QuanLyChamDiemChiTiet = () => {
                               <Card
                                 key={pc.id}
                                 style={{ marginBottom: 16 }}
-                                title={`Người chấm: ${nguoiCham.name}`}
+                                title={`Người chấm: ${nguoiCham?.name}`}
                               >
                                 <Descriptions column={1} bordered>
                                   <Descriptions.Item label="Trạng thái">
@@ -347,9 +350,9 @@ const QuanLyChamDiemChiTiet = () => {
                                             );
                                           return (
                                             <li key={diem.id}>
-                                              {tieuChi.name}: {diem.score_value}{" "}
-                                              (
-                                              {diem.comment ||
+                                              {tieuChi?.name}:{" "}
+                                              {diem?.score_value} (
+                                              {diem?.comment ||
                                                 "Không có nhận xét"}
                                               )
                                             </li>
@@ -369,12 +372,7 @@ const QuanLyChamDiemChiTiet = () => {
                                     type="primary"
                                     style={{ marginTop: 16 }}
                                     onClick={() =>
-                                      chonDiem(
-                                        banGhi.id,
-                                        pc.user_id,
-                                        phan.id,
-                                        diemSo,
-                                      )
+                                      chonDiem(banGhi.id, pc.user_id, diemSo)
                                     }
                                     disabled={banGhi.total_final_score !== null}
                                   >

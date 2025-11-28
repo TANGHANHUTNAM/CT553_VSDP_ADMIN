@@ -4,18 +4,7 @@ import {
   FormOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import {
-  Card,
-  Col,
-  DatePicker,
-  Input,
-  Row,
-  Statistic,
-  Switch,
-  Table,
-  Tabs,
-  Tag,
-} from "antd";
+import { Card, Col, Row, Statistic, Switch, Table, Tabs, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   Area,
@@ -38,13 +27,10 @@ import { IResponse } from "../../interfaces";
 import { getDashboardService } from "../../services";
 import { colorStatusSubmit, formatDate } from "../../utils/functionUtils";
 
-const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
-const { Search } = Input;
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
-// TypeScript interfaces
 interface User {
   id: number;
   name: string;
@@ -100,7 +86,7 @@ export interface DashboardData {
 const DashboardManagement: React.FC = () => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(false);
-  const [dateRange, setDateRange] = useState<[string, string] | null>(null);
+  const [dateRange] = useState<[string, string] | null>(null);
   const [showActiveUsers, setShowActiveUsers] = useState(true);
 
   useEffect(() => {
@@ -187,29 +173,6 @@ const DashboardManagement: React.FC = () => {
     name: role,
     value: userRoleCounts[role],
   }));
-
-  const scopeStatusChartData = data.formResponses.reduce(
-    (acc, response) => {
-      const key = `${response.scope}_${response.status}`;
-      acc[key] = (acc[key] || 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-
-  const stackedBarData = [
-    {
-      scope: "Học bổng",
-      SUBMITTED: scopeStatusChartData["SCHOLARSHIP_SUBMITTED"] || 0,
-      CHECKED: scopeStatusChartData["SCHOLARSHIP_CHECKED"] || 0,
-      REJECTED: scopeStatusChartData["SCHOLARSHIP_REJECTED"] || 0,
-    },
-    {
-      scope: "Khảo sát",
-      SUBMITTED: scopeStatusChartData["SURVEY_SUBMITTED"] || 0,
-      INTERVIEWING: scopeStatusChartData["SURVEY_INTERVIEWING"] || 0,
-    },
-  ];
 
   const filteredResponses = dateRange
     ? data.formResponses.filter(

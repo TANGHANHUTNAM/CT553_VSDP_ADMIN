@@ -99,7 +99,17 @@ const ModalEditInforResponseForm: React.FC<
         .filter((field) => field.blockType === "Signature" && field.value);
 
       signatureFields.forEach((field) => {
-        if (field.value?.url && signatureRefs.current[field.id]) {
+        if (
+          field.value &&
+          typeof field.value === "object" &&
+          !Array.isArray(field.value) &&
+          "url" in field.value &&
+          signatureRefs.current[field.id]
+        ) {
+          const signatureValue = field.value as {
+            url: string;
+            public_id: string;
+          };
           const img = new Image();
           img.crossOrigin = "Anonymous";
           img.onload = () => {
@@ -122,7 +132,7 @@ const ModalEditInforResponseForm: React.FC<
             );
             toast.error("Không thể tải chữ ký");
           };
-          img.src = field.value.url;
+          img.src = signatureValue.url;
         }
       });
     }

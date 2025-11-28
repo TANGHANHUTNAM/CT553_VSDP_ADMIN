@@ -24,7 +24,6 @@ const FormBuilderStatisticsPage: React.FC = () => {
           <FormStatisticManagement
             name={data?.data?.name}
             created_at={data?.data?.created_at}
-            scope={data?.data?.scope as string}
           />
         </div>
       ) : (
